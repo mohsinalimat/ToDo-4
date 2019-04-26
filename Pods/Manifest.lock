@@ -1,0 +1,34 @@
+PODS:
+  - AddButtonExpand (0.0.4)
+  - ProgressBar (0.1.0)
+  - Realm (3.14.1):
+    - Realm/Headers (= 3.14.1)
+  - Realm/Headers (3.14.1)
+  - RealmSwift (3.14.1):
+    - Realm (= 3.14.1)
+  - SingleDatePickerCalendar (0.0.2)
+
+DEPENDENCIES:
+  - AddButtonExpand
+  - ProgressBar
+  - RealmSwift
+  - SingleDatePickerCalendar
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AddButtonExpand
+    - ProgressBar
+    - Realm
+    - RealmSwift
+    - SingleDatePickerCalendar
+
+SPEC CHECKSUMS:
+  AddButtonExpand: b71976f8344309e5a9ace6aecf9ef6180ea14ca0
+  ProgressBar: 5a1e2bb90ab1524edc6bf63f50de5f74ccaed761
+  Realm: e12c9c2387d05c5bba3a9c394838f5870e85763b
+  RealmSwift: a82eab9b04c3e1616082c7e17aa300740847769c
+  SingleDatePickerCalendar: 373d64d6cde4894b66b34a5ea1459c21af4f2c4d
+
+PODFILE CHECKSUM: 001c2aee914879d9e639d2802db6140a84e28a70
+
+COCOAPODS: 1.5.3

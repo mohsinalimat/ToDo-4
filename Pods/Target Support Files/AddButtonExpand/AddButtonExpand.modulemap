@@ -1,0 +1,6 @@
+framework module AddButtonExpand {
+  umbrella header "AddButtonExpand-umbrella.h"
+
+  export *
+  module * { export * }
+}

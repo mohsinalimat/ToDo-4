@@ -1,0 +1,6 @@
+framework module SingleDatePickerCalendar {
+  umbrella header "SingleDatePickerCalendar-umbrella.h"
+
+  export *
+  module * { export * }
+}

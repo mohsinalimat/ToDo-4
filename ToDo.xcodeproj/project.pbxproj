@@ -18,6 +18,7 @@
 		A17A3CD6224B2EEB00204CD9 /* ToDoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */; };
 		A17A3CD8224B2F0F00204CD9 /* TopLeftIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD7224B2F0F00204CD9 /* TopLeftIcon.swift */; };
 		A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD9224B2FB900204CD9 /* TaskList.swift */; };
+		A18CFD4D227347760081A54E /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18CFD4C227347760081A54E /* TaskCell.swift */; };
 		A1A5E163225A551400B2D4AD /* NewCategoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E162225A551400B2D4AD /* NewCategoryCard.swift */; };
 		A1A5E165225A773A00B2D4AD /* ToDoCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E164225A773A00B2D4AD /* ToDoCategories.swift */; };
 		A1A5E167225AB7A600B2D4AD /* CategoryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */; };
@@ -49,6 +50,7 @@
 		A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCard.swift; sourceTree = "<group>"; };
 		A17A3CD7224B2F0F00204CD9 /* TopLeftIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLeftIcon.swift; sourceTree = "<group>"; };
 		A17A3CD9224B2FB900204CD9 /* TaskList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskList.swift; sourceTree = "<group>"; };
+		A18CFD4C227347760081A54E /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		A1A5E162225A551400B2D4AD /* NewCategoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryCard.swift; sourceTree = "<group>"; };
 		A1A5E164225A773A00B2D4AD /* ToDoCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCategories.swift; sourceTree = "<group>"; };
 		A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTextField.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				A1B8AD6022507437000D22D9 /* ToDo-Ext.swift */,
 				A1B4018822516CC3007993C4 /* CheckBox.swift */,
 				A1B4018A22519E00007993C4 /* TaskTableView.swift */,
+				A18CFD4C227347760081A54E /* TaskCell.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				A1A5E165225A773A00B2D4AD /* ToDoCategories.swift in Sources */,
 				A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */,
 				A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */,
+				A18CFD4D227347760081A54E /* TaskCell.swift in Sources */,
 				A1B4018922516CC3007993C4 /* CheckBox.swift in Sources */,
 				A1B4018B22519E00007993C4 /* TaskTableView.swift in Sources */,
 				A1A5E169225AFB5200B2D4AD /* Person.swift in Sources */,

@@ -8,22 +8,33 @@
 
 import Foundation
 
+/// format mm/dd/yyyy
+func dateString(date: Date) -> String {
+    let formatter: DateFormatter = DateFormatter()
+    formatter.dateFormat = "MM/dd/yyyy"
+    return formatter.string(from: date)
+}
+
+func date(date: String) -> Date? {
+    let formatter: DateFormatter = DateFormatter()
+    formatter.dateFormat = "MM/dd/yyyy"
+    return formatter.date(from: date)
+}
+
 
 func getTasks(type: Type) -> [String: [String]] {
     var tasks: [String: [String]] = [:]
 
     let taskType = person.taskType.filter { $0.type == type }
-    let formatter: DateFormatter = DateFormatter()
-    formatter.dateFormat = "MM/dd/yyyy"
-    
+
     if taskType.count == 0 || taskType.first?.tasks.count == 0 {
         return tasks
     }
 
-    var initialDate: String = formatter.string(from: taskType.first!.tasks.first!.date!)
+    var initialDate: String = dateString(date: taskType.first!.tasks.first!.date!)
 
     for task in taskType.first!.tasks {
-        let taskDate: String = formatter.string(from: task.date!)
+        let taskDate: String = dateString(date: task.date!)
         if taskDate != initialDate {
             initialDate = taskDate
         }
@@ -34,9 +45,24 @@ func getTasks(type: Type) -> [String: [String]] {
         tasks[taskDate]!.append(task.name!)
     }
     
+    let sortedTasksByDate: [(String, [String])] = tasks.sorted(by: { $0.key < $1.key })
+
+    for sortedTask in sortedTasksByDate {
+        let date: String = sortedTask.0
+        tasks[date] = [String]()
+        tasks[date] = sortedTask.1
+    }
+
     return tasks
 }
 
-func sortTaskByDate(tasks: [String: [String]], task: Task) {
-    // TODO: sort
+func deleteTask(type: Type, taskNameToDelete: String) {
+    let taskType = person.taskType.filter { $0.type == type }
+    
+    for (index, task) in taskType.first!.tasks.enumerated() {
+        if task.name! == taskNameToDelete {
+            taskType.first?.tasks.remove(at: index)
+            break
+        }
+    }
 }

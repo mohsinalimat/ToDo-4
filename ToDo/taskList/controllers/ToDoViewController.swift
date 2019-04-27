@@ -34,6 +34,7 @@ class ToDoViewController: UIViewController {
             view.addSubview(todoCard)
 
             taskTableView.translatesAutoresizingMaskIntoConstraints = false
+            taskTableView.taskDelegate = self
             
             view.addSubview(taskTableView)
             taskTableView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width/1.5).isActive = true
@@ -50,10 +51,9 @@ class ToDoViewController: UIViewController {
             let tasks: [String: [String]] = getTasks(type: type)
 
             for i in 0..<(tasks.count) {
-                taskTableView.register(UITableViewCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(i)")
+                taskTableView.register(TaskCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(i)")
             }
             taskTableView.tasks = tasks
-            taskTableView.taskType = type
         }
     }
     
@@ -73,17 +73,24 @@ class ToDoViewController: UIViewController {
 
 }
 
+extension ToDoViewController: TaskTableViewDelegate {
+    func taskTableView(_ deletedTaskName: String) {
+        try! realm.write {
+            deleteTask(type: taskType!, taskNameToDelete: deletedTaskName)  // delete task in realm
+        }
+    }
+}
+
 extension ToDoViewController: AddButtonExpandDelegate {
 
     func buttonWillShrink() {
         NotificationCenter.default.post(name: NSNotification.Name.init("buttonShrink"), object: nil)
-        // TODO: update table
         guard let type = taskType else { return }
-        let tasks: [String: [String]] = getTasks(type: type)
-        if tasks.count > taskTableView.tasks.count {
-            taskTableView.register(UITableViewCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(taskTableView.tasks.count)")
+        let newTasks: [String: [String]] = getTasks(type: type)
+        if newTasks.count > taskTableView.tasks.count {
+            taskTableView.register(TaskCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(taskTableView.tasks.count)")
         }
-        taskTableView.tasks = tasks
+        taskTableView.tasks = newTasks
         taskTableView.reloadData()
     }
     

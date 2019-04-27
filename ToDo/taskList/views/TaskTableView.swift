@@ -8,13 +8,17 @@
 
 import UIKit
 
+protocol TaskTableViewDelegate: AnyObject {
+    func taskTableView(_ deletedTaskName: String)
+}
+
 class TaskTableView: UITableView {
     
     let tasksId: String = "Tasks"
     
     var tasks: [String: [String]] = [:]
     
-    var taskType: Type!
+    weak var taskDelegate: TaskTableViewDelegate?
 
     var checkedIndexPath: [IndexPath] = [IndexPath]()
     
@@ -64,81 +68,30 @@ extension TaskTableView: UITableViewDataSource {
         return key.value.count
     }
     
-    func checkboxOnTap(trashCan: UIButton, cell: UITableViewCell, indexPath: IndexPath) -> (Bool, String) -> () {
-        return {
-            (checked: Bool, label: String) in
-            if checked {
-                cell.addSubview(trashCan)
-                trashCan.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-                trashCan.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: -20).isActive = true
-                self.checkedIndexPath.append(indexPath)
-            } else {
-                self.removeCheckedIndexPath(indexPath: indexPath)
-                trashCan.removeFromSuperview()
-            }
-        }
-    }
-    
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(indexPath.section)", for: indexPath)
-        let trashCan: UIButton = UIButton()
+        guard let taskCell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(indexPath.section)", for: indexPath) as? TaskCell else {
+            return UITableViewCell()
+        }
         let dictionary: (key: String, value: [String]) = Array(tasks)[indexPath.section]
         
-        trashCan.translatesAutoresizingMaskIntoConstraints = false
-        trashCan.setImage(UIImage(named: "garbage"), for: .normal)
-
-        // TODO: need to refactor
-        if cell.subviews.count > 2 {
-            let checkbox: CheckBox
-            if cell.subviews.count == 4 {
-                let trashCan: UIButton = cell.subviews[3] as? UIButton != nil ? cell.subviews[3] as! UIButton : cell.subviews[1] as! UIButton
-                checkbox = cell.subviews[1] as? CheckBox != nil ? cell.subviews[1] as! CheckBox : cell.subviews[2] as! CheckBox
-
-
-                if !self.isIndexPathChecked(indexPath: indexPath) && checkbox.checked {
-                    checkbox.checked = false
-                    trashCan.removeFromSuperview()
-                } else if self.isIndexPathChecked(indexPath: indexPath) {
-                    checkbox.checked = true
-                }
-                checkbox.onTapAction = checkboxOnTap(trashCan: trashCan, cell: cell, indexPath: indexPath)
-            } else {
-                checkbox = cell.subviews[1] as! CheckBox
-                if self.isIndexPathChecked(indexPath: indexPath) {
-                    checkbox.checked = true
-                    
-                    cell.addSubview(trashCan)
-                    trashCan.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-                    trashCan.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: -20).isActive = true
-                }
-                checkbox.onTapAction = checkboxOnTap(trashCan: trashCan, cell: cell, indexPath: indexPath)
-            }
-
-            checkbox.label = dictionary.value[indexPath.row]
-            
-            return cell
+        if taskCell.delegate == nil {
+             taskCell.delegate = self
         }
         
-        let checkbox: CheckBox = CheckBox()
-        checkbox.label = dictionary.value[indexPath.row]
-        checkbox.translatesAutoresizingMaskIntoConstraints = false
-        
-        if self.isIndexPathChecked(indexPath: indexPath) {
-            checkbox.checked = true
-            cell.addSubview(trashCan)
-
-            trashCan.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-            trashCan.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: -20).isActive = true
+        if taskCell.checkbox.checked && !isIndexPathChecked(indexPath: indexPath) {
+            taskCell.checkbox.checked = false
+            taskCell.trashCan.removeFromSuperview()
+        } else if !taskCell.checkbox.checked && isIndexPathChecked(indexPath: indexPath) {
+            taskCell.checkbox.checked = true
+            taskCell.addSubview(taskCell.trashCan)
+            taskCell.trashCan.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true
+            taskCell.trashCan.rightAnchor.constraint(equalTo: taskCell.rightAnchor, constant: -20).isActive = true
         }
-        checkbox.onTapAction = checkboxOnTap(trashCan: trashCan, cell: cell, indexPath: indexPath)
+        
+        taskCell.checkbox.label = dictionary.value[indexPath.row]
+        taskCell.indexPathToDelete = indexPath
 
-        cell.addSubview(checkbox)
-        checkbox.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-        checkbox.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        checkbox.heightAnchor.constraint(equalToConstant: 15).isActive = true
-
-        return cell
+        return taskCell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -146,9 +99,39 @@ extension TaskTableView: UITableViewDataSource {
     }
 }
 
+extension TaskTableView: TaskCellDelegate {
+    
+    /// on delete task cell
+    func taskCell(_ deletedIndexPath: IndexPath, _ deletedTaskName: String) {
+        removeCheckedIndexPath(indexPath: deletedIndexPath)
+
+        let tasksName: [String] = Array(tasks)[deletedIndexPath.section].value
+        let taskDate: String = Array(tasks)[deletedIndexPath.section].key
+        
+        if tasksName.count == 1 {
+            tasks.removeValue(forKey: taskDate)
+            deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
+        } else {
+            tasks[taskDate]?.remove(at: deletedIndexPath.row)
+            deleteRows(at: [deletedIndexPath], with: .automatic)
+        }
+        
+        taskDelegate?.taskTableView(deletedTaskName) // notify toDoViewController
+    }
+
+    /// on check checkbox
+    func taskCell(_ checkedIndexPath: IndexPath, _ checked: Bool) {
+        if checked {
+            self.checkedIndexPath.append(checkedIndexPath)
+        } else {
+            removeCheckedIndexPath(indexPath: checkedIndexPath)
+        }
+    }
+}
+
 extension TaskTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(section)"), Array(tasks).count - 1 >= section  else { return nil }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(section)")  else { return nil }
         let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height))
         let dictionary: (key: String, value: [String]) = Array(tasks)[section]
         label.textColor = UIColor.lightGray

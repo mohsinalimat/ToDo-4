@@ -15,6 +15,7 @@ func dateString(date: Date) -> String {
     return formatter.string(from: date)
 }
 
+/// format mm/dd/yyyy
 func date(date: String) -> Date? {
     let formatter: DateFormatter = DateFormatter()
     formatter.dateFormat = "MM/dd/yyyy"

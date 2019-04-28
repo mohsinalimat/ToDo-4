@@ -131,10 +131,10 @@ extension TaskTableView: TaskCellDelegate {
 
     /// on delete task cell
     func taskCell(_ deletedIndexPath: IndexPath, _ deletedTaskName: String) {
-        removeCheckedIndexPath(indexPath: deletedIndexPath)
-
         let tasksName: [String] = tasks[deletedIndexPath.section].1
         let taskDate: String = tasks[deletedIndexPath.section].0
+        
+        removeCheckedIndexPath(indexPath: deletedIndexPath)
 
         if tasksName.count == 1 {                       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)

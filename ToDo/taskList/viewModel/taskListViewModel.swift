@@ -50,10 +50,14 @@ func getTasks(type: Type) -> [(String, [String])] {
 
 func deleteTask(type: Type, taskNameToDelete: String, taskDateToDelete: String) {
     let taskType = person.taskType.filter { $0.type == type }
-    let dateToDelete: Date = date(date: taskDateToDelete)!
-    
+    let dateToDelete: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date(date: taskDateToDelete)!)
+
     for (index, task) in taskType.first!.tasks.enumerated() {
-        if task.name! == taskNameToDelete && task.date == dateToDelete {
+        let taskDate: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: task.date!)
+        if task.name! == taskNameToDelete
+            && taskDate.day! == dateToDelete.day!
+            && taskDate.month! == dateToDelete.month!
+            && taskDate.year! == dateToDelete.year! {
             taskType.first?.tasks.remove(at: index)
             break
         }

@@ -13,17 +13,27 @@ protocol TaskTableViewDelegate: AnyObject {
 }
 
 class TaskTableView: UITableView {
+    // MARK: - task table view property
     
+    /** task reuseable id **/
     let tasksId: String = "Tasks"
     
+    
+    /** tasks according to date in tuple **/
     var tasks: [(String, [String])] = [(String, [String])]()
     
+    /** task delegate, need for deletion to notify controller **/
     weak var taskDelegate: TaskTableViewDelegate?
 
-    var checkedIndexPath: [IndexPath] = [IndexPath]()
+    /**
+     Need to keep track of checked index path in a section.
+     Because when reusing the cell, we need to determined
+     whether that cell has been checked.
+    **/
+    var checkedIndexPaths: [IndexPath] = [IndexPath]()
     
     func isIndexPathChecked(indexPath: IndexPath) -> Bool {
-        for checkedIndexPath in self.checkedIndexPath {
+        for checkedIndexPath in self.checkedIndexPaths {
             if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
                 return true
             }
@@ -32,14 +42,15 @@ class TaskTableView: UITableView {
     }
     
     func removeCheckedIndexPath(indexPath: IndexPath) {
-        for (index, checkedIndexPath) in self.checkedIndexPath.enumerated() {
+        for (index, checkedIndexPath) in self.checkedIndexPaths.enumerated() {
             if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
-                self.checkedIndexPath.remove(at: index)
+                self.checkedIndexPaths.remove(at: index)
                 break
             }
         }
     }
     
+    //MARK: - override funcs
     override init(frame: CGRect, style: UITableViewStyle) {
         super.init(frame: frame, style: style)
         dataSource = self
@@ -72,7 +83,6 @@ extension TaskTableView: UITableViewDataSource {
         guard let taskCell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(indexPath.section)", for: indexPath) as? TaskCell else {
             return UITableViewCell()
         }
-        let dictionary: (key: String, value: [String]) = Array(tasks)[indexPath.section]
         
         if taskCell.delegate == nil {
              taskCell.delegate = self
@@ -87,8 +97,8 @@ extension TaskTableView: UITableViewDataSource {
             taskCell.trashCan.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true
             taskCell.trashCan.rightAnchor.constraint(equalTo: taskCell.rightAnchor).isActive = true
         }
-        
-        taskCell.checkbox.label = dictionary.value[indexPath.row]
+
+        taskCell.checkbox.label = tasks[indexPath.section].1[indexPath.row]
         taskCell.indexPathToDelete = indexPath
 
         return taskCell
@@ -100,29 +110,49 @@ extension TaskTableView: UITableViewDataSource {
 }
 
 extension TaskTableView: TaskCellDelegate {
-    
+
+    /**
+     Do this after deletion for the row below the deleted index path.
+     This happen when the checkbox below the deleted one has the old
+     checkedIndexPath because it needs to move up one row after the one
+     above it is deleted
+    **/
+    func updateCheckIndexPath(_ deletedIndexPath: IndexPath) {
+        let deletedSection: Int = deletedIndexPath.section
+        let deletedRow: Int = deletedIndexPath.row
+        
+        // TODO: fix indexPathToDelete for row below deletedIndexPath
+        for (index, checkedIndexPath) in checkedIndexPaths.enumerated() {
+            if checkedIndexPath.section == deletedSection && checkedIndexPath.row > deletedRow {
+                checkedIndexPaths[index].row = checkedIndexPaths[index].row - 1
+            }
+        }
+    }
+
     /// on delete task cell
     func taskCell(_ deletedIndexPath: IndexPath, _ deletedTaskName: String) {
         removeCheckedIndexPath(indexPath: deletedIndexPath)
 
         let tasksName: [String] = tasks[deletedIndexPath.section].1
-        let taskDate: String = tasks[deletedIndexPath.row].0
+        let taskDate: String = tasks[deletedIndexPath.section].0
 
         if tasksName.count == 1 {                       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)
             deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
         } else {
             tasks[deletedIndexPath.section].1.remove(at: deletedIndexPath.row)
-            deleteRows(at: [deletedIndexPath], with: .automatic)
+            deleteRows(at: [deletedIndexPath], with: .bottom)
+            updateCheckIndexPath(deletedIndexPath)
+            reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)
         }
-        
+
         taskDelegate?.taskTableView(deletedTaskName, taskDate) // notify toDoViewController
     }
 
     /// on check checkbox
     func taskCell(_ checkedIndexPath: IndexPath, _ checked: Bool) {
         if checked {
-            self.checkedIndexPath.append(checkedIndexPath)
+            self.checkedIndexPaths.append(checkedIndexPath)
         } else {
             removeCheckedIndexPath(indexPath: checkedIndexPath)
         }

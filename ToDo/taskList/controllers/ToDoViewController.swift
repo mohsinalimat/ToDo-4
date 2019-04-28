@@ -35,9 +35,9 @@ class ToDoViewController: UIViewController {
 
             taskTableView.translatesAutoresizingMaskIntoConstraints = false
             taskTableView.taskDelegate = self
-            
+
             view.addSubview(taskTableView)
-            taskTableView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width/1.5).isActive = true
+            taskTableView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width/1.3).isActive = true
             taskTableView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - todoCard.frame.maxY).isActive = true
             taskTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: todoCard.frame.maxY).isActive = true
             taskTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: UIScreen.main.bounds.width/5.9).isActive = true
@@ -48,7 +48,7 @@ class ToDoViewController: UIViewController {
     var taskType: Type? {
         didSet {
             guard let type = taskType else { return }
-            let tasks: [String: [String]] = getTasks(type: type)
+            let tasks: [(String, [String])] = getTasks(type: type)
 
             for i in 0..<(tasks.count) {
                 taskTableView.register(TaskCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(i)")
@@ -66,6 +66,10 @@ class ToDoViewController: UIViewController {
                                                            target: self,
                                                            action: #selector(leftBarButtonAction))
     }
+    
+    override func viewDidLayoutSubviews() {
+        taskTableView.separatorInset = .zero
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -74,9 +78,9 @@ class ToDoViewController: UIViewController {
 }
 
 extension ToDoViewController: TaskTableViewDelegate {
-    func taskTableView(_ deletedTaskName: String) {
+    func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String) {
         try! realm.write {
-            deleteTask(type: taskType!, taskNameToDelete: deletedTaskName)  // delete task in realm
+            deleteTask(type: taskType!, taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)  // delete task in realm
         }
     }
 }
@@ -85,8 +89,11 @@ extension ToDoViewController: AddButtonExpandDelegate {
 
     func buttonWillShrink() {
         NotificationCenter.default.post(name: NSNotification.Name.init("buttonShrink"), object: nil)
+
         guard let type = taskType else { return }
-        let newTasks: [String: [String]] = getTasks(type: type)
+        
+        let newTasks: [(String, [String])] = getTasks(type: type)
+
         if newTasks.count > taskTableView.tasks.count {
             taskTableView.register(TaskCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(taskTableView.tasks.count)")
         }

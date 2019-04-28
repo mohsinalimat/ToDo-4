@@ -47,19 +47,6 @@ class HomeController: UIViewController {
         navigationController?.navigationBar.barTintColor = .white
 
         view.addSubview(taskTypeCollection)
-        
-        // TODO: Remove when login screen is finished
-        if realm.objects(Person.self).count == 0 {
-            try! realm.write {
-                let newPerson: Person = Person(firstName: "Tuyen", lastName: "Le", middleName: "Dinh")
-                realm.add(newPerson)
-            }
-        }
-//        else {
-//            try! realm.write {
-//                realm.deleteAll()
-//            }
-//        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -139,9 +126,13 @@ extension HomeController: UICollectionViewDelegate {
 
             if taskType.count == 0 {
                 taskTypeCollection.performBatchUpdates({
-                    person.taskType.append(newTaskType)
+                    person.taskType.insert(newTaskType, at: 0)
                     self.taskTypeCollection.insertItems(at: [IndexPath(row: 1, section: 0)])
-                }, completion: nil)
+                }, completion: {
+                    (finished: Bool) in self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
+                                                                             at: UICollectionViewScrollPosition.centeredHorizontally,
+                                                                             animated: true)
+                })
             }
         }
     }

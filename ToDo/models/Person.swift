@@ -23,5 +23,11 @@ final class Person: Object {
 }
 
 var person: Person {
+    if realm.objects(Person.self).count == 0 {
+        try! realm.write {
+            let newPerson: Person = Person(firstName: "Tuyen", lastName: "Le", middleName: "Dinh")
+            realm.add(newPerson)
+        }
+    }
     return realm.objects(Person.self).first! // TODO: will not actually grab first and need to check against login authentication
 }

@@ -24,7 +24,7 @@ class TaskCell: UITableViewCell {
             if checked {
                 self.addSubview(self.trashCan)
                 self.trashCan.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-                self.trashCan.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
+                self.trashCan.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
             } else {
                 self.trashCan.removeFromSuperview()
             }
@@ -53,6 +53,7 @@ class TaskCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     
         checkbox.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(checkbox)
         
         checkbox.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

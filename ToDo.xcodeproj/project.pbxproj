@@ -28,6 +28,7 @@
 		A1B8AD6122507437000D22D9 /* ToDo-Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B8AD6022507437000D22D9 /* ToDo-Ext.swift */; };
 		A1B8AD6422508CC7000D22D9 /* ToDoCardDismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B8AD6322508CC7000D22D9 /* ToDoCardDismissAnimator.swift */; };
 		A1B973602259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B9735F2259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift */; };
+		A1C7A91922752C8F00C0C1FD /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C7A91822752C8F00C0C1FD /* Extension.swift */; };
 		A1C98528224F18EE0071E79C /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C98527224F18EE0071E79C /* ToDoViewController.swift */; };
 		A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */; };
 		B004DC3053A7D76BC404C83E /* Pods_ToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E27C3B32806F0827D27B949 /* Pods_ToDo.framework */; };
@@ -60,6 +61,7 @@
 		A1B8AD6022507437000D22D9 /* ToDo-Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDo-Ext.swift"; sourceTree = "<group>"; };
 		A1B8AD6322508CC7000D22D9 /* ToDoCardDismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCardDismissAnimator.swift; sourceTree = "<group>"; };
 		A1B9735F2259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCardCollectionViewFLowLayout.swift; sourceTree = "<group>"; };
+		A1C7A91822752C8F00C0C1FD /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A1C98527224F18EE0071E79C /* ToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
 		A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCardPresentAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,6 +141,7 @@
 		A17A3CB2224B2A2000204CD9 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
+				A1C7A91722752C7F00C0C1FD /* helper */,
 				A17A3CD3224B2EC400204CD9 /* models */,
 				A14AE34022583B22008242C1 /* newTask */,
 				A1B8AD5D22507398000D22D9 /* taskList */,
@@ -228,6 +231,14 @@
 				A1B8AD6322508CC7000D22D9 /* ToDoCardDismissAnimator.swift */,
 			);
 			path = navigationAnimator;
+			sourceTree = "<group>";
+		};
+		A1C7A91722752C7F00C0C1FD /* helper */ = {
+			isa = PBXGroup;
+			children = (
+				A1C7A91822752C8F00C0C1FD /* Extension.swift */,
+			);
+			path = helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -359,6 +370,7 @@
 				A1B4018B22519E00007993C4 /* TaskTableView.swift in Sources */,
 				A1A5E169225AFB5200B2D4AD /* Person.swift in Sources */,
 				A1B8AD6422508CC7000D22D9 /* ToDoCardDismissAnimator.swift in Sources */,
+				A1C7A91922752C8F00C0C1FD /* Extension.swift in Sources */,
 				A17A3CD6224B2EEB00204CD9 /* ToDoCard.swift in Sources */,
 				A17A3CD8224B2F0F00204CD9 /* TopLeftIcon.swift in Sources */,
 				A1B973602259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift in Sources */,

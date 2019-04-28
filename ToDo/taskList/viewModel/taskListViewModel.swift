@@ -22,13 +22,13 @@ func date(date: String) -> Date? {
 }
 
 
-func getTasks(type: Type) -> [String: [String]] {
+func getTasks(type: Type) -> [(String, [String])] {
     var tasks: [String: [String]] = [:]
 
     let taskType = person.taskType.filter { $0.type == type }
 
     if taskType.count == 0 || taskType.first?.tasks.count == 0 {
-        return tasks
+        return [(String, [String])]()
     }
 
     var initialDate: String = dateString(date: taskType.first!.tasks.first!.date!)
@@ -44,23 +44,16 @@ func getTasks(type: Type) -> [String: [String]] {
         }
         tasks[taskDate]!.append(task.name!)
     }
-    
-    let sortedTasksByDate: [(String, [String])] = tasks.sorted(by: { $0.key < $1.key })
 
-    for sortedTask in sortedTasksByDate {
-        let date: String = sortedTask.0
-        tasks[date] = [String]()
-        tasks[date] = sortedTask.1
-    }
-
-    return tasks
+    return tasks.sorted(by: { $0.key < $1.key })
 }
 
-func deleteTask(type: Type, taskNameToDelete: String) {
+func deleteTask(type: Type, taskNameToDelete: String, taskDateToDelete: String) {
     let taskType = person.taskType.filter { $0.type == type }
+    let dateToDelete: Date = date(date: taskDateToDelete)!
     
     for (index, task) in taskType.first!.tasks.enumerated() {
-        if task.name! == taskNameToDelete {
+        if task.name! == taskNameToDelete && task.date == dateToDelete {
             taskType.first?.tasks.remove(at: index)
             break
         }

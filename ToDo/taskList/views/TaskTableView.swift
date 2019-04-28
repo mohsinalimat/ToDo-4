@@ -9,20 +9,20 @@
 import UIKit
 
 protocol TaskTableViewDelegate: AnyObject {
-    func taskTableView(_ deletedTaskName: String)
+    func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String)
 }
 
 class TaskTableView: UITableView {
     
     let tasksId: String = "Tasks"
     
-    var tasks: [String: [String]] = [:]
+    var tasks: [(String, [String])] = [(String, [String])]()
     
     weak var taskDelegate: TaskTableViewDelegate?
 
     var checkedIndexPath: [IndexPath] = [IndexPath]()
     
-    private func isIndexPathChecked(indexPath: IndexPath) -> Bool {
+    func isIndexPathChecked(indexPath: IndexPath) -> Bool {
         for checkedIndexPath in self.checkedIndexPath {
             if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
                 return true
@@ -31,7 +31,7 @@ class TaskTableView: UITableView {
         return false
     }
     
-    private func removeCheckedIndexPath(indexPath: IndexPath) {
+    func removeCheckedIndexPath(indexPath: IndexPath) {
         for (index, checkedIndexPath) in self.checkedIndexPath.enumerated() {
             if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
                 self.checkedIndexPath.remove(at: index)
@@ -85,7 +85,7 @@ extension TaskTableView: UITableViewDataSource {
             taskCell.checkbox.checked = true
             taskCell.addSubview(taskCell.trashCan)
             taskCell.trashCan.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true
-            taskCell.trashCan.rightAnchor.constraint(equalTo: taskCell.rightAnchor, constant: -20).isActive = true
+            taskCell.trashCan.rightAnchor.constraint(equalTo: taskCell.rightAnchor).isActive = true
         }
         
         taskCell.checkbox.label = dictionary.value[indexPath.row]
@@ -105,18 +105,18 @@ extension TaskTableView: TaskCellDelegate {
     func taskCell(_ deletedIndexPath: IndexPath, _ deletedTaskName: String) {
         removeCheckedIndexPath(indexPath: deletedIndexPath)
 
-        let tasksName: [String] = Array(tasks)[deletedIndexPath.section].value
-        let taskDate: String = Array(tasks)[deletedIndexPath.section].key
-        
-        if tasksName.count == 1 {
-            tasks.removeValue(forKey: taskDate)
+        let tasksName: [String] = tasks[deletedIndexPath.section].1
+        let taskDate: String = tasks[deletedIndexPath.row].0
+
+        if tasksName.count == 1 {                       // remove section if there is only 1 task left
+            tasks.remove(at: deletedIndexPath.section)
             deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
         } else {
-            tasks[taskDate]?.remove(at: deletedIndexPath.row)
+            tasks[deletedIndexPath.section].1.remove(at: deletedIndexPath.row)
             deleteRows(at: [deletedIndexPath], with: .automatic)
         }
         
-        taskDelegate?.taskTableView(deletedTaskName) // notify toDoViewController
+        taskDelegate?.taskTableView(deletedTaskName, taskDate) // notify toDoViewController
     }
 
     /// on check checkbox
@@ -133,10 +133,15 @@ extension TaskTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(section)")  else { return nil }
         let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height))
-        let dictionary: (key: String, value: [String]) = Array(tasks)[section]
-        label.textColor = UIColor.lightGray
-        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
-        label.text = dictionary.key
+        let taskDate: DateComponents = Calendar.current.dateComponents([.day, .month], from: date(date: tasks[section].0)!)
+        let present: DateComponents = Calendar.current.dateComponents([.day, .month], from: Date())
+
+        if taskDate.day! < present.day! && taskDate.month! <= present.month! {
+            label.attributedText = NSMutableAttributedString().normal("\(tasks[section].0)").bold(" - past due")
+        } else {
+            label.attributedText = NSMutableAttributedString().normal("\(tasks[section].0)")
+        }
+        
         return label
     }
 }

@@ -49,7 +49,7 @@ class TaskCell: UITableViewCell {
         delegate?.taskCell(indexPathToDelete, checkbox.label)
     }
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     
         checkbox.translatesAutoresizingMaskIntoConstraints = false

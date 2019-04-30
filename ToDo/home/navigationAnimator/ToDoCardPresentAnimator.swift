@@ -25,7 +25,7 @@ class ToDoCardPresentAnimator: NSObject {
 
         translateY.duration = 1.5
         translateY.fromValue = 0
-        translateY.fillMode = kCAFillModeForwards
+        translateY.fillMode = CAMediaTimingFillMode.forwards
         translateY.isRemovedOnCompletion = false
 
         return translateY
@@ -46,6 +46,7 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
         let toView: UIView = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!.view
         let containerView: UIView = transitionContext.containerView
         let todoCard: ToDoCardExt = ToDoCardExt(frame: todoCardFrame) // TODO: can be reuse
+        let tasksCount: Int = person.taskType[todoCardIndex - 1].tasks.count
 
         translateY.toValue = todoCard.topLeftIcon.bounds.maxY - todoCard.numOfTaskLayer.frame.minY + (todoCard.topLeftIcon.bounds.maxY * 3)
         
@@ -59,6 +60,7 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
         todoCard.numOfTaskLayer.add(translateY, forKey: translateY.keyPath)
         todoCard.taskTypeLabelLayer.add(translateY, forKey: translateY.keyPath)
         todoCard.backgroundColor = .clear
+        todoCard.numOfTask = tasksCount
         todoCard.taskType = realm.objects(Person.self).first!.taskType[todoCardIndex - 1].type.rawValue // TODO: fix, not always first person
         
         UIView.animate(withDuration: 1.5, animations: {

@@ -10,7 +10,7 @@ import UIKit
 
 extension NSMutableAttributedString {
     @discardableResult func bold(_ text: String) -> NSMutableAttributedString {
-        let attrs: [NSAttributedStringKey: Any] = [.font: UIFont(name: "AvenirNext-Bold", size: 12)!]
+        let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AvenirNext-Bold", size: 12)!]
         let boldString = NSMutableAttributedString(string: text, attributes: attrs)
         
         append(boldString)
@@ -19,7 +19,7 @@ extension NSMutableAttributedString {
     }
 
     @discardableResult func normal(_ text: String) -> NSMutableAttributedString {
-        let attrs: [NSAttributedStringKey: Any] = [.font: UIFont(name: "AppleSDGothicNeo-Regular", size: 15)!, .foregroundColor: UIColor.lightGray]
+        let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AppleSDGothicNeo-Regular", size: 15)!, .foregroundColor: UIColor.lightGray]
         let normal = NSMutableAttributedString(string: text, attributes: attrs)
 
         append(normal)

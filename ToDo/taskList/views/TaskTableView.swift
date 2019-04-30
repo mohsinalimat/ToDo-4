@@ -51,7 +51,7 @@ class TaskTableView: UITableView {
     }
     
     //MARK: - override funcs
-    override init(frame: CGRect, style: UITableViewStyle) {
+    override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         dataSource = self
         delegate = self
@@ -59,9 +59,10 @@ class TaskTableView: UITableView {
         showsVerticalScrollIndicator = false
         tableFooterView = UIView()
         bounces = false
+        register(TaskCell.self, forCellReuseIdentifier: tasksId)
     }
     
-    convenience init(style: UITableViewStyle) {
+    convenience init(style: UITableView.Style) {
         self.init(frame: .zero, style: style)
     }
     
@@ -80,7 +81,7 @@ extension TaskTableView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let taskCell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(indexPath.section)", for: indexPath) as? TaskCell else {
+        guard let taskCell = tableView.dequeueReusableCell(withIdentifier: tasksId, for: indexPath) as? TaskCell else {
             return UITableViewCell()
         }
         
@@ -161,7 +162,7 @@ extension TaskTableView: TaskCellDelegate {
 
 extension TaskTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(tasksId) \(section)")  else { return nil }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: tasksId)  else { return nil }
         let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height))
         let taskDate: DateComponents = Calendar.current.dateComponents([.day, .month], from: date(date: tasks[section].0)!)
         let present: DateComponents = Calendar.current.dateComponents([.day, .month], from: Date())

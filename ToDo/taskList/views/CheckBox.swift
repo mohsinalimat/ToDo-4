@@ -116,7 +116,7 @@ open class CheckBox: UIControl {
         let checkMark: CAShapeLayer = CAShapeLayer()
         checkMark.path = self.checkMarkPath.cgPath
         checkMark.lineWidth = 1
-        checkMark.lineCap = kCAFilterLinear
+        checkMark.lineCap = CAShapeLayerLineCap.square
         checkMark.fillColor = nil
         
         return checkMark
@@ -214,7 +214,7 @@ open class CheckBox: UIControl {
         end.toValue = checkMark.strokeStart
         end.fromValue = checkMark.strokeEnd
         end.duration = duration
-        end.fillMode = kCAFillModeForwards
+        end.fillMode = CAMediaTimingFillMode.forwards
         end.isRemovedOnCompletion = false
         end.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.88, 0.09, 0.99)
         

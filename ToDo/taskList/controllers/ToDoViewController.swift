@@ -25,12 +25,12 @@ class ToDoViewController: UIViewController {
         return button
     }()
     
-    var taskTableView: TaskTableView = TaskTableView(style: .plain)
+    var taskTableView: TaskTableView = TaskTableView(style: UITableView.Style.plain)
     
     var todoCard: ToDoCardExt? {
         didSet {
             guard let todoCard = todoCard else { return }
-
+    
             view.addSubview(todoCard)
 
             taskTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,11 +49,8 @@ class ToDoViewController: UIViewController {
         didSet {
             guard let type = taskType else { return }
             let tasks: [(String, [String])] = getTasks(type: type)
-
-            for i in 0..<(tasks.count) {
-                taskTableView.register(TaskCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(i)")
-            }
             taskTableView.tasks = tasks
+            todoCard?.numOfTask = getTasksCount(type: type)
         }
     }
     
@@ -82,25 +79,30 @@ extension ToDoViewController: TaskTableViewDelegate {
         try! realm.write {
             deleteTask(type: taskType!, taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)  // delete task in realm
         }
+        
+        if let type = self.taskType {
+            todoCard?.numOfTask = getTasksCount(type: type)
+        }
     }
 }
 
 extension ToDoViewController: AddButtonExpandDelegate {
 
+    /// add task
     func buttonWillShrink() {
         NotificationCenter.default.post(name: NSNotification.Name.init("buttonShrink"), object: nil)
 
         guard let type = taskType else { return }
-        
+
         let newTasks: [(String, [String])] = getTasks(type: type)
 
-        if newTasks.count > taskTableView.tasks.count {
-            taskTableView.register(TaskCell.self, forCellReuseIdentifier: "\(taskTableView.tasksId) \(taskTableView.tasks.count)")
-        }
+        todoCard?.numOfTask = getTasksCount(type: type)
         taskTableView.tasks = newTasks
         taskTableView.reloadData()
     }
     
+    
+    /// open new task controller
     func buttonWillExpand() {
         let addTaskController: AddTaskController = AddTaskController(type: taskType!)
         addTaskController.modalPresentationStyle = .custom
@@ -117,7 +119,7 @@ extension ToDoViewController: UIViewControllerTransitioningDelegate {
 }
 
 extension ToDoViewController: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return ToDoCardDismissAnimator()
     }
 }

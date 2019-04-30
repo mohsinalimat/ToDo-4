@@ -19,14 +19,14 @@ class HomeController: UIViewController {
 
     lazy var taskTypeCollection: UICollectionView = {
         let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
+        layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
         layout.itemSize = CGSize(width: view.bounds.width/1.5, height: view.bounds.height/2.5)
 
         let collection: UICollectionView = UICollectionView(frame: CGRect(x: 0,
-                                                    y: view.bounds.maxY - view.bounds.height/2,
-                                                    width: view.bounds.width,
-                                                    height: view.bounds.height/2),
-                                      collectionViewLayout: layout)
+                                                                          y: view.bounds.maxY - view.bounds.height/2,
+                                                                          width: view.bounds.width,
+                                                                          height: view.bounds.height/2),
+                                                            collectionViewLayout: layout)
         collection.dataSource = self
         collection.delegate = self
         collection.backgroundColor = .clear
@@ -50,8 +50,11 @@ class HomeController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
+
         navigationController?.setNavigationBarHidden(true, animated: true)
         navigationController?.delegate = self
+        taskTypeCollection.reloadItems(at: [IndexPath(row: todoCardIndex, section: 0)])
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,7 +63,7 @@ class HomeController: UIViewController {
 }
 
 extension HomeController: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         navigationController.setNavigationBarHidden(false, animated: false)
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
         return ToDoCardPresentAnimator(navigationBarMaxY: navigationController.navigationBar.frame.maxY, todoCardIndex: todoCardIndex)
@@ -83,9 +86,11 @@ extension HomeController: UICollectionViewDataSource {
         if indexPath.row == 0 {
             return newCategoryCard
         }
-
+        
+        let taskType: Type = person.taskType[indexPath.row-1].type
         todoCard.progressBar.percentage = 0
-        todoCard.taskType = person.taskType[indexPath.row-1].type.rawValue
+        todoCard.taskType = taskType.rawValue
+        todoCard.numOfTask = getTasksCount(type: taskType)
         return todoCard
     }
 
@@ -129,9 +134,13 @@ extension HomeController: UICollectionViewDelegate {
                     person.taskType.insert(newTaskType, at: 0)
                     self.taskTypeCollection.insertItems(at: [IndexPath(row: 1, section: 0)])
                 }, completion: {
-                    (finished: Bool) in self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
-                                                                             at: UICollectionViewScrollPosition.centeredHorizontally,
-                                                                             animated: true)
+                    (finished: Bool) in
+                    let newContentOffset: CGPoint = CGPoint(x: self.view.bounds.width/1.5 + 10,
+                                                            y: self.taskTypeCollection.contentOffset.y)
+                    self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
+                                                         at: UICollectionView.ScrollPosition.centeredHorizontally,
+                                                         animated: true)
+                    self.taskTypeCollection.setContentOffset(newContentOffset, animated: true) // TODO: temporary solution, need to fix scrolling after add new item
                 })
             }
         }

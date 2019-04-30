@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A1154C97225863A1004AD50C /* AddTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1154C96225863A1004AD50C /* AddTaskController.swift */; };
-		A12017C622700F32007AC0EF /* taskListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12017C522700F32007AC0EF /* taskListViewModel.swift */; };
+		A12017C622700F32007AC0EF /* TaskListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12017C522700F32007AC0EF /* TaskListViewModel.swift */; };
 		A14AE34322583B62008242C1 /* AddTaskPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */; };
 		A17A3CB4224B2A2000204CD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */; };
 		A17A3CB6224B2A2000204CD9 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CB5224B2A2000204CD9 /* HomeController.swift */; };
@@ -39,7 +39,7 @@
 		8E27C3B32806F0827D27B949 /* Pods_ToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B8536ADFD20F2A7EB9BA06 /* Pods-ToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDo/Pods-ToDo.release.xcconfig"; sourceTree = "<group>"; };
 		A1154C96225863A1004AD50C /* AddTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskController.swift; sourceTree = "<group>"; };
-		A12017C522700F32007AC0EF /* taskListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = taskListViewModel.swift; sourceTree = "<group>"; };
+		A12017C522700F32007AC0EF /* TaskListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewModel.swift; sourceTree = "<group>"; };
 		A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskPresentationController.swift; sourceTree = "<group>"; };
 		A17A3CB0224B2A2000204CD9 /* ToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,7 +98,7 @@
 		A12017C422700F0A007AC0EF /* viewModel */ = {
 			isa = PBXGroup;
 			children = (
-				A12017C522700F32007AC0EF /* taskListViewModel.swift */,
+				A12017C522700F32007AC0EF /* TaskListViewModel.swift */,
 			);
 			path = viewModel;
 			sourceTree = "<group>";
@@ -275,6 +275,7 @@
 				TargetAttributes = {
 					A17A3CAF224B2A2000204CD9 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -316,7 +317,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ToDo/Pods-ToDo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ToDo/Pods-ToDo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AddButtonExpand/AddButtonExpand.framework",
 				"${BUILT_PRODUCTS_DIR}/ProgressBar/ProgressBar.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
@@ -333,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ToDo/Pods-ToDo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ToDo/Pods-ToDo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		42111A8D86FB258EDB349456 /* [CP] Check Pods Manifest.lock */ = {
@@ -375,7 +376,7 @@
 				A17A3CD8224B2F0F00204CD9 /* TopLeftIcon.swift in Sources */,
 				A1B973602259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift in Sources */,
 				A14AE34322583B62008242C1 /* AddTaskPresentationController.swift in Sources */,
-				A12017C622700F32007AC0EF /* taskListViewModel.swift in Sources */,
+				A12017C622700F32007AC0EF /* TaskListViewModel.swift in Sources */,
 				A1A5E167225AB7A600B2D4AD /* CategoryTextField.swift in Sources */,
 				A1A5E163225A551400B2D4AD /* NewCategoryCard.swift in Sources */,
 				A17A3CB4224B2A2000204CD9 /* AppDelegate.swift in Sources */,
@@ -535,7 +536,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = DieuThao.ToDo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -554,7 +555,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = DieuThao.ToDo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

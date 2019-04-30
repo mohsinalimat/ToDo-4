@@ -22,6 +22,11 @@ func date(date: String) -> Date? {
     return formatter.date(from: date)
 }
 
+func getTasksCount(type: Type) -> Int {
+    let taskType = person.taskType.filter { $0.type == type }
+    return taskType.first!.tasks.count
+}
+
 
 func getTasks(type: Type) -> [(String, [String])] {
     var tasks: [String: [String]] = [:]

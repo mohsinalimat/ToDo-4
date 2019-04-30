@@ -23,7 +23,6 @@ class WeekLabelCollection: UICollectionView {
         super.init(frame: frame, collectionViewLayout: layout)
         
         dataSource = self
-        delegate = self
 
         register(WeekLabelCell.self, forCellWithReuseIdentifier: weekIdentifier)
 
@@ -33,10 +32,6 @@ class WeekLabelCollection: UICollectionView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension WeekLabelCollection: UICollectionViewDelegate {
-
 }
 
 extension WeekLabelCollection: UICollectionViewDataSource {
@@ -49,8 +44,4 @@ extension WeekLabelCollection: UICollectionViewDataSource {
         weekCell.label = weekAbbreviation[indexPath.row]
         return weekCell
     }
-}
-
-extension WeekLabelCell: UICollectionViewDelegateFlowLayout {
-
 }

@@ -56,18 +56,18 @@ class AdddButtonExpand: UIButton {
         addSubview(plusSign)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(notification:)),
-                                               name: NSNotification.Name.UIKeyboardWillShow,
+                                               name: UIResponder.keyboardWillShowNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillHide),
-                                               name: NSNotification.Name.UIKeyboardWillHide,
+                                               name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
-        addTarget(self, action: #selector(onTap), for: UIControlEvents.touchDown)
+        addTarget(self, action: #selector(onTap), for: UIControl.Event.touchDown)
     }
 
     /// get keyboard frame
     @objc internal func keyboardWillShow(notification: Notification) {
-        let keyboardFrame = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardFrame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         guard keyboardFrame.contains(frame) else { return }
         animateLayer()
         UIView.animate(withDuration: animateDuration, animations: {

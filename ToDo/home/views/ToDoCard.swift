@@ -44,7 +44,7 @@ class ToDoCard: UICollectionViewCell {
         label.contentsScale = UIScreen.main.scale
         label.frame = CGRect(x: frame.width/15,
                              y: taskTypeLabelLayer.frame.minY - label.preferredFrameSize().height*1.5,
-                             width: label.preferredFrameSize().width,
+                             width: label.preferredFrameSize().width * 1.5,
                              height: label.preferredFrameSize().height)
         return label
     }()

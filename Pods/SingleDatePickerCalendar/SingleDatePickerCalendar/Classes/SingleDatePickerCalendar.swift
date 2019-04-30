@@ -80,9 +80,9 @@ class SingleDatePickerCalendar: UICollectionView {
         delegate = self
         showsVerticalScrollIndicator = true
         bounces = false
-        backgroundColor = .gray
+        backgroundColor = .white
 
-        register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerViewIdentifier)
+        register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerViewIdentifier)
         for i in 0...12 {
             register(UICollectionViewCell.self, forCellWithReuseIdentifier: "\(monthCollectionIdentifier) \(i)")
         }
@@ -127,7 +127,6 @@ extension SingleDatePickerCalendar: UICollectionViewDataSource {
         let monthCollectionView: MonthCollectionView = MonthCollectionView(frame: .zero, month: indexPath.row + 1, year: year)
         monthCollectionView.monthCollectionViewDelegate = self
         monthCell.addSubview(monthCollectionView)
-        monthCell.backgroundColor = .white
 
         if #available(iOS 9.0, *) {
             monthCollectionView.centerXAnchor.constraint(equalTo: monthCell.centerXAnchor).isActive = true
@@ -140,10 +139,10 @@ extension SingleDatePickerCalendar: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView: UICollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerViewIdentifier, for: indexPath)
+        let headerView: UICollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerViewIdentifier, for: indexPath)
 
         switch kind {
-        case UICollectionElementKindSectionHeader:
+        case UICollectionView.elementKindSectionHeader:
             let weakLabelCollection: WeekLabelCollection = WeekLabelCollection(frame: .zero)
             weakLabelCollection.translatesAutoresizingMaskIntoConstraints = false
 

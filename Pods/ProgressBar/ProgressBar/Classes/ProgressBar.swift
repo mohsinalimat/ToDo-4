@@ -79,7 +79,7 @@ class ProgressBar: UIView {
         animate.toValue = CGFloat(percentage) / 100
         animate.duration = 5
         animate.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.88, 0.09, 0.99)
-        animate.fillMode = kCAFillModeForwards
+        animate.fillMode = CAMediaTimingFillMode.forwards
         animate.isRemovedOnCompletion = false
         gradientLayer.add(animate, forKey: animate.keyPath)
     }

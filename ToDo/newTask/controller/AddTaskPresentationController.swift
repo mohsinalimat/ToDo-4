@@ -12,14 +12,14 @@ import AddButtonExpand
 class AddTaskPresentationController: UIPresentationController {
     
     @objc internal func keyboardWillShow(notification: Notification) {
-        let keyboardFrame = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardFrame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         containerView?.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: keyboardFrame.minY - 40)
     }
 
     override func presentationTransitionWillBegin() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(notification:)),
-                                               name: NSNotification.Name.UIKeyboardWillShow,
+                                               name: UIResponder.keyboardWillShowNotification,
                                                object: nil)
     }
     

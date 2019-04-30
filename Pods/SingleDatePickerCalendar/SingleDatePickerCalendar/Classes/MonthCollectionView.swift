@@ -39,10 +39,10 @@ class MonthCollectionView: UICollectionView {
     }
 
     /// date cell identifier
-    open let dateCellIdentifier: String = "SingleDatePickerCell"
+    let dateCellIdentifier: String = "SingleDatePickerCell"
 
     /// header view calender identifier
-    open let headerViewIdentifier: String = "HeaderView"
+    let headerViewIdentifier: String = "HeaderView"
 
     /// total day of current month appears on the calendar
     open var totalDayCurrentMonth: Int {
@@ -87,17 +87,20 @@ class MonthCollectionView: UICollectionView {
         flowLayout.minimumInteritemSpacing = 15
         currentDisplayMonth = month
         currentDisplayYear = year
+        
         super.init(frame: frame, collectionViewLayout: flowLayout)
+
         delegate = self
         dataSource = self
         isScrollEnabled = false
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
-        backgroundColor = .white
         bounces = false
+        backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
+  
         register(UICollectionViewCell.self, forCellWithReuseIdentifier: dateCellIdentifier)
-        register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerViewIdentifier)
+        register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerViewIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -109,6 +112,7 @@ extension MonthCollectionView: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                insetForSectionAt section: Int) -> UIEdgeInsets {
+  
         return UIEdgeInsets(top: 12, left: 0, bottom: 0, right: 0)
     }
     
@@ -116,7 +120,6 @@ extension MonthCollectionView: UICollectionViewDelegate {
         guard let dateCell = collectionView.cellForItem(at: indexPath),
             dateCell.subviews.count == 2, // check if subview is 2 because date label is a subview of date cell
             let dateLabel = dateCell.subviews[1] as? UILabel else { return }
-
         var dateComponent: DateComponents = DateComponents()
         dateComponent.year = currentDisplayYear
         dateComponent.month = currentDisplayMonth
@@ -167,10 +170,10 @@ extension MonthCollectionView: UICollectionViewDataSource {
     }
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerViewIdentifier, for: indexPath)
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerViewIdentifier, for: indexPath)
 
         switch kind {
-        case UICollectionElementKindSectionHeader:
+        case UICollectionView.elementKindSectionHeader:
             if indexPath.section == 0 {
                 headerView.addSubview(monthLabel)
                 if #available(iOS 9.0, *) {

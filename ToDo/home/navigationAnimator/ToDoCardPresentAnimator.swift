@@ -47,6 +47,7 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
         let containerView: UIView = transitionContext.containerView
         let todoCard: ToDoCardExt = ToDoCardExt(frame: todoCardFrame) // TODO: can be reuse
         let tasksCount: Int = person.taskType[todoCardIndex - 1].tasks.count
+        let percentage: Int = person.taskType[todoCardIndex - 1].percentage
 
         translateY.toValue = todoCard.topLeftIcon.bounds.maxY - todoCard.numOfTaskLayer.frame.minY + (todoCard.topLeftIcon.bounds.maxY * 3)
         
@@ -61,6 +62,8 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
         todoCard.taskTypeLabelLayer.add(translateY, forKey: translateY.keyPath)
         todoCard.backgroundColor = .clear
         todoCard.numOfTask = tasksCount
+
+        todoCard.progressBar.setPercentage(percentage, animated: false)
         todoCard.taskType = realm.objects(Person.self).first!.taskType[todoCardIndex - 1].type.rawValue // TODO: fix, not always first person
         
         UIView.animate(withDuration: 1.5, animations: {

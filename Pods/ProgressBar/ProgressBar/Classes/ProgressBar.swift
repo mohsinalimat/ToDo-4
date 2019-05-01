@@ -1,13 +1,10 @@
 
-
-//
 //  ProgressBar.swift
 //  ProgressBarDemo
 //
 //  Created by Tuyen Le on 22.03.19.
 //  Copyright © 2019 Tuyen Le. All rights reserved.
 //
-
 import UIKit
 
 open
@@ -23,8 +20,8 @@ class ProgressBar: UIView {
         gradientLayer.endPoint = CGPoint(x: 1, y: 0)
         gradientLayer.frame = CGRect(x: bounds.origin.x,
                                      y: bounds.origin.y,
-                                     width: bounds.width/1.3,
-                                     height: bounds.height)
+                                     width: bounds.width, // bounds.width/1.3
+            height: bounds.height)
         gradientLayer.colors = [
             UIColor(red: 0.37, green: 0.63, blue: 0.85, alpha: 1.0),
             UIColor(red: 0.58, green: 0.42, blue: 0.98, alpha: 1.0).cgColor,
@@ -32,14 +29,6 @@ class ProgressBar: UIView {
         
         return gradientLayer
     }()
-    
-    /// percentage
-    open var percentage: Int = 0 {
-        didSet {
-            percentageLabel.text = "\(percentage) %"
-            self.animatePercentage()
-        }
-    }
     
     /// percentage label font size
     open var fontSize: CGFloat = 10 {
@@ -54,6 +43,24 @@ class ProgressBar: UIView {
             percentageLabel.font = UIFont(name: font, size: fontSize)
         }
     }
+    
+    /// percentage
+    open private(set) var percentage: Int = 0
+    
+    /// set percentage
+    open func setPercentage(_ percentage: Int, animated: Bool) {
+        percentageLabel.text = "\(percentage) %"
+        self.percentage = percentage
+        self.shouldAnimate = animated
+        if animated {
+            self.animatePercentage(duration: 5)
+        } else {
+            self.animatePercentage(duration: 0)
+        }
+    }
+    
+    private var oldValue: Any?
+    private var shouldAnimate: Bool = true
     
     private
     lazy var path: UIBezierPath = {
@@ -73,14 +80,23 @@ class ProgressBar: UIView {
         return shape
     }()
     
-    open func animatePercentage() {
+    private func animatePercentage(duration: CFTimeInterval) {
         let animate = CABasicAnimation(keyPath: "transform.scale.x")
-        animate.fromValue = 0
+        
+        if shouldAnimate {
+            animate.fromValue = oldValue == nil ? 0 : oldValue
+        } else {
+            animate.fromValue = CGFloat(percentage) / 100
+        }
+        
         animate.toValue = CGFloat(percentage) / 100
-        animate.duration = 5
-        animate.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.88, 0.09, 0.99)
+        animate.duration = duration
         animate.fillMode = CAMediaTimingFillMode.forwards
+        animate.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.88, 0.09, 0.99)
         animate.isRemovedOnCompletion = false
+        
+        oldValue = animate.toValue
+        
         gradientLayer.add(animate, forKey: animate.keyPath)
     }
     
@@ -115,7 +131,6 @@ class ProgressBar: UIView {
         
         self.layer.insertSublayer(gradientLayer, at: 0)
         self.layer.insertSublayer(outLine, above: gradientLayer)
-        self.animatePercentage()
     }
     
     required public init?(coder aDecoder: NSCoder) {

@@ -22,6 +22,25 @@ let realm = try! Realm()
 
 final class TaskType: Object {
     @objc private dynamic var typeEnum: String = Type.Personal.rawValue
+    @objc dynamic var numOfCompletedTask: Int = 0
+    @objc dynamic var totalTask: Int {
+        get {
+            if tasks.count == 0 {
+                return 0
+            }
+            return tasks.count + numOfCompletedTask
+        }
+    }
+    
+    @objc dynamic var percentage: Int {
+        get {
+            if totalTask == 0 {
+                return 100
+            }
+            return Int(CGFloat(numOfCompletedTask) / CGFloat(totalTask) * 100)
+        }
+    }
+    
     var tasks: List<Task> = List<Task>()
     
     var type: Type {

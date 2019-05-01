@@ -12,7 +12,6 @@ class ToDoCardExt: ToDoCard {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        progressBar.percentage = 0
         layer.cornerRadius = 0
         shadowLayer.removeFromSuperlayer()
     }

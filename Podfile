@@ -7,7 +7,7 @@ target 'ToDo' do
 
   # Pods for ToDo
   pod 'RealmSwift'
-  pod 'ProgressBar'
   pod 'AddButtonExpand'
   pod 'SingleDatePickerCalendar'
+  pod 'ProgressBar'
 end

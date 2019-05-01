@@ -75,13 +75,16 @@ class ToDoViewController: UIViewController {
 }
 
 extension ToDoViewController: TaskTableViewDelegate {
+    /// delete task in realm
     func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String) {
         try! realm.write {
-            deleteTask(type: taskType!, taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)  // delete task in realm
-        }
-        
-        if let type = self.taskType {
-            todoCard?.numOfTask = getTasksCount(type: type)
+            deleteTask(type: taskType!, taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)
+            todoCard?.numOfTask = getTasksCount(type: taskType!)
+            let percentage: Int = getTasksCompletedPercentage(type: taskType!)
+            todoCard?.progressBar.setPercentage(percentage, animated: true)
+            if todoCard?.progressBar.percentage ==  100 {
+                resetCompletedTask(type: taskType!)
+            }
         }
     }
 }
@@ -95,8 +98,10 @@ extension ToDoViewController: AddButtonExpandDelegate {
         guard let type = taskType else { return }
 
         let newTasks: [(String, [String])] = getTasks(type: type)
+        let percentage: Int = getTasksCompletedPercentage(type: type)
 
         todoCard?.numOfTask = getTasksCount(type: type)
+        todoCard?.progressBar.setPercentage(percentage, animated: true)
         taskTableView.tasks = newTasks
         taskTableView.reloadData()
     }

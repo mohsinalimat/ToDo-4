@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import AVFoundation
 
 
 class HomeController: UIViewController {
@@ -16,6 +17,15 @@ class HomeController: UIViewController {
     
     let toDoCardIdentifier: String = "ToDoCard"
     let newCategoryCardIdentifier: String = "NewCategoryCard"
+    
+    lazy var profilePicture: UIButton = {
+        let imageView: UIButton = UIButton()
+        imageView.setImage(UIImage(named: "user"), for: UIControl.State.normal)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.addTarget(self, action: #selector(viewProfile), for: UIControl.Event.touchUpInside)
+
+        return imageView
+    }()
 
     lazy var taskTypeCollection: UICollectionView = {
         let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
@@ -37,6 +47,10 @@ class HomeController: UIViewController {
 
         return collection
     }()
+    
+    @objc func viewProfile() {
+        // TODO: create profile page
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +61,10 @@ class HomeController: UIViewController {
         navigationController?.navigationBar.barTintColor = .white
 
         view.addSubview(taskTypeCollection)
+        view.addSubview(profilePicture)
+        
+        profilePicture.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
+        profilePicture.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height/10).isActive = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -86,11 +104,12 @@ extension HomeController: UICollectionViewDataSource {
         if indexPath.row == 0 {
             return newCategoryCard
         }
-        
+
         let taskType: Type = person.taskType[indexPath.row-1].type
-        todoCard.progressBar.percentage = 0
+        let percentage: Int = person.taskType[indexPath.row-1].percentage
         todoCard.taskType = taskType.rawValue
         todoCard.numOfTask = getTasksCount(type: taskType)
+        todoCard.progressBar.setPercentage(percentage, animated: false)
         return todoCard
     }
 

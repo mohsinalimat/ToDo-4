@@ -27,6 +27,16 @@ func getTasksCount(type: Type) -> Int {
     return taskType.first!.tasks.count
 }
 
+func getTasksCompletedPercentage(type: Type) -> Int {
+    let taskType = person.taskType.filter { $0.type == type }
+    return taskType.first!.percentage
+}
+
+func resetCompletedTask(type: Type) {
+    let taskType = person.taskType.filter { $0.type == type }
+    taskType.first!.numOfCompletedTask = 0
+}
+
 
 func getTasks(type: Type) -> [(String, [String])] {
     var tasks: [String: [String]] = [:]
@@ -65,6 +75,7 @@ func deleteTask(type: Type, taskNameToDelete: String, taskDateToDelete: String) 
             && taskDate.month! == dateToDelete.month!
             && taskDate.year! == dateToDelete.year! {
             taskType.first?.tasks.remove(at: index)
+            taskType.first?.numOfCompletedTask += 1
             break
         }
     }

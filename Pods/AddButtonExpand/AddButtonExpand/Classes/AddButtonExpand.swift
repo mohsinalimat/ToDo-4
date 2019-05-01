@@ -10,26 +10,26 @@ class AdddButtonExpand: UIButton {
     // MARK: Button properties
     
     open weak var addButtonDelegate: AddButtonExpandDelegate?
-
+    
     /// plus sign
     open lazy var plusSign: PlusSign = {
         oldBound = bounds
         return PlusSign(frame: bounds)
     }()
-
+    
     /// determine whether the button is expanded or shrinked
     open private(set) var expanded: Bool = false
     
     /// animate duration
     open var animateDuration: TimeInterval = 1
-
+    
     /// color object of button
     open var color: UIColor = UIColor.gray {
         didSet {
             layer.backgroundColor = color.cgColor
         }
     }
-
+    
     /// shrink button back to original form
     open func shrink() {
         animateLayer()
@@ -42,13 +42,13 @@ class AdddButtonExpand: UIButton {
     open func expand(keyboardFrame: CGRect?) {
         
     }
-
+    
     /// original frame before expansion
     internal var oldFrame: CGRect
-
+    
     /// original bound before expansion
     internal var oldBound: CGRect!
-
+    
     /// initial setup for button
     internal func defaultSetup() {
         layer.backgroundColor = color.cgColor
@@ -64,7 +64,7 @@ class AdddButtonExpand: UIButton {
                                                object: nil)
         addTarget(self, action: #selector(onTap), for: UIControl.Event.touchDown)
     }
-
+    
     /// get keyboard frame
     @objc internal func keyboardWillShow(notification: Notification) {
         let keyboardFrame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
@@ -77,7 +77,7 @@ class AdddButtonExpand: UIButton {
             self.plusSign.frame.origin.x = UIScreen.main.bounds.width/2 - self.plusSign.frame.width/2
         })
     }
-
+    
     
     @objc internal func keyboardWillHide() {
         shrink()
@@ -90,7 +90,7 @@ class AdddButtonExpand: UIButton {
             addButtonDelegate?.buttonWillExpand()
         }
     }
-
+    
     /// animation when tapped
     internal func animateLayer() {
         expanded = !expanded
@@ -110,7 +110,7 @@ class AdddButtonExpand: UIButton {
         oldBound = bounds
         defaultSetup()
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

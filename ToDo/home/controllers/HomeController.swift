@@ -15,8 +15,7 @@ class HomeController: UIViewController {
     
     private var todoList: [TaskType] = [TaskType]()
     
-    let toDoCardIdentifier: String = "ToDoCard"
-    let newCategoryCardIdentifier: String = "NewCategoryCard"
+    let captureSession: AVCaptureSession = AVCaptureSession()
     
     lazy var profilePicture: UIButton = {
         let imageView: UIButton = UIButton()
@@ -48,8 +47,57 @@ class HomeController: UIViewController {
         return collection
     }()
     
+    lazy var capturePhotoButton: UIButton = {
+        let button: UIButton = UIButton()
+        button.setImage(UIImage(named: "len"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    lazy var cameraButtonView: UIView = {
+        let cameraButtonView: UIView = UIView(frame: CGRect(x: 0, y: view.bounds.maxY - 120, width: view.bounds.width, height: 120))
+        cameraButtonView.backgroundColor = .clear
+        
+        cameraButtonView.addSubview(capturePhotoButton)
+        capturePhotoButton.centerXAnchor.constraint(equalTo: cameraButtonView.centerXAnchor).isActive = true
+        capturePhotoButton.centerYAnchor.constraint(equalTo: cameraButtonView.centerYAnchor).isActive = true
+        return cameraButtonView
+    }()
+    
     @objc func viewProfile() {
-        // TODO: create profile page
+        // TODO: capture image
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
+        let cameraPreview: UIView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
+ 
+        guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
+
+        
+        do {
+            let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
+            captureSession.addInput(captureDeviceInput)
+        } catch let error {
+            print("error unable to initialize back camera: ", error.localizedDescription)
+        }
+
+        captureSession.sessionPreset = AVCaptureSession.Preset.photo
+        
+        if captureSession.canAddOutput(stillImageOutput) {
+            captureSession.addOutput(stillImageOutput)
+        }
+        
+        
+        previewLayer.frame = view.bounds
+        previewLayer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        cameraPreview.layer.addSublayer(previewLayer)
+        
+        view.addSubview(cameraPreview)
+        view.addSubview(cameraButtonView)
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.captureSession.startRunning()
+        }
     }
 
     override func viewDidLoad() {

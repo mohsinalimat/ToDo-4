@@ -15,3 +15,9 @@ let todoCategories: [String] = [
     "Travel",
     "Other"
 ]
+
+let toDoCardIdentifier: String = "ToDoCard"
+
+let newCategoryCardIdentifier: String = "NewCategoryCard"
+
+let tasksId: String = "Tasks"

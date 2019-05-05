@@ -13,19 +13,174 @@ import AVFoundation
 
 class HomeController: UIViewController {
     
-    private var todoList: [TaskType] = [TaskType]()
-    
+    // MARK: - Camera action properties
     let captureSession: AVCaptureSession = AVCaptureSession()
     
+    let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
+    
+    lazy var circleCrop: CircleCropView = {
+        return CircleCropView(frame: CGRect(x: 20,
+                                            y: view.bounds.midY - view.frame.height/4,
+                                            width: view.frame.width - 40,
+                                            height: view.frame.height/2))
+    }()
+    
+    lazy var imageView: UIImageView = {
+        return UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+    }()
+    
+    lazy var cameraPreview: UIView = {
+        return UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
+    }()
+    
     lazy var profilePicture: UIButton = {
-        let imageView: UIButton = UIButton()
-        imageView.setImage(UIImage(named: "user"), for: UIControl.State.normal)
+        let imageView = UIButton()
+        let image = UIImage(named: "user")!
+        imageView.setImage(image, for: .normal)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.addTarget(self, action: #selector(viewProfile), for: UIControl.Event.touchUpInside)
-
+        imageView.addTarget(self, action: #selector(photoOptions), for: UIControl.Event.touchUpInside)
+        imageView.layer.cornerRadius = image.size.width/2
+        /// shadow layer
+        imageView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        imageView.layer.shadowOffset = CGSize(width: 5, height: 5)
+        imageView.layer.shadowOpacity = 1.0
+        imageView.layer.shadowRadius = 5
+        imageView.layer.masksToBounds = false
+        imageView.layer.cornerRadius = image.size.width/2
         return imageView
     }()
-
+    
+    /// view photo options
+    @objc func photoOptions() {
+        let alertPhotoOptions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertPhotoOptions.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: capturePhoto(action:)))
+        alertPhotoOptions.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: pickImageFromLibrary(action:)))
+        alertPhotoOptions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertPhotoOptions, animated: true, completion: nil)
+    }
+    
+    func pickImageFromLibrary(action: UIAlertAction) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        imagePicker.imageExportPreset = .current
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func capturePhoto(action: UIAlertAction) {
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        
+        guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
+        
+        do {
+            let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
+            if captureSession.inputs.count == 0 {
+                captureSession.addInput(captureDeviceInput)
+            }
+        } catch let error {
+            print("error unable to initialize back camera: ", error.localizedDescription)
+        }
+        
+        if captureSession.canAddOutput(stillImageOutput) {
+            captureSession.sessionPreset = AVCaptureSession.Preset.photo
+            captureSession.addOutput(stillImageOutput)
+        }
+        
+        
+        previewLayer.frame = view.bounds
+        previewLayer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        cameraPreview.layer.addSublayer(previewLayer)
+        
+        view.addSubview(cameraPreview)
+        view.addSubview(cameraButtonView)
+        view.addSubview(crossOut)
+        
+        crossOut.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40).isActive = true
+        crossOut.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
+        
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.captureSession.startRunning()
+        }
+    }
+    
+    lazy var capturePhotoButton: UIButton = {
+        let button: UIButton = UIButton()
+        button.setImage(UIImage(named: "len"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = button.currentImage!.size.width/2
+        button.layer.backgroundColor = UIColor.white.cgColor
+        button.addTarget(self, action: #selector(captureAndSaveImage), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var cameraButtonView: UIView = {
+        let cameraButtonView: UIView = UIView(frame: CGRect(x: 0, y: view.bounds.maxY - 120, width: view.bounds.width, height: 120))
+        cameraButtonView.backgroundColor = .clear
+        
+        cameraButtonView.addSubview(capturePhotoButton)
+        capturePhotoButton.centerXAnchor.constraint(equalTo: cameraButtonView.centerXAnchor).isActive = true
+        capturePhotoButton.centerYAnchor.constraint(equalTo: cameraButtonView.centerYAnchor).isActive = true
+        return cameraButtonView
+    }()
+    
+    /// use for canceling image capture
+    lazy var crossOut: UIButton = {
+        let image: UIButton = UIButton()
+        image.setImage(UIImage(named: "crossOut"), for: .normal)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.addTarget(self, action: #selector(cancelImageCapture), for: .touchUpInside)
+        return image
+    }()
+    
+    /// done cropping image text
+    lazy var doneCropImage: UIButton = {
+        let button = UIButton(type: .roundedRect)
+        button.setTitle("save", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-SemiBold", size: 20)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(doneCroppingImage), for: .touchUpInside)
+        return button
+    }()
+    
+    /// done crop image action. The actual cropping
+    @objc func doneCroppingImage() {
+        
+        // TODO: crop image functionality
+        guard let image = imageView.image else { return }
+        let targetSize = profilePicture.bounds.size
+        if let cropimage = circleCrop.cropImage(image, targetSize) {
+            profilePicture.layer.cornerRadius = cropimage.size.width/2
+            profilePicture.setImage(cropimage, for: .normal)
+        }
+        
+        cancelImageView()
+    }
+    
+    @objc func cancelImageCapture() {
+        captureSession.stopRunning()
+        captureSession.removeOutput(stillImageOutput)
+        cameraButtonView.removeFromSuperview()
+        crossOut.removeFromSuperview()
+        cameraPreview.removeFromSuperview()
+    }
+    
+    @objc func cancelImageView() {
+        crossOut.removeFromSuperview()
+        imageView.removeFromSuperview()
+        circleCrop.removeFromSuperview()
+    }
+    
+    @objc func captureAndSaveImage() {
+        let photoSettings: AVCapturePhotoSettings = AVCapturePhotoSettings()
+        photoSettings.isAutoStillImageStabilizationEnabled = true
+        stillImageOutput.capturePhoto(with: photoSettings, delegate: self)
+    }
+    
+    // MARK: - ToDo list type
     lazy var taskTypeCollection: UICollectionView = {
         let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
@@ -46,59 +201,6 @@ class HomeController: UIViewController {
 
         return collection
     }()
-    
-    lazy var capturePhotoButton: UIButton = {
-        let button: UIButton = UIButton()
-        button.setImage(UIImage(named: "len"), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    lazy var cameraButtonView: UIView = {
-        let cameraButtonView: UIView = UIView(frame: CGRect(x: 0, y: view.bounds.maxY - 120, width: view.bounds.width, height: 120))
-        cameraButtonView.backgroundColor = .clear
-        
-        cameraButtonView.addSubview(capturePhotoButton)
-        capturePhotoButton.centerXAnchor.constraint(equalTo: cameraButtonView.centerXAnchor).isActive = true
-        capturePhotoButton.centerYAnchor.constraint(equalTo: cameraButtonView.centerYAnchor).isActive = true
-        return cameraButtonView
-    }()
-    
-    @objc func viewProfile() {
-        // TODO: capture image
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
-        let cameraPreview: UIView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
- 
-        guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
-
-        
-        do {
-            let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
-            captureSession.addInput(captureDeviceInput)
-        } catch let error {
-            print("error unable to initialize back camera: ", error.localizedDescription)
-        }
-
-        captureSession.sessionPreset = AVCaptureSession.Preset.photo
-        
-        if captureSession.canAddOutput(stillImageOutput) {
-            captureSession.addOutput(stillImageOutput)
-        }
-        
-        
-        previewLayer.frame = view.bounds
-        previewLayer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        cameraPreview.layer.addSublayer(previewLayer)
-        
-        view.addSubview(cameraPreview)
-        view.addSubview(cameraButtonView)
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.captureSession.startRunning()
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,8 +230,51 @@ class HomeController: UIViewController {
     }
 }
 
+extension HomeController: UIImagePickerControllerDelegate {
+    /// pick image from photo library
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: {
+            guard let pickedImageFromLibrary = info[.originalImage] as? UIImage else { return }
+            let targetSize = self.profilePicture.frame.size
+            if let cropimage = self.circleCrop.cropImage(pickedImageFromLibrary, targetSize) {
+                self.profilePicture.layer.cornerRadius = cropimage.size.width/2
+                self.profilePicture.setImage(cropimage, for: .normal)
+            }
+        })
+    }
+}
+
+extension HomeController: AVCapturePhotoCaptureDelegate {
+    /// crop image after photo capture
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        let unmanage = photo.cgImageRepresentation()
+        if let image = unmanage?.takeUnretainedValue() {
+            let newCaptureImage = UIImage(cgImage: image, scale: 1, orientation: .right)
+            imageView.image = newCaptureImage
+
+            cancelImageCapture()
+
+            view.addSubview(imageView)
+            view.insertSubview(circleCrop, aboveSubview: imageView)
+
+            crossOut.addTarget(self, action: #selector(cancelImageView), for: .touchUpInside)
+            view.addSubview(crossOut)
+            view.addSubview(doneCropImage)
+
+            crossOut.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40).isActive = true
+            crossOut.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
+            
+            doneCropImage.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -40).isActive = true
+            doneCropImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
+        }
+    }
+}
+
 extension HomeController: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController,
+                              animationControllerFor operation: UINavigationController.Operation,
+                              from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let _ = toVC as? ToDoViewController else { return nil }
         navigationController.setNavigationBarHidden(false, animated: false)
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
         return ToDoCardPresentAnimator(navigationBarMaxY: navigationController.navigationBar.frame.maxY, todoCardIndex: todoCardIndex)

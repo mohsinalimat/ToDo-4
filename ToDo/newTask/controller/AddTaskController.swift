@@ -24,7 +24,7 @@ class AddTaskController: UIViewController {
 
     lazy var crossOut: UIButton = {
         let image: UIButton = UIButton()
-        image.setImage(UIImage(named: "crossOut"), for: .normal)
+        image.setImage(UIImage(named: "crossOutBlack"), for: .normal)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.addTarget(self, action: #selector(cancelTask), for: .touchUpInside)
         return image
@@ -48,7 +48,7 @@ class AddTaskController: UIViewController {
     }()
 
     lazy var singleDatePickerCalendar: SingleDatePickerCalendar = {
-        let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 160, width: view.frame.width, height: 250))
+        let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 160, width: view.frame.width, height: 270))
         singleDatePickerCalendar.singleDatePickerDelegate = self
         return singleDatePickerCalendar
     }()

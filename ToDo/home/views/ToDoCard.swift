@@ -14,6 +14,31 @@ struct TopLeftIconConstraint {
     var left: NSLayoutConstraint!
 }
 
+class TopLeftIcon: UIImageView {
+    
+    override init(image: UIImage?) {
+        super.init(image: image)
+        translatesAutoresizingMaskIntoConstraints = false
+        if let img = image {
+            let circle: CAShapeLayer = CAShapeLayer()
+            circle.strokeColor = UIColor.black.cgColor
+            circle.fillColor = nil
+            circle.lineWidth = 0.5
+            let radius: CGFloat = img.size.width > img.size.height ? img.size.width : img.size.height
+            circle.path = UIBezierPath(arcCenter: center,
+                                       radius: radius,
+                                       startAngle: 0,
+                                       endAngle: 2 * .pi,
+                                       clockwise: true).cgPath
+            layer.addSublayer(circle)
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 
 class ToDoCard: UICollectionViewCell {
     
@@ -100,6 +125,33 @@ class ToDoCard: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         defaultSetup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+class NewCategoryCard: ToDoCard {
+    
+    lazy var label: UILabel = {
+        let label: UILabel = UILabel()
+        label.text = "Add Category"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        taskTypeLabelLayer.removeFromSuperlayer()
+        numOfTaskLayer.removeFromSuperlayer()
+        topLeftIcon.removeFromSuperview()
+        progressBar.removeFromSuperview()
+        
+        addSubview(label)
+        label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

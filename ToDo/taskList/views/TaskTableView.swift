@@ -37,7 +37,7 @@ class TaskTableView: UITableView {
         return false
     }
     
-    func removeCheckedIndexPath(indexPath: IndexPath) {
+    func removeCheckedIndexPath(_ indexPath: IndexPath) {
         for (index, checkedIndexPath) in self.checkedIndexPaths.enumerated() {
             if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
                 self.checkedIndexPaths.remove(at: index)
@@ -117,8 +117,7 @@ extension TaskTableView: TaskCellDelegate {
     func updateCheckIndexPath(_ deletedIndexPath: IndexPath) {
         let deletedSection: Int = deletedIndexPath.section
         let deletedRow: Int = deletedIndexPath.row
-        
-        // TODO: fix indexPathToDelete for row below deletedIndexPath
+
         for (index, checkedIndexPath) in checkedIndexPaths.enumerated() {
             if checkedIndexPath.section == deletedSection && checkedIndexPath.row > deletedRow {
                 checkedIndexPaths[index].row = checkedIndexPaths[index].row - 1
@@ -131,7 +130,8 @@ extension TaskTableView: TaskCellDelegate {
         let tasksName: [String] = tasks[deletedIndexPath.section].1
         let taskDate: String = tasks[deletedIndexPath.section].0
         
-        removeCheckedIndexPath(indexPath: deletedIndexPath)
+        removeCheckedIndexPath(deletedIndexPath)
+        updateCheckIndexPath(deletedIndexPath)
 
         if tasksName.count == 1 {                       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)
@@ -151,7 +151,7 @@ extension TaskTableView: TaskCellDelegate {
         if checked {
             self.checkedIndexPaths.append(checkedIndexPath)
         } else {
-            removeCheckedIndexPath(indexPath: checkedIndexPath)
+            removeCheckedIndexPath(checkedIndexPath)
         }
     }
 }

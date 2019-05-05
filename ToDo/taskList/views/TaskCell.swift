@@ -58,8 +58,8 @@ class TaskCell: UITableViewCell {
         
         checkbox.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         checkbox.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        checkbox.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        checkbox.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        checkbox.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        checkbox.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

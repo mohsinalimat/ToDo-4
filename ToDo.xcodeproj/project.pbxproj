@@ -10,16 +10,15 @@
 		A1154C97225863A1004AD50C /* AddTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1154C96225863A1004AD50C /* AddTaskController.swift */; };
 		A12017C622700F32007AC0EF /* TaskListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12017C522700F32007AC0EF /* TaskListViewModel.swift */; };
 		A14AE34322583B62008242C1 /* AddTaskPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */; };
+		A172A84D227B83F5002ED40D /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A172A84C227B83F5002ED40D /* ImageCropper.swift */; };
 		A17A3CB4224B2A2000204CD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */; };
 		A17A3CB6224B2A2000204CD9 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CB5224B2A2000204CD9 /* HomeController.swift */; };
 		A17A3CB9224B2A2000204CD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A17A3CB7224B2A2000204CD9 /* Main.storyboard */; };
 		A17A3CBE224B2A2100204CD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A17A3CBD224B2A2100204CD9 /* Assets.xcassets */; };
 		A17A3CC1224B2A2100204CD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A17A3CBF224B2A2100204CD9 /* LaunchScreen.storyboard */; };
 		A17A3CD6224B2EEB00204CD9 /* ToDoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */; };
-		A17A3CD8224B2F0F00204CD9 /* TopLeftIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD7224B2F0F00204CD9 /* TopLeftIcon.swift */; };
 		A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD9224B2FB900204CD9 /* TaskList.swift */; };
 		A18CFD4D227347760081A54E /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18CFD4C227347760081A54E /* TaskCell.swift */; };
-		A1A5E163225A551400B2D4AD /* NewCategoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E162225A551400B2D4AD /* NewCategoryCard.swift */; };
 		A1A5E165225A773A00B2D4AD /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E164225A773A00B2D4AD /* Identifiers.swift */; };
 		A1A5E167225AB7A600B2D4AD /* CategoryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */; };
 		A1A5E169225AFB5200B2D4AD /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E168225AFB5100B2D4AD /* Person.swift */; };
@@ -41,6 +40,7 @@
 		A1154C96225863A1004AD50C /* AddTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskController.swift; sourceTree = "<group>"; };
 		A12017C522700F32007AC0EF /* TaskListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewModel.swift; sourceTree = "<group>"; };
 		A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskPresentationController.swift; sourceTree = "<group>"; };
+		A172A84C227B83F5002ED40D /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		A17A3CB0224B2A2000204CD9 /* ToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A17A3CB5224B2A2000204CD9 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -49,10 +49,8 @@
 		A17A3CC0224B2A2100204CD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A17A3CC2224B2A2100204CD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCard.swift; sourceTree = "<group>"; };
-		A17A3CD7224B2F0F00204CD9 /* TopLeftIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLeftIcon.swift; sourceTree = "<group>"; };
 		A17A3CD9224B2FB900204CD9 /* TaskList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskList.swift; sourceTree = "<group>"; };
 		A18CFD4C227347760081A54E /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
-		A1A5E162225A551400B2D4AD /* NewCategoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryCard.swift; sourceTree = "<group>"; };
 		A1A5E164225A773A00B2D4AD /* Identifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
 		A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTextField.swift; sourceTree = "<group>"; };
 		A1A5E168225AFB5100B2D4AD /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
@@ -187,9 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */,
-				A17A3CD7224B2F0F00204CD9 /* TopLeftIcon.swift */,
 				A1B9735F2259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift */,
-				A1A5E162225A551400B2D4AD /* NewCategoryCard.swift */,
 				A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */,
 			);
 			path = views;
@@ -237,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				A1C7A91822752C8F00C0C1FD /* Extension.swift */,
+				A172A84C227B83F5002ED40D /* ImageCropper.swift */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -373,14 +370,13 @@
 				A1B8AD6422508CC7000D22D9 /* ToDoCardDismissAnimator.swift in Sources */,
 				A1C7A91922752C8F00C0C1FD /* Extension.swift in Sources */,
 				A17A3CD6224B2EEB00204CD9 /* ToDoCard.swift in Sources */,
-				A17A3CD8224B2F0F00204CD9 /* TopLeftIcon.swift in Sources */,
 				A1B973602259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift in Sources */,
 				A14AE34322583B62008242C1 /* AddTaskPresentationController.swift in Sources */,
 				A12017C622700F32007AC0EF /* TaskListViewModel.swift in Sources */,
 				A1A5E167225AB7A600B2D4AD /* CategoryTextField.swift in Sources */,
-				A1A5E163225A551400B2D4AD /* NewCategoryCard.swift in Sources */,
 				A17A3CB4224B2A2000204CD9 /* AppDelegate.swift in Sources */,
 				A1B8AD6122507437000D22D9 /* ToDo-Ext.swift in Sources */,
+				A172A84D227B83F5002ED40D /* ImageCropper.swift in Sources */,
 				A1C98528224F18EE0071E79C /* ToDoViewController.swift in Sources */,
 				A1154C97225863A1004AD50C /* AddTaskController.swift in Sources */,
 			);

@@ -38,7 +38,7 @@ open class CheckBox: UIControl {
         didSet {
             textLayer.string = label
             textLayer.frame = CGRect(x: bounds.maxX * 2,
-                                     y: -2,
+                                     y: 0,
                                      width: textLayer.preferredFrameSize().width,
                                      height: textLayer.preferredFrameSize().height)
         }

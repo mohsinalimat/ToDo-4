@@ -110,9 +110,10 @@ extension TaskTableView: TaskCellDelegate {
 
     /**
      Do this after deletion for the row below the deleted index path.
+     Or the section below the deleted section.
      This happen when the checkbox below the deleted one has the old
-     checkedIndexPath because it needs to move up one row after the one
-     above it is deleted
+     checkedIndexPath because it needs to move up one row or section
+     after the one above it is deleted
     **/
     func updateRowCheckIndexPath(_ deletedIndexPath: IndexPath) {
         let deletedSection: Int = deletedIndexPath.section

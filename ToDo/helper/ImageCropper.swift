@@ -8,44 +8,22 @@
 
 import UIKit
 
-class CircleCropView: UIView {
-
-    lazy var focusShape: CAShapeLayer = {
-        let shape = CAShapeLayer()
-        let path = UIBezierPath()
-
-        // 2 vertical line
-        path.move(to: CGPoint(x: bounds.midX - 60, y: 15))
-        path.addLine(to: CGPoint(x: bounds.midX - 60, y: bounds.maxY - 15))
-        path.move(to: CGPoint(x: bounds.midX + 60, y: 15))
-        path.addLine(to: CGPoint(x: bounds.midX + 60, y: bounds.maxY - 15))
-
-        // 2 horizontal line
-        path.move(to: CGPoint(x: 15, y: bounds.midY - 60))
-        path.addLine(to: CGPoint(x: bounds.maxX - 15, y: bounds.midY - 60))
-        path.move(to: CGPoint(x: 15, y: bounds.midY + 60))
-        path.addLine(to: CGPoint(x: bounds.maxX - 15, y: bounds.midY + 60))
-        shape.path = path.cgPath
-        shape.lineWidth = 0.5
-        shape.strokeColor = UIColor.lightGray.cgColor
-        return shape
-    }()
-
+struct CircleCropView {
     func cropImage(_ image: UIImage, _ targetSize: CGSize) -> UIImage? {
         let size = image.size
-
+        
         let heightRatio = targetSize.height / size.height
         let widthRatio = targetSize.width / size.width
-
+        
         let scaleWidth = size.width * widthRatio
         let scaleHeight = size.height * heightRatio
         let rect = CGRect(x: 0, y: 0, width: scaleWidth, height: scaleHeight)
-
+        
         UIGraphicsBeginImageContextWithOptions(targetSize, false, UIScreen.main.scale)
         image.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-
+        
         return maskRoundedImage(newImage)
     }
     
@@ -62,6 +40,28 @@ class CircleCropView: UIView {
         
         return roundedImage
     }
+    
+    /** TODO: Implement crop functionality
+    lazy var focusShape: CAShapeLayer = {
+        let shape = CAShapeLayer()
+        let path = UIBezierPath()
+        
+        // 2 vertical line
+        path.move(to: CGPoint(x: bounds.midX - 60, y: 15))
+        path.addLine(to: CGPoint(x: bounds.midX - 60, y: bounds.maxY - 15))
+        path.move(to: CGPoint(x: bounds.midX + 60, y: 15))
+        path.addLine(to: CGPoint(x: bounds.midX + 60, y: bounds.maxY - 15))
+        
+        // 2 horizontal line
+        path.move(to: CGPoint(x: 15, y: bounds.midY - 60))
+        path.addLine(to: CGPoint(x: bounds.maxX - 15, y: bounds.midY - 60))
+        path.move(to: CGPoint(x: 15, y: bounds.midY + 60))
+        path.addLine(to: CGPoint(x: bounds.maxX - 15, y: bounds.midY + 60))
+        shape.path = path.cgPath
+        shape.lineWidth = 0.5
+        shape.strokeColor = UIColor.lightGray.cgColor
+        return shape
+    }()
 
     @objc func dragView(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: self)
@@ -113,5 +113,5 @@ class CircleCropView: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
+    } **/
 }

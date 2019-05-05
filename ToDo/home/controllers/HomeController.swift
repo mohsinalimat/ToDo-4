@@ -18,12 +18,7 @@ class HomeController: UIViewController {
     
     let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
     
-    lazy var circleCrop: CircleCropView = {
-        return CircleCropView(frame: CGRect(x: 20,
-                                            y: view.bounds.midY - view.frame.height/4,
-                                            width: view.frame.width - 40,
-                                            height: view.frame.height/2))
-    }()
+    var circleCrop: CircleCropView = CircleCropView()
     
     lazy var imageView: UIImageView = {
         return UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
@@ -171,7 +166,6 @@ class HomeController: UIViewController {
     @objc func cancelImageView() {
         crossOut.removeFromSuperview()
         imageView.removeFromSuperview()
-        circleCrop.removeFromSuperview()
     }
     
     @objc func captureAndSaveImage() {
@@ -255,7 +249,6 @@ extension HomeController: AVCapturePhotoCaptureDelegate {
             cancelImageCapture()
 
             view.addSubview(imageView)
-            view.insertSubview(circleCrop, aboveSubview: imageView)
 
             crossOut.addTarget(self, action: #selector(cancelImageView), for: .touchUpInside)
             view.addSubview(crossOut)

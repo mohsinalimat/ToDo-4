@@ -14,6 +14,11 @@ class ToDoViewController: UIViewController {
     @objc func leftBarButtonAction() {
         navigationController?.popViewController(animated: true)
     }
+    
+    
+    lazy var todoViewModel: ToDoViewModel = {
+        return ToDoViewModel(taskType: taskType!)
+    }()
 
     lazy var addButtonExpand: AdddButtonExpand = {
         let button: AdddButtonExpand = AdddButtonExpand(frame: CGRect(x: view.bounds.maxX - 80,
@@ -47,10 +52,10 @@ class ToDoViewController: UIViewController {
     
     var taskType: Type? {
         didSet {
-            guard let type = taskType else { return }
-            let tasks: [(String, [String])] = getTasks(type: type)
-            taskTableView.tasks = tasks
-            todoCard?.numOfTask = getTasksCount(type: type)
+            guard let _ = taskType else { return }
+
+            taskTableView.tasks = todoViewModel.tasks
+            todoCard?.numOfTask = todoViewModel.tasksCount
         }
     }
     
@@ -78,12 +83,12 @@ extension ToDoViewController: TaskTableViewDelegate {
     /// delete task in realm
     func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String) {
         try! realm.write {
-            deleteTask(type: taskType!, taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)
-            todoCard?.numOfTask = getTasksCount(type: taskType!)
-            let percentage: Int = getTasksCompletedPercentage(type: taskType!)
+            todoViewModel.deleteTask(taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)
+            todoCard?.numOfTask = todoViewModel.tasksCount
+            let percentage: Int = todoViewModel.tasksCompletedPercentage
             todoCard?.progressBar.setPercentage(percentage, animated: true)
             if todoCard?.progressBar.percentage ==  100 {
-                resetCompletedTask(type: taskType!)
+                todoViewModel.resetCompletedTask()
             }
         }
     }
@@ -95,12 +100,12 @@ extension ToDoViewController: AddButtonExpandDelegate {
     func buttonWillShrink() {
         NotificationCenter.default.post(name: NSNotification.Name.init("buttonShrink"), object: nil)
 
-        guard let type = taskType else { return }
+        guard let _ = taskType else { return }
 
-        let newTasks: [(String, [String])] = getTasks(type: type)
-        let percentage: Int = getTasksCompletedPercentage(type: type)
+        let newTasks: [(String, [String])] = todoViewModel.tasks
+        let percentage: Int = todoViewModel.tasksCompletedPercentage
 
-        todoCard?.numOfTask = getTasksCount(type: type)
+        todoCard?.numOfTask = todoViewModel.tasksCount
         todoCard?.progressBar.setPercentage(percentage, animated: true)
         taskTableView.tasks = newTasks
         taskTableView.reloadData()

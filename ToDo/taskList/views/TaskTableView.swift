@@ -114,13 +114,15 @@ extension TaskTableView: TaskCellDelegate {
      checkedIndexPath because it needs to move up one row after the one
      above it is deleted
     **/
-    func updateCheckIndexPath(_ deletedIndexPath: IndexPath) {
+    func updateRowCheckIndexPath(_ deletedIndexPath: IndexPath) {
         let deletedSection: Int = deletedIndexPath.section
         let deletedRow: Int = deletedIndexPath.row
 
         for (index, checkedIndexPath) in checkedIndexPaths.enumerated() {
             if checkedIndexPath.section == deletedSection && checkedIndexPath.row > deletedRow {
                 checkedIndexPaths[index].row = checkedIndexPaths[index].row - 1
+            } else if checkedIndexPath.section > deletedSection {
+                checkedIndexPaths[index].section = checkedIndexPaths[index].section - 1
             }
         }
     }
@@ -131,15 +133,16 @@ extension TaskTableView: TaskCellDelegate {
         let taskDate: String = tasks[deletedIndexPath.section].0
         
         removeCheckedIndexPath(deletedIndexPath)
-        updateCheckIndexPath(deletedIndexPath)
+        updateRowCheckIndexPath(deletedIndexPath)
 
         if tasksName.count == 1 {                       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)
             deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
+            reloadData()
         } else {
             tasks[deletedIndexPath.section].1.remove(at: deletedIndexPath.row)
             deleteRows(at: [deletedIndexPath], with: .bottom)
-            updateCheckIndexPath(deletedIndexPath)
+            updateRowCheckIndexPath(deletedIndexPath)
             reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)
         }
 
@@ -157,6 +160,12 @@ extension TaskTableView: TaskCellDelegate {
 }
 
 extension TaskTableView: UITableViewDelegate {
+    func date(date: String) -> Date? {
+        let formatter: DateFormatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
+        return formatter.date(from: date)
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: tasksId)  else { return nil }
         let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height))

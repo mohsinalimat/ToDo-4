@@ -300,9 +300,12 @@ extension HomeController: UICollectionViewDataSource {
 
         let taskType: Type = person.taskType[indexPath.row-1].type
         let percentage: Int = person.taskType[indexPath.row-1].percentage
+        let taskCount: Int = person.taskType[indexPath.row-1].tasks.count
+
         todoCard.taskType = taskType.rawValue
-        todoCard.numOfTask = getTasksCount(type: taskType)
+        todoCard.numOfTask = taskCount
         todoCard.progressBar.setPercentage(percentage, animated: false)
+
         return todoCard
     }
 

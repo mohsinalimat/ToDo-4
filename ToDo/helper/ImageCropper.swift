@@ -8,19 +8,37 @@
 
 import UIKit
 
-struct CircleCropView {
+class CircleCropView: UIView {
     func cropImage(_ image: UIImage, _ targetSize: CGSize) -> UIImage? {
-        let size = image.size
+        UIGraphicsBeginImageContextWithOptions(targetSize, false, UIScreen.main.scale)
+        image.draw(in: CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         
-        let heightRatio = targetSize.height / size.height
-        let widthRatio = targetSize.width / size.width
-        
-        let scaleWidth = size.width * widthRatio
-        let scaleHeight = size.height * heightRatio
-        let rect = CGRect(x: 0, y: 0, width: scaleWidth, height: scaleHeight)
+        return maskRoundedImage(newImage)
+    }
+
+    func cropImage(_ imageView: UIImageView, _ targetSize: CGSize) -> UIImage? {
+        guard let image = imageView.image else { return nil }
+    
+        let imageViewScale = max(image.size.width / imageView.frame.size.width, image.size.height / imageView.frame.size.height)
+        let x = (imageView.frame.midY * imageViewScale)/1.5 < frame.origin.y * imageViewScale
+                ? frame.origin.x * imageViewScale + (frame.width * imageViewScale)/1.5
+                : frame.origin.x * imageViewScale
+        let y = (imageView.frame.midY * imageViewScale)/1.5 < frame.origin.y * imageViewScale
+                ? frame.origin.y * imageViewScale - (frame.height * imageViewScale)/1.5
+                : frame.origin.y * imageViewScale
+
+        let cropZone = CGRect(x: x,
+                              y: y,
+                              width: frame.height * imageViewScale,
+                              height: frame.width * imageViewScale)
+
+
+        let imageRef = UIImage(cgImage: image.cgImage!.cropping(to: cropZone)!, scale: image.scale, orientation: image.imageOrientation)
         
         UIGraphicsBeginImageContextWithOptions(targetSize, false, UIScreen.main.scale)
-        image.draw(in: rect)
+        imageRef.draw(in: CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -32,7 +50,8 @@ struct CircleCropView {
         let imageView = UIImageView(image: image)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = image.size.width/2
-        
+        imageView.contentMode = .scaleAspectFit
+    
         UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, UIScreen.main.scale)
         imageView.layer.render(in: UIGraphicsGetCurrentContext()!)
         let roundedImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -41,7 +60,7 @@ struct CircleCropView {
         return roundedImage
     }
     
-    /** TODO: Implement crop functionality
+    /// TODO: Implement crop functionality
     lazy var focusShape: CAShapeLayer = {
         let shape = CAShapeLayer()
         let path = UIBezierPath()
@@ -98,7 +117,6 @@ struct CircleCropView {
         layer.masksToBounds = false
         layer.cornerRadius = frame.size.height/2
         clipsToBounds = true
-        layer.addSublayer(focusShape)
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragView(_:)))
         addGestureRecognizer(panGesture)
     }
@@ -113,5 +131,5 @@ struct CircleCropView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    } **/
+    }
 }

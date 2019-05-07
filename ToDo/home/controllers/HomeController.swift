@@ -18,7 +18,12 @@ class HomeController: UIViewController {
     
     let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
     
-    var circleCrop: CircleCropView = CircleCropView()
+    lazy var circleCrop: CircleCropView = {
+       return CircleCropView(frame: CGRect(x: 10,
+                                           y: UIScreen.main.bounds.height/2 -  UIScreen.main.bounds.height/4,
+                                           width: UIScreen.main.bounds.width - 10,
+                                           height: UIScreen.main.bounds.height/2))
+    }()
     
     lazy var imageView: UIImageView = {
         return UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
@@ -137,17 +142,17 @@ class HomeController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-SemiBold", size: 20)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(doneCroppingImage), for: .touchUpInside)
+        button.addTarget(self, action: #selector(doneCroppingImageAction), for: .touchUpInside)
         return button
     }()
     
     /// done crop image action. The actual cropping
-    @objc func doneCroppingImage() {
+    @objc func doneCroppingImageAction() {
         
         // TODO: crop image functionality
-        guard let image = imageView.image else { return }
+        guard let _ = imageView.image else { return }
         let targetSize = profilePicture.bounds.size
-        if let cropimage = circleCrop.cropImage(image, targetSize) {
+        if let cropimage = circleCrop.cropImage(imageView, targetSize) {
             profilePicture.layer.cornerRadius = cropimage.size.width/2
             profilePicture.setImage(cropimage, for: .normal)
         }
@@ -166,6 +171,7 @@ class HomeController: UIViewController {
     @objc func cancelImageView() {
         crossOut.removeFromSuperview()
         imageView.removeFromSuperview()
+        circleCrop.removeFromSuperview()
     }
     
     @objc func captureAndSaveImage() {
@@ -239,16 +245,17 @@ extension HomeController: UIImagePickerControllerDelegate {
 }
 
 extension HomeController: AVCapturePhotoCaptureDelegate {
-    /// crop image after photo capture
+    /// crop image or cancel after photo capture
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         let unmanage = photo.cgImageRepresentation()
         if let image = unmanage?.takeUnretainedValue() {
             let newCaptureImage = UIImage(cgImage: image, scale: 1, orientation: .right)
             imageView.image = newCaptureImage
-
+            
             cancelImageCapture()
 
             view.addSubview(imageView)
+            view.addSubview(circleCrop)
 
             crossOut.addTarget(self, action: #selector(cancelImageView), for: .touchUpInside)
             view.addSubview(crossOut)

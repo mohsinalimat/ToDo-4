@@ -35,8 +35,15 @@ class HomeController: UIViewController {
     
     lazy var profilePicture: UIButton = {
         let imageView = UIButton()
-        let image = UIImage(named: "user")!
-        imageView.setImage(image, for: .normal)
+
+        if let profileImageFromRealm = person.profileImage {
+            imageView.setImage(UIImage(data: profileImageFromRealm, scale: 2), for: .normal)
+        } else {
+            imageView.setImage(UIImage(named: "user"), for: .normal)
+        }
+        
+        let image = imageView.image(for: .normal)!
+
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.addTarget(self, action: #selector(photoOptions), for: UIControl.Event.touchUpInside)
         imageView.layer.cornerRadius = image.size.width/2
@@ -148,14 +155,23 @@ class HomeController: UIViewController {
     
     /// done crop image action. The actual cropping
     @objc func doneCroppingImageAction() {
-        
-        // TODO: crop image functionality
         guard let _ = imageView.image else { return }
         let targetSize = profilePicture.bounds.size
-        if let cropimage = circleCrop.cropImage(imageView, targetSize) {
-            profilePicture.layer.cornerRadius = cropimage.size.width/2
-            profilePicture.setImage(cropimage, for: .normal)
+        
+        guard let cropImage = circleCrop.cropImage(imageView, targetSize),
+            let cropImagePngData = cropImage.pngData() else { return }
+        
+        profilePicture.layer.cornerRadius = cropImage.size.width/2
+        profilePicture.setImage(cropImage, for: .normal)
+        
+        do {
+            try realm.write {
+                person.profileImage = cropImagePngData
+            }
+        } catch let error {
+            print(error.localizedDescription)
         }
+        
         
         cancelImageView()
     }
@@ -179,8 +195,7 @@ class HomeController: UIViewController {
         photoSettings.isAutoStillImageStabilizationEnabled = true
         stillImageOutput.capturePhoto(with: photoSettings, delegate: self)
     }
-    
-    // MARK: - ToDo list type
+
     lazy var taskTypeCollection: UICollectionView = {
         let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal

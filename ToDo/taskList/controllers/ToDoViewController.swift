@@ -109,6 +109,8 @@ extension ToDoViewController: AddButtonExpandDelegate {
         todoCard?.progressBar.setPercentage(percentage, animated: true)
         taskTableView.tasks = newTasks
         taskTableView.reloadData()
+
+        // TODO: add time picker
     }
     
     

@@ -115,7 +115,7 @@ extension TaskTableView: TaskCellDelegate {
      checkedIndexPath because it needs to move up one row or section
      after the one above it is deleted
     **/
-    func updateRowCheckIndexPath(_ deletedIndexPath: IndexPath) {
+    func updateCheckIndexPath(_ deletedIndexPath: IndexPath) {
         let deletedSection: Int = deletedIndexPath.section
         let deletedRow: Int = deletedIndexPath.row
 
@@ -134,7 +134,7 @@ extension TaskTableView: TaskCellDelegate {
         let taskDate: String = tasks[deletedIndexPath.section].0
         
         removeCheckedIndexPath(deletedIndexPath)
-        updateRowCheckIndexPath(deletedIndexPath)
+        updateCheckIndexPath(deletedIndexPath)
 
         if tasksName.count == 1 {                       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)
@@ -143,7 +143,6 @@ extension TaskTableView: TaskCellDelegate {
         } else {
             tasks[deletedIndexPath.section].1.remove(at: deletedIndexPath.row)
             deleteRows(at: [deletedIndexPath], with: .bottom)
-            updateRowCheckIndexPath(deletedIndexPath)
             reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)
         }
 

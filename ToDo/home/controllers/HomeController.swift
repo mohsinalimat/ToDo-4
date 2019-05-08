@@ -37,7 +37,7 @@ class HomeController: UIViewController {
         let imageView = UIButton()
 
         if let profileImageFromRealm = person.profileImage {
-            imageView.setImage(UIImage(data: profileImageFromRealm, scale: 2), for: .normal)
+            imageView.setImage(UIImage(data: profileImageFromRealm, scale: 3), for: .normal)
         } else {
             imageView.setImage(UIImage(named: "user"), for: .normal)
         }
@@ -251,9 +251,18 @@ extension HomeController: UIImagePickerControllerDelegate {
         picker.dismiss(animated: true, completion: {
             guard let pickedImageFromLibrary = info[.originalImage] as? UIImage else { return }
             let targetSize = self.profilePicture.frame.size
-            if let cropimage = self.circleCrop.cropImage(pickedImageFromLibrary, targetSize) {
-                self.profilePicture.layer.cornerRadius = cropimage.size.width/2
-                self.profilePicture.setImage(cropimage, for: .normal)
+            
+            guard let cropImage = self.circleCrop.cropImage(pickedImageFromLibrary, targetSize),
+                  let cropImagePngData = cropImage.pngData() else { return }
+            self.profilePicture.layer.cornerRadius = cropImage.size.width/2
+            self.profilePicture.setImage(cropImage, for: .normal)
+            
+            do {
+                try realm.write {
+                    person.profileImage = cropImagePngData
+                }
+            } catch let error {
+                print(error.localizedDescription)
             }
         })
     }

@@ -28,24 +28,6 @@ class TaskTableView: UITableView {
     **/
     var checkedIndexPaths: [IndexPath] = [IndexPath]()
     
-    func isIndexPathChecked(indexPath: IndexPath) -> Bool {
-        for checkedIndexPath in self.checkedIndexPaths {
-            if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func removeCheckedIndexPath(_ indexPath: IndexPath) {
-        for (index, checkedIndexPath) in self.checkedIndexPaths.enumerated() {
-            if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
-                self.checkedIndexPaths.remove(at: index)
-                break
-            }
-        }
-    }
-    
     //MARK: - override funcs
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -68,6 +50,15 @@ class TaskTableView: UITableView {
 }
 
 extension TaskTableView: UITableViewDataSource {
+    fileprivate func isIndexPathChecked(indexPath: IndexPath) -> Bool {
+        for checkedIndexPath in self.checkedIndexPaths {
+            if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
+                return true
+            }
+        }
+        return false
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tasks.count == 0 || section >= tasks.count {
             return 0
@@ -110,20 +101,33 @@ extension TaskTableView: TaskCellDelegate {
 
     /**
      Do this after deletion for the row below the deleted index path.
-     Or the section below the deleted section.
-     This happen when the checkbox below the deleted one has the old
-     checkedIndexPath because it needs to move up one row or section
-     after the one above it is deleted
     **/
-    func updateCheckIndexPath(_ deletedIndexPath: IndexPath) {
+    fileprivate func updateRowCheckIndexPath(_ deletedIndexPath: IndexPath) {
         let deletedSection: Int = deletedIndexPath.section
         let deletedRow: Int = deletedIndexPath.row
 
         for (index, checkedIndexPath) in checkedIndexPaths.enumerated() {
             if checkedIndexPath.section == deletedSection && checkedIndexPath.row > deletedRow {
                 checkedIndexPaths[index].row = checkedIndexPaths[index].row - 1
-            } else if checkedIndexPath.section > deletedSection {
+            }
+        }
+    }
+    
+    fileprivate func updateSectionCheckIndexPath(_ deletedIndexPath: IndexPath) {
+        let deletedSection: Int = deletedIndexPath.section
+        
+        for (index, checkedIndexPath) in checkedIndexPaths.enumerated() {
+            if checkedIndexPath.section > deletedSection {
                 checkedIndexPaths[index].section = checkedIndexPaths[index].section - 1
+            }
+        }
+    }
+    
+    fileprivate func removeCheckedIndexPath(_ indexPath: IndexPath) {
+        for (index, checkedIndexPath) in self.checkedIndexPaths.enumerated() {
+            if checkedIndexPath.row == indexPath.row && checkedIndexPath.section == indexPath.section {
+                self.checkedIndexPaths.remove(at: index)
+                break
             }
         }
     }
@@ -134,13 +138,14 @@ extension TaskTableView: TaskCellDelegate {
         let taskDate: String = tasks[deletedIndexPath.section].0
         
         removeCheckedIndexPath(deletedIndexPath)
-        updateCheckIndexPath(deletedIndexPath)
 
         if tasksName.count == 1 {                       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)
             deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
+            updateSectionCheckIndexPath(deletedIndexPath)
             reloadData()
         } else {
+            updateRowCheckIndexPath(deletedIndexPath)
             tasks[deletedIndexPath.section].1.remove(at: deletedIndexPath.row)
             deleteRows(at: [deletedIndexPath], with: .bottom)
             reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)

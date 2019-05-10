@@ -64,7 +64,6 @@ class AddTaskController: UIViewController {
                     $0.type == self.type
                 }
 
-                // TODO: add task
                 if let taskType = taskTypes.first {
                     let task: Task = Task(name: inputTask.text!, date: dateSelected!)
                     taskType.tasks.append(task)

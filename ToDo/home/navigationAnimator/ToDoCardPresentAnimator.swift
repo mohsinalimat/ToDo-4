@@ -43,7 +43,7 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let toView: UIView = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!.view
+        let toView: UIView = transitionContext.viewController(forKey: .to)!.view
         let containerView: UIView = transitionContext.containerView
         let todoCard: ToDoCardExt = ToDoCardExt(frame: todoCardFrame) // TODO: can be reuse
         let tasksCount: Int = person.taskType[todoCardIndex - 1].tasks.count
@@ -79,7 +79,7 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
             todoCard.progressBar.frame.origin.y = todoCard.taskTypeLabelLayer.bounds.maxY * 4.8
         }, completion: {
             (finished: Bool) in
-            let toDoViewController: ToDoViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)! as! ToDoViewController
+            let toDoViewController: ToDoViewController = transitionContext.viewController(forKey: .to)! as! ToDoViewController
             toDoViewController.todoCard = todoCard
             toDoViewController.taskType = Type(rawValue: todoCard.taskType)
             transitionContext.completeTransition(true)

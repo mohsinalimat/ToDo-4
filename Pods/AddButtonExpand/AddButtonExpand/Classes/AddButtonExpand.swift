@@ -21,7 +21,7 @@ class AdddButtonExpand: UIButton {
     open private(set) var expanded: Bool = false
     
     /// animate duration
-    open var animateDuration: TimeInterval = 1
+    open var animateDuration: TimeInterval = 0.5
     
     /// color object of button
     open var color: UIColor = UIColor.gray {

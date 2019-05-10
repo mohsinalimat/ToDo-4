@@ -15,6 +15,8 @@ protocol TaskTableViewDelegate: AnyObject {
 class TaskTableView: UITableView {
     // MARK: - task table view property
     
+    let tasksId: String = "Tasks"
+    
     /** tasks according to date in tuple **/
     var tasks: [(String, [String])] = [(String, [String])]()
     

@@ -14,6 +14,10 @@ import AVFoundation
 class HomeController: UIViewController {
     
     // MARK: - Camera action properties
+    let toDoCardIdentifier: String = "ToDoCard"
+    
+    let newCategoryCardIdentifier: String = "NewCategoryCard"
+
     let captureSession: AVCaptureSession = AVCaptureSession()
     
     let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()

@@ -11,15 +11,6 @@ import AddButtonExpand
 
 class ToDoViewController: UIViewController {
 
-    @objc func leftBarButtonAction() {
-        if view.subviews.count == 4 {
-            view.subviews[3].removeFromSuperview()
-        } else {
-            navigationController?.popViewController(animated: true)
-        }
-    }
-    
-    
     lazy var todoViewModel: ToDoViewModel = {
         return ToDoViewModel(taskType: taskType!)
     }()
@@ -63,6 +54,16 @@ class ToDoViewController: UIViewController {
         }
     }
     
+    /// go back to home controller
+    @objc func leftBarButtonAction() {
+        if view.subviews.count == 4 {
+            navigationItem.rightBarButtonItem = nil
+            view.subviews[3].removeFromSuperview()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -137,6 +138,7 @@ extension ToDoViewController: UIPickerViewDelegate {
         }
         return minutes
     }
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0 {
             return hours[row]
@@ -149,6 +151,10 @@ extension ToDoViewController: UIPickerViewDelegate {
                 return "PM"
             }
         }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        // TODO: pick timer
     }
 }
 
@@ -178,6 +184,14 @@ extension ToDoViewController: AddButtonExpandDelegate {
         
         return blurredView
     }
+    
+    /// save timer
+    @objc func rightBarButtonAction() {
+        if view.subviews.count == 4 {
+            navigationItem.rightBarButtonItem = nil
+            view.subviews[3].removeFromSuperview()
+        }
+    }
 
     /// add task
     func buttonWillShrink() {
@@ -195,6 +209,10 @@ extension ToDoViewController: AddButtonExpandDelegate {
 
         // TODO: add time picker
         view.addSubview(blurView)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(rightBarButtonAction))
     }
     
     

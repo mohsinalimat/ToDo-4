@@ -10,6 +10,15 @@ import UIKit
 
 class CategoryTextField: UITextField {
     
+    let todoCategories: [String] = [
+        "Personal",
+        "Work",
+        "Grocery",
+        "Home",
+        "Travel",
+        "Other"
+    ]
+    
     lazy var picker: UIPickerView = {
         let picker: UIPickerView = UIPickerView()
         picker.translatesAutoresizingMaskIntoConstraints = false

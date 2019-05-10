@@ -19,7 +19,6 @@
 		A17A3CD6224B2EEB00204CD9 /* ToDoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */; };
 		A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD9224B2FB900204CD9 /* TaskList.swift */; };
 		A18CFD4D227347760081A54E /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18CFD4C227347760081A54E /* TaskCell.swift */; };
-		A1A5E165225A773A00B2D4AD /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E164225A773A00B2D4AD /* Identifiers.swift */; };
 		A1A5E167225AB7A600B2D4AD /* CategoryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */; };
 		A1A5E169225AFB5200B2D4AD /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E168225AFB5100B2D4AD /* Person.swift */; };
 		A1B4018922516CC3007993C4 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4018822516CC3007993C4 /* CheckBox.swift */; };
@@ -51,7 +50,6 @@
 		A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCard.swift; sourceTree = "<group>"; };
 		A17A3CD9224B2FB900204CD9 /* TaskList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskList.swift; sourceTree = "<group>"; };
 		A18CFD4C227347760081A54E /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
-		A1A5E164225A773A00B2D4AD /* Identifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
 		A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTextField.swift; sourceTree = "<group>"; };
 		A1A5E168225AFB5100B2D4AD /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		A1B4018822516CC3007993C4 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				A17A3CD9224B2FB900204CD9 /* TaskList.swift */,
-				A1A5E164225A773A00B2D4AD /* Identifiers.swift */,
 				A1A5E168225AFB5100B2D4AD /* Person.swift */,
 			);
 			path = models;
@@ -360,7 +357,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A17A3CB6224B2A2000204CD9 /* HomeController.swift in Sources */,
-				A1A5E165225A773A00B2D4AD /* Identifiers.swift in Sources */,
 				A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */,
 				A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */,
 				A18CFD4D227347760081A54E /* TaskCell.swift in Sources */,

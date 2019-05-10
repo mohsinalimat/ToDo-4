@@ -14,12 +14,17 @@ struct TopLeftIconConstraint {
     var left: NSLayoutConstraint!
 }
 
-class TopLeftIcon: UIImageView {
-    
-    override init(image: UIImage?) {
+struct TopRightIconContraint {
+    var right: NSLayoutConstraint!
+    var top: NSLayoutConstraint!
+}
+
+class Icon: UIImageView {
+
+    init(encircle: Bool, image: UIImage?) {
         super.init(image: image)
         translatesAutoresizingMaskIntoConstraints = false
-        if let img = image {
+        if let img = image, encircle {
             let circle: CAShapeLayer = CAShapeLayer()
             circle.strokeColor = UIColor.black.cgColor
             circle.fillColor = nil
@@ -33,7 +38,7 @@ class TopLeftIcon: UIImageView {
             layer.addSublayer(circle)
         }
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,7 +47,13 @@ class TopLeftIcon: UIImageView {
 
 class ToDoCard: UICollectionViewCell {
     
-    var topLeftIcon: TopLeftIcon = TopLeftIcon(image: UIImage(named: "personal"))
+    var topLeftIcon: Icon = Icon(encircle: true, image: UIImage(named: "personal"))
+    
+    var topLeftIconContraint: TopLeftIconConstraint = TopLeftIconConstraint()
+    
+    var moreIcon: Icon = Icon(encircle: false, image: UIImage(named: "more"))
+    
+    var moreIconContraint: TopRightIconContraint = TopRightIconContraint()
     
     var numOfTask: Int = 0 {
         didSet {
@@ -57,8 +68,6 @@ class ToDoCard: UICollectionViewCell {
     }
     
     var progressBar: ProgressBar!
-    
-    var topLeftIconContraint: TopLeftIconConstraint = TopLeftIconConstraint()
     
     lazy var numOfTaskLayer: CATextLayer = {
         let label: CATextLayer = CATextLayer()
@@ -114,6 +123,13 @@ class ToDoCard: UICollectionViewCell {
 
         addSubview(topLeftIcon)
         addSubview(progressBar)
+        addSubview(moreIcon)
+        
+        // auto layout for top right icon
+        moreIconContraint.top = moreIcon.topAnchor.constraint(equalTo: topAnchor, constant: 15)
+        moreIconContraint.right = moreIcon.rightAnchor.constraint(equalTo: rightAnchor, constant: -frame.width/10)
+        moreIconContraint.top.isActive = true
+        moreIconContraint.right.isActive = true
         
         // auto layout for top left icon
         topLeftIconContraint.top = topLeftIcon.topAnchor.constraint(equalTo: topAnchor, constant: 20)
@@ -147,6 +163,7 @@ class NewCategoryCard: ToDoCard {
         taskTypeLabelLayer.removeFromSuperlayer()
         numOfTaskLayer.removeFromSuperlayer()
         topLeftIcon.removeFromSuperview()
+        moreIcon.removeFromSuperview()
         progressBar.removeFromSuperview()
         
         addSubview(label)

@@ -66,19 +66,19 @@ class ToDoViewModel {
         }
     }
     
-    /// reset completed task
+    /// reset completed task to 0
     func resetCompletedTask() {
         taskType.numOfCompletedTask = 0
     }
     
-    /// format mm/dd/yyyy
+    /// format mm/dd/yyyy in string
     func dateString(date: Date) -> String {
         let formatter: DateFormatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
         return formatter.string(from: date)
     }
     
-    /// format mm/dd/yyyy
+    /// format mm/dd/yyyy in date component
     func date(date: String) -> Date? {
         let formatter: DateFormatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"

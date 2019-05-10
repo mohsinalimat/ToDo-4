@@ -58,6 +58,7 @@ class ToDoViewController: UIViewController {
     @objc func leftBarButtonAction() {
         if view.subviews.count == 4 {
             navigationItem.rightBarButtonItem = nil
+            title = "Tasks"
             view.subviews[3].removeFromSuperview()
         } else {
             navigationController?.popViewController(animated: true)
@@ -67,6 +68,7 @@ class ToDoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        title = "Tasks"
         navigationController?.delegate = self
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backArrow"),
                                                            style: .plain,
@@ -188,27 +190,30 @@ extension ToDoViewController: AddButtonExpandDelegate {
     /// save timer
     @objc func rightBarButtonAction() {
         if view.subviews.count == 4 {
+            title = "Tasks"
             navigationItem.rightBarButtonItem = nil
             view.subviews[3].removeFromSuperview()
         }
     }
 
-    /// add task
+    /// add task from delegate
     func buttonWillShrink() {
         NotificationCenter.default.post(name: NSNotification.Name.init("buttonShrink"), object: nil)
 
-        guard let _ = taskType else { return }
+        guard let _ = taskType,
+              let todoCard = todoCard, todoCard.numOfTask < todoViewModel.tasksCount else { return }
 
         let newTasks: [(String, [String])] = todoViewModel.tasks
         let percentage: Int = todoViewModel.tasksCompletedPercentage
 
-        todoCard?.numOfTask = todoViewModel.tasksCount
-        todoCard?.progressBar.setPercentage(percentage, animated: true)
+        todoCard.numOfTask = todoViewModel.tasksCount
+        todoCard.progressBar.setPercentage(percentage, animated: true)
         taskTableView.tasks = newTasks
         taskTableView.reloadData()
 
         // TODO: add time picker
         view.addSubview(blurView)
+        title = "Add Alarm"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
                                                             style: .plain,
                                                             target: self,

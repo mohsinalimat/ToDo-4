@@ -71,6 +71,14 @@ class AddTaskController: UIViewController {
             }
             dismiss(animated: true, completion: nil)
             inputTask.resignFirstResponder()
+        }        
+        else {
+            let rootVC = UIApplication.shared.windows.last?.rootViewController
+            let alert = UIAlertController(title: "Error", message: "Missing date or task description", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            guard rootVC != nil else { return }
+            rootVC!.present(alert, animated: true, completion: nil)
         }
     }
 

@@ -98,6 +98,7 @@ class CircleCropView: UIView {
         let parentMaxX = UIScreen.main.bounds.maxX
         let parentMaxY = UIScreen.main.bounds.maxY
         
+        // prevent from out of bound drag
         if frame.minX >= 0 && frame.maxX <= parentMaxX && frame.minY >= 0 && frame.maxY <= parentMaxY {
             center = CGPoint(x: center.x + translation.x, y: center.y + translation.y)
         } else if frame.minX < 0 && velocity.x < 0 {

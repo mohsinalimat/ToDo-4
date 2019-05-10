@@ -162,7 +162,7 @@ extension ToDoViewController: UIPickerViewDelegate {
 
 extension ToDoViewController: AddButtonExpandDelegate {
     var blurView: UIVisualEffectView {
-        let blurEffect = UIBlurEffect(style: .extraLight)
+        let blurEffect = UIBlurEffect(style: .prominent)
         let blurredView = UIVisualEffectView(effect: blurEffect)
         let timePicker = UIPickerView()
         
@@ -172,7 +172,6 @@ extension ToDoViewController: AddButtonExpandDelegate {
         timePicker.translatesAutoresizingMaskIntoConstraints = false
 
         blurredView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        blurredView.backgroundColor = .lightGray
         blurredView.contentView.addSubview(timePicker)
         blurredView.frame = CGRect(x: 0,
                                    y: -navigationController!.navigationBar.frame.height,

@@ -30,7 +30,10 @@ class ToDoViewController: UIViewController {
     /**
      default to current hour and minute when picking timer
     **/
-    var datePickedComponent: DateComponents = Calendar.current.dateComponents([.hour, .minute], from: Date())
+    lazy var timerPickedComponent: DateComponents = {
+        let currentTime = Calendar.current.dateComponents([.hour, .minute], from: Date())
+        return currentTime
+    }()
     
     var todoCard: ToDoCardExt? {
         didSet {
@@ -60,7 +63,7 @@ class ToDoViewController: UIViewController {
     }
     
     /// go back to home controller
-    @objc func leftBarButtonAction() {
+    @objc func backArrowAction() {
         if view.subviews.count == 4 {
             navigationItem.rightBarButtonItem = nil
             title = "Tasks"
@@ -78,7 +81,7 @@ class ToDoViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backArrow"),
                                                            style: .plain,
                                                            target: self,
-                                                           action: #selector(leftBarButtonAction))
+                                                           action: #selector(backArrowAction))
     }
     
     override func viewDidLayoutSubviews() {
@@ -94,14 +97,12 @@ class ToDoViewController: UIViewController {
 extension ToDoViewController: TaskTableViewDelegate {
     /// delete task in realm
     func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String) {
-        try! realm.write {
-            todoViewModel.deleteTask(taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)
-            todoCard?.numOfTask = todoViewModel.tasksCount
-            let percentage: Int = todoViewModel.tasksCompletedPercentage
-            todoCard?.progressBar.setPercentage(percentage, animated: true)
-            if todoCard?.progressBar.percentage ==  100 {
-                todoViewModel.resetCompletedTask()
-            }
+        todoViewModel.deleteTask(taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)
+        todoCard?.numOfTask = todoViewModel.tasksCount
+        let percentage: Int = todoViewModel.tasksCompletedPercentage
+        todoCard?.progressBar.setPercentage(percentage, animated: true)
+        if todoCard?.progressBar.percentage ==  100 {
+            todoViewModel.resetCompletedTask()
         }
     }
 }
@@ -161,17 +162,12 @@ extension ToDoViewController: UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let date = todoViewModel.recentlyAddedTask?.date
-        var dateComponent = Calendar.current.dateComponents([.year, .month, .day], from: date!)
-
         if component == 0 {
             let hour = Int(hours[row])
-            dateComponent.setValue(hour, for: .hour)
-            datePickedComponent = dateComponent
+            timerPickedComponent.setValue(hour, for: .hour)
         } else if component == 1 {
             let minute = Int(minutes[row])
-            dateComponent.setValue(minute, for: .minute)
-            datePickedComponent = dateComponent
+            timerPickedComponent.setValue(minute, for: .minute)
         }
     }
 }
@@ -216,8 +212,8 @@ extension ToDoViewController: AddButtonExpandDelegate {
             
             guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
             let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
-            
-            todoViewModel.saveDate(datePickedComponent)
+
+            todoViewModel.saveTimer(hour: timerPickedComponent.hour!, minute: timerPickedComponent.minute!)
 
             // scroll to newly added task
             for (dateSection, date) in taskTableView.tasks.enumerated() {

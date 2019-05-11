@@ -43,6 +43,13 @@ class TaskCell: UITableViewCell {
         return trashCan
     }()
     
+    lazy var alarmClock: UIButton = {
+        let alarmClock = UIButton()
+        alarmClock.setImage(UIImage(named: "clock"), for: .normal)
+        alarmClock.translatesAutoresizingMaskIntoConstraints = false
+        return alarmClock
+    }()
+    
     @objc func trashCanOnTap() {
         checkbox.checked = false
         trashCan.removeFromSuperview()

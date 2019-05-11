@@ -17,6 +17,10 @@ class AddTaskController: UIViewController {
     var dateSelected: Date?
     
     var type: Type
+    
+    lazy var todoViewModel: ToDoViewModel = {
+        return ToDoViewModel(taskType: type)
+    }()
 
     lazy var inputTask: UITextField = {
         let text: UITextField = UITextField()
@@ -59,16 +63,8 @@ class AddTaskController: UIViewController {
 
     @objc func addButtonShrink() {
         if inputTask.text != "" && dateSelected != nil {
-            try! realm.write {
-                let taskTypes = person.taskType.filter {
-                    $0.type == self.type
-                }
-
-                if let taskType = taskTypes.first {
-                    let task: Task = Task(name: inputTask.text!, date: dateSelected!)
-                    taskType.tasks.append(task)
-                }
-            }
+            let newTask = Task(name: inputTask.text!, date: dateSelected!)
+            todoViewModel.saveTask(newTask)
             dismiss(animated: true, completion: nil)
             inputTask.resignFirstResponder()
         }        

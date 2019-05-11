@@ -54,10 +54,27 @@ class ToDoViewModel {
     }
     
     /// save date
-    func saveDate(_ dateComponent: DateComponents) {
+    func saveTimer(hour: Int, minute: Int) {
         do {
             try realm.write {
-                recentlyAddedTask?.date = dateComponent.date
+                var dateComponent = Calendar.current.dateComponents([.year, .month, .day], from: recentlyAddedTask!.date!)
+                dateComponent.setValue(hour, for: .hour)
+                dateComponent.setValue(minute, for: .minute)
+                let calendar: Calendar = Calendar(identifier: .gregorian)
+                let date: Date = calendar.date(from: dateComponent)!
+                
+                recentlyAddedTask?.date = date
+            }
+        } catch let error {
+            print(error)
+        }
+    }
+    
+    /// save new task
+    func saveTask(_ newTask: Task) {
+        do {
+            try realm.write {
+                taskType.tasks.append(newTask)
             }
         } catch let error {
             print(error)
@@ -66,24 +83,36 @@ class ToDoViewModel {
     
     /// delete tasks
     func deleteTask(taskNameToDelete: String, taskDateToDelete: String) {
-        let dateToDelete: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date(date: taskDateToDelete)!)
-        
-        for (index, task) in taskType.tasks.enumerated() {
-            let taskDate: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: task.date!)
-            if task.name! == taskNameToDelete
-                && taskDate.day! == dateToDelete.day!
-                && taskDate.month! == dateToDelete.month!
-                && taskDate.year! == dateToDelete.year! {
-                taskType.tasks.remove(at: index)
-                taskType.numOfCompletedTask += 1
-                break
+        do {
+            try realm.write {
+                let dateToDelete: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date(date: taskDateToDelete)!)
+                
+                for (index, task) in taskType.tasks.enumerated() {
+                    let taskDate: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: task.date!)
+                    if task.name! == taskNameToDelete
+                        && taskDate.day! == dateToDelete.day!
+                        && taskDate.month! == dateToDelete.month!
+                        && taskDate.year! == dateToDelete.year! {
+                        taskType.tasks.remove(at: index)
+                        taskType.numOfCompletedTask += 1
+                        break
+                    }
+                }
             }
+        } catch let error {
+            print(error)
         }
     }
     
     /// reset completed task to 0
     func resetCompletedTask() {
-        taskType.numOfCompletedTask = 0
+        do {
+            try realm.write {
+                taskType.numOfCompletedTask = 0
+            }
+        } catch let error {
+            print(error)
+        }
     }
     
     /// format mm/dd/yyyy in string

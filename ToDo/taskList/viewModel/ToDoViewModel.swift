@@ -53,6 +53,17 @@ class ToDoViewModel {
         return tasks.sorted(by: { $0.key < $1.key })
     }
     
+    /// save date
+    func saveDate(_ dateComponent: DateComponents) {
+        do {
+            try realm.write {
+                recentlyAddedTask?.date = dateComponent.date
+            }
+        } catch let error {
+            print(error)
+        }
+    }
+    
     /// delete tasks
     func deleteTask(taskNameToDelete: String, taskDateToDelete: String) {
         let dateToDelete: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date(date: taskDateToDelete)!)

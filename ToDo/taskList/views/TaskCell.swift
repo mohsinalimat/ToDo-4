@@ -17,6 +17,8 @@ class TaskCell: UITableViewCell {
     
     weak var delegate: TaskCellDelegate?
     
+    var indexPathToDelete: IndexPath!
+    
     lazy var checkbox: CheckBox = {
         let checkbox: CheckBox = CheckBox()
         checkbox.onTapAction = {
@@ -40,8 +42,6 @@ class TaskCell: UITableViewCell {
         trashCan.addTarget(self, action: #selector(trashCanOnTap), for: .touchUpInside)
         return trashCan
     }()
-    
-    var indexPathToDelete: IndexPath!
     
     @objc func trashCanOnTap() {
         checkbox.checked = false

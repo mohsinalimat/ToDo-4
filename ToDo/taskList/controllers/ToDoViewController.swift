@@ -27,6 +27,11 @@ class ToDoViewController: UIViewController {
     
     var taskTableView: TaskTableView = TaskTableView(style: UITableView.Style.plain)
     
+    /**
+     default to current hour and minute when picking timer
+    **/
+    var datePickedComponent: DateComponents = Calendar.current.dateComponents([.hour, .minute], from: Date())
+    
     var todoCard: ToDoCardExt? {
         didSet {
             guard let todoCard = todoCard else { return }
@@ -156,7 +161,18 @@ extension ToDoViewController: UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        // TODO: pick timer
+        let date = todoViewModel.recentlyAddedTask?.date
+        var dateComponent = Calendar.current.dateComponents([.year, .month, .day], from: date!)
+
+        if component == 0 {
+            let hour = Int(hours[row])
+            dateComponent.setValue(hour, for: .hour)
+            datePickedComponent = dateComponent
+        } else if component == 1 {
+            let minute = Int(minutes[row])
+            dateComponent.setValue(minute, for: .minute)
+            datePickedComponent = dateComponent
+        }
     }
 }
 
@@ -165,11 +181,16 @@ extension ToDoViewController: AddButtonExpandDelegate {
         let blurEffect = UIBlurEffect(style: .prominent)
         let blurredView = UIVisualEffectView(effect: blurEffect)
         let timePicker = UIPickerView()
-        
+        let currentTime = Calendar.current.dateComponents([.hour, .minute], from: Date())
+        let hour = Int(floor(Double(currentTime.hour!) / 2.0))
+        let minute = currentTime.minute!
+
         timePicker.delegate = self
         timePicker.dataSource = self
         timePicker.showsSelectionIndicator = true
         timePicker.translatesAutoresizingMaskIntoConstraints = false
+        timePicker.selectRow(hour - 1, inComponent: 0, animated: true)
+        timePicker.selectRow(minute, inComponent: 1, animated: true)
 
         blurredView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         blurredView.contentView.addSubview(timePicker)
@@ -187,7 +208,7 @@ extension ToDoViewController: AddButtonExpandDelegate {
     }
     
     /// save timer
-    @objc func rightBarButtonAction() {
+    @objc func saveTimer() {
         if view.subviews.count == 4 {
             title = "Tasks"
             navigationItem.rightBarButtonItem = nil
@@ -196,6 +217,8 @@ extension ToDoViewController: AddButtonExpandDelegate {
             guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
             let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
             
+            todoViewModel.saveDate(datePickedComponent)
+
             // scroll to newly added task
             for (dateSection, date) in taskTableView.tasks.enumerated() {
                 if date.0 == recentlyAddedTaskDate {
@@ -232,7 +255,7 @@ extension ToDoViewController: AddButtonExpandDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
                                                             style: .plain,
                                                             target: self,
-                                                            action: #selector(rightBarButtonAction))
+                                                            action: #selector(saveTimer))
     }
     
     

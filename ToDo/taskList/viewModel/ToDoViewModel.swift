@@ -25,6 +25,10 @@ class ToDoViewModel {
         return taskType.percentage
     }
     
+    var recentlyAddedTask: Task? {
+        return taskType.tasks.last
+    }
+    
     var tasks: [(String, [String])] {
         var tasks: [String: [String]] = [:]
 

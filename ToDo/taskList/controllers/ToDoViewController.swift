@@ -192,6 +192,23 @@ extension ToDoViewController: AddButtonExpandDelegate {
             title = "Tasks"
             navigationItem.rightBarButtonItem = nil
             view.subviews[3].removeFromSuperview()
+            
+            guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
+            let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
+            
+            // scroll to newly added task
+            for (dateSection, date) in taskTableView.tasks.enumerated() {
+                if date.0 == recentlyAddedTaskDate {
+                    for (taskRow, task) in date.1.enumerated() {
+                        if task == recentlyAddedTask.name! {
+                            let scrollToIndexPath = IndexPath(row: taskRow, section: dateSection)
+                            taskTableView.scrollToRow(at: scrollToIndexPath, at: .top, animated: true)
+                            break
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -202,12 +219,11 @@ extension ToDoViewController: AddButtonExpandDelegate {
         guard let _ = taskType,
               let todoCard = todoCard, todoCard.numOfTask < todoViewModel.tasksCount else { return }
 
-        let newTasks: [(String, [String])] = todoViewModel.tasks
         let percentage: Int = todoViewModel.tasksCompletedPercentage
 
         todoCard.numOfTask = todoViewModel.tasksCount
         todoCard.progressBar.setPercentage(percentage, animated: true)
-        taskTableView.tasks = newTasks
+        taskTableView.tasks = todoViewModel.tasks   // new task
         taskTableView.reloadData()
 
         // TODO: add time picker

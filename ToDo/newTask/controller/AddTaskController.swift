@@ -13,6 +13,10 @@ import AddButtonExpand
 import SingleDatePickerCalendar
 
 class AddTaskController: UIViewController {
+    
+    var dateSelected: Date?
+    
+    var type: Type
 
     lazy var inputTask: UITextField = {
         let text: UITextField = UITextField()
@@ -52,10 +56,6 @@ class AddTaskController: UIViewController {
         singleDatePickerCalendar.singleDatePickerDelegate = self
         return singleDatePickerCalendar
     }()
-    
-    var dateSelected: Date?
-
-    var type: Type
 
     @objc func addButtonShrink() {
         if inputTask.text != "" && dateSelected != nil {

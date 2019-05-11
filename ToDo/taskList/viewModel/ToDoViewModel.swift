@@ -29,11 +29,11 @@ class ToDoViewModel {
         return taskType.tasks.last
     }
     
-    var tasks: [(String, [String])] {
-        var tasks: [String: [String]] = [:]
+    var tasks: [(String, [Task])] {
+        var tasks: [String: [Task]] = [:]
 
         if taskType.tasks.count == 0 {
-            return [(String, [String])]()
+            return [(String, [Task])]()
         }
         
         var initialDate: String = dateString(date: taskType.tasks.first!.date!)
@@ -45,9 +45,9 @@ class ToDoViewModel {
             }
             
             if tasks[taskDate] == nil {
-                tasks[taskDate] = [String]()
+                tasks[taskDate] = [Task]()
             }
-            tasks[taskDate]!.append(task.name!)
+            tasks[taskDate]!.append(task)
         }
         
         return tasks.sorted(by: { $0.key < $1.key })

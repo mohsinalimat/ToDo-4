@@ -219,7 +219,7 @@ extension ToDoViewController: AddButtonExpandDelegate {
             for (dateSection, date) in taskTableView.tasks.enumerated() {
                 if date.0 == recentlyAddedTaskDate {
                     for (taskRow, task) in date.1.enumerated() {
-                        if task == recentlyAddedTask.name! {
+                        if task.name! == recentlyAddedTask.name! {
                             let scrollToIndexPath = IndexPath(row: taskRow, section: dateSection)
                             taskTableView.scrollToRow(at: scrollToIndexPath, at: .top, animated: true)
                             break

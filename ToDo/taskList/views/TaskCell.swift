@@ -43,9 +43,13 @@ class TaskCell: UITableViewCell {
         return trashCan
     }()
     
-    lazy var alarmClock: UIButton = {
+    var alarmClock: UIButton = {
         let alarmClock = UIButton()
         alarmClock.setImage(UIImage(named: "clock"), for: .normal)
+        alarmClock.setTitleColor(.black, for: .normal)
+        alarmClock.titleLabel?.font = UIFont.systemFont(ofSize: 10)
+        alarmClock.titleEdgeInsets = UIEdgeInsets(top: 0, left: -30, bottom: 0, right: 0)
+        alarmClock.imageEdgeInsets = UIEdgeInsets(top: 0, left: -50, bottom: 0, right: 0)
         alarmClock.translatesAutoresizingMaskIntoConstraints = false
         return alarmClock
     }()

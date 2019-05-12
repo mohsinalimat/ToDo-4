@@ -60,10 +60,8 @@ class ToDoViewModel {
                 var dateComponent = Calendar.current.dateComponents([.year, .month, .day], from: recentlyAddedTask!.date!)
                 dateComponent.setValue(hour, for: .hour)
                 dateComponent.setValue(minute, for: .minute)
-                let calendar: Calendar = Calendar(identifier: .gregorian)
-                let date: Date = calendar.date(from: dateComponent)!
-                
-                recentlyAddedTask?.date = date
+
+                recentlyAddedTask?.date = Calendar(identifier: .gregorian).date(from: dateComponent)
             }
         } catch let error {
             print(error)

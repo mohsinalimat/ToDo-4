@@ -87,8 +87,18 @@ extension TaskTableView: UITableViewDataSource {
             taskCell.trashCan.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true
             taskCell.trashCan.rightAnchor.constraint(equalTo: taskCell.rightAnchor).isActive = true
         }
+        
+        let task = tasks[indexPath.section].1[indexPath.row]
+        let dueDateComponent = Calendar.current.dateComponents([.hour, .minute, .year], from: task.date!)
+        
+        if let hour = dueDateComponent.hour, let minute = dueDateComponent.minute {
+            taskCell.alarmClock.setTitle("\(hour):\(minute)", for: .normal)
+            taskCell.addSubview(taskCell.alarmClock)
+            taskCell.alarmClock.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true
+            taskCell.alarmClock.centerXAnchor.constraint(equalTo: taskCell.centerXAnchor, constant: 80).isActive = true
+        }
 
-        taskCell.checkbox.label = tasks[indexPath.section].1[indexPath.row].name!
+        taskCell.checkbox.label = task.name!
         taskCell.indexPathToDelete = indexPath
 
         return taskCell
@@ -115,6 +125,11 @@ extension TaskTableView: TaskCellDelegate {
         }
     }
     
+    /**
+     Do this after deletion for thesection below the deleted index path.
+     In case there are checkboxes being checked for sections below the
+     deleted section, decrement the section by 1
+    **/
     fileprivate func updateSectionCheckIndexPath(_ deletedIndexPath: IndexPath) {
         let deletedSection: Int = deletedIndexPath.section
         
@@ -140,7 +155,7 @@ extension TaskTableView: TaskCellDelegate {
         
         removeCheckedIndexPath(deletedIndexPath)
 
-        if tasks[deletedIndexPath.section].1.count == 1 {                       // remove section if there is only 1 task left
+        if tasks[deletedIndexPath.section].1.count == 1 {       // remove section if there is only 1 task left
             tasks.remove(at: deletedIndexPath.section)
             deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
             updateSectionCheckIndexPath(deletedIndexPath)
@@ -155,7 +170,7 @@ extension TaskTableView: TaskCellDelegate {
         taskDelegate?.taskTableView(deletedTaskName, taskDate) // notify toDoViewController
     }
 
-    /// on check checkbox
+    /// save checked indexPath
     func taskCell(_ checkedIndexPath: IndexPath, _ checked: Bool) {
         if checked {
             self.checkedIndexPaths.append(checkedIndexPath)

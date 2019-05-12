@@ -101,7 +101,7 @@ extension ToDoViewController: TaskTableViewDelegate {
         todoCard?.numOfTask = todoViewModel.tasksCount
         let percentage: Int = todoViewModel.tasksCompletedPercentage
         todoCard?.progressBar.setPercentage(percentage, animated: true)
-        if todoCard?.progressBar.percentage ==  100 {
+        if todoCard?.progressBar.percentage == 100 {
             todoViewModel.resetCompletedTask()
         }
     }
@@ -212,15 +212,19 @@ extension ToDoViewController: AddButtonExpandDelegate {
             
             guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
             let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
+            
+            let hour = timerPickedComponent.hour!
+            let minute = timerPickedComponent.minute!
 
-            todoViewModel.saveTimer(hour: timerPickedComponent.hour!, minute: timerPickedComponent.minute!)
+            todoViewModel.saveTimer(hour: hour, minute: minute)
 
-            // scroll to newly added task
+            // scroll to newly added task and reload
             for (dateSection, date) in taskTableView.tasks.enumerated() {
                 if date.0 == recentlyAddedTaskDate {
                     for (taskRow, task) in date.1.enumerated() {
                         if task.name! == recentlyAddedTask.name! {
                             let scrollToIndexPath = IndexPath(row: taskRow, section: dateSection)
+                            taskTableView.reloadRows(at: [scrollToIndexPath], with: .none)
                             taskTableView.scrollToRow(at: scrollToIndexPath, at: .top, animated: true)
                             break
                         }

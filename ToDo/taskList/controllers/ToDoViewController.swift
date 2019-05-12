@@ -109,12 +109,12 @@ extension ToDoViewController: TaskTableViewDelegate {
 
 extension ToDoViewController: UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 3
+        return 2
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if component == 0 {
-            return 12
+            return 24
         } else if component == 1 {
             return 60
         }
@@ -126,7 +126,7 @@ extension ToDoViewController: UIPickerViewDataSource {
 
 extension ToDoViewController: UIPickerViewDelegate {
     var hours: [String] {
-        let hour = 12
+        let hour = 24
         var hours: [String] = [String]()
         for i in 1...hour {
             hours.append(String(i))
@@ -139,7 +139,7 @@ extension ToDoViewController: UIPickerViewDelegate {
         var minutes: [String] = [String]()
         for i in 1...minute {
             if i < 10 {
-                minutes.append("0\(i)")
+                minutes.append("\(i)")
             } else {
                 minutes.append(String(i))
             }
@@ -150,14 +150,8 @@ extension ToDoViewController: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0 {
             return hours[row]
-        } else if component == 1 {
-            return minutes[row]
         } else {
-            if row == 0 {
-                return "AM"
-            } else {
-                return "PM"
-            }
+            return minutes[row]
         }
     }
     
@@ -177,16 +171,15 @@ extension ToDoViewController: AddButtonExpandDelegate {
         let blurEffect = UIBlurEffect(style: .prominent)
         let blurredView = UIVisualEffectView(effect: blurEffect)
         let timePicker = UIPickerView()
-        let currentTime = Calendar.current.dateComponents([.hour, .minute], from: Date())
-        let hour = Int(floor(Double(currentTime.hour!) / 2.0))
-        let minute = currentTime.minute!
+        let hour = timerPickedComponent.hour!
+        let minute = timerPickedComponent.minute!
 
         timePicker.delegate = self
         timePicker.dataSource = self
         timePicker.showsSelectionIndicator = true
         timePicker.translatesAutoresizingMaskIntoConstraints = false
         timePicker.selectRow(hour - 1, inComponent: 0, animated: true)
-        timePicker.selectRow(minute, inComponent: 1, animated: true)
+        timePicker.selectRow(minute - 1, inComponent: 1, animated: true)
 
         blurredView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         blurredView.contentView.addSubview(timePicker)
@@ -215,6 +208,8 @@ extension ToDoViewController: AddButtonExpandDelegate {
             
             let hour = timerPickedComponent.hour!
             let minute = timerPickedComponent.minute!
+            
+            print(hour, minute)
 
             todoViewModel.saveTimer(hour: hour, minute: minute)
 

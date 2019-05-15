@@ -30,6 +30,11 @@ class TaskTableView: UITableView {
     **/
     var checkedIndexPaths: [IndexPath] = [IndexPath]()
     
+    /**
+     Need to keep track of index path that has alarm clock.
+    **/
+    var clockIndexPaths: [IndexPath] = [IndexPath]()
+    
     //MARK: - override funcs
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -91,7 +96,9 @@ extension TaskTableView: UITableViewDataSource {
         let task = tasks[indexPath.section].1[indexPath.row]
         let dueDateComponent = Calendar.current.dateComponents([.hour, .minute, .year], from: task.date!)
         
-        if let hour = dueDateComponent.hour, let minute = dueDateComponent.minute {
+        taskCell.alarmClock.removeFromSuperview()
+        
+        if let hour = dueDateComponent.hour, let minute = dueDateComponent.minute, hour != 0, minute != 0 {
             taskCell.alarmClock.setTitle("\(hour):\(minute)", for: .normal)
             taskCell.addSubview(taskCell.alarmClock)
             taskCell.alarmClock.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true

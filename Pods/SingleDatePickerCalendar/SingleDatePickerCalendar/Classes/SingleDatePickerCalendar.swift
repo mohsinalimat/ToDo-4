@@ -20,6 +20,8 @@ class SingleDatePickerCalendar: UICollectionView {
 
     let monthCollectionIdentifier: String = "Month"
     
+    let bundle: Bundle = Bundle(for: SingleDatePickerCalendar.self)
+    
     var monthCollectionView: MonthCollectionView {
         return MonthCollectionView(frame: .zero, month: 1, year: year)
     }
@@ -48,7 +50,7 @@ class SingleDatePickerCalendar: UICollectionView {
     
     internal lazy var leftArrow: UIButton = {
         let leftArrow: UIButton = UIButton()
-        leftArrow.setImage(UIImage(named: "leftArrow"), for: .normal)
+        leftArrow.setImage(UIImage(named: "leftArrow", in: bundle, compatibleWith: nil), for: .normal)
         leftArrow.translatesAutoresizingMaskIntoConstraints = false
         leftArrow.addTarget(self, action: #selector(previousYear), for: .touchUpInside)
         return leftArrow
@@ -56,7 +58,7 @@ class SingleDatePickerCalendar: UICollectionView {
     
     internal lazy var rightArrow: UIButton = {
         let rightArrow: UIButton = UIButton()
-        rightArrow.setImage(UIImage(named: "rightArrow"), for: .normal)
+        rightArrow.setImage(UIImage(named: "rightArrow", in: bundle, compatibleWith: nil), for: .normal)
         rightArrow.translatesAutoresizingMaskIntoConstraints = false
         rightArrow.addTarget(self, action: #selector(nextYear), for: .touchUpInside)
         return rightArrow

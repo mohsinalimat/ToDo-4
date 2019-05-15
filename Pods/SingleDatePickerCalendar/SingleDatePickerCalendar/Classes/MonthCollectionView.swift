@@ -112,8 +112,7 @@ extension MonthCollectionView: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                insetForSectionAt section: Int) -> UIEdgeInsets {
-  
-        return UIEdgeInsets(top: 12, left: 0, bottom: 0, right: 0)
+        return UIEdgeInsets(top: 10, left: 2, bottom: 0, right: 2)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -150,12 +149,13 @@ extension MonthCollectionView: UICollectionViewDataSource {
         } else {
             if currentDisplayYear < present.year! || (currentDisplayMonth < present.month! && currentDisplayYear == present.year!)
                 || (currentDisplayMonth == present.month! && currentDisplayYear == present.year! && currentDateIncremental < present.day!) {
-                dateLabel.textColor = UIColor(red: 0.32, green: 0.36, blue: 0.41, alpha: 1.0)
+                dateLabel.textColor = UIColor(red: 0.32, green: 0.36, blue: 0.41, alpha: 1)
+                dateLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 18)
                 dateCell.isUserInteractionEnabled = false
             } else {
                 dateLabel.textColor = UIColor.black
+                dateLabel.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
             }
-            dateLabel.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
             dateLabel.text = String(currentDateIncremental)
             currentDateIncremental += 1
         }

@@ -8,6 +8,7 @@
 
 import UIKit
 import AddButtonExpand
+import UserNotifications
 
 class ToDoViewController: UIViewController {
 
@@ -111,7 +112,7 @@ extension ToDoViewController: UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if component == 0 {
             return 24
@@ -120,8 +121,7 @@ extension ToDoViewController: UIPickerViewDataSource {
         }
         return 2
     }
-    
-    
+
 }
 
 extension ToDoViewController: UIPickerViewDelegate {
@@ -208,8 +208,6 @@ extension ToDoViewController: AddButtonExpandDelegate {
             
             let hour = timerPickedComponent.hour!
             let minute = timerPickedComponent.minute!
-            
-            print(hour, minute)
 
             todoViewModel.saveTimer(hour: hour, minute: minute)
 
@@ -226,8 +224,34 @@ extension ToDoViewController: AddButtonExpandDelegate {
                     }
                 }
             }
-
+            
+            // add notification
+            addNotification()
+            
         }
+    }
+    
+    /// add notification to app when it's due date and time
+    fileprivate func addNotification() {
+        guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "To Do"
+        content.body = recentlyAddedTask.name!
+
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: recentlyAddedTask.date!)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let uuidString = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+        let notificationCenter = UNUserNotificationCenter.current()
+
+        notificationCenter.delegate = self
+        notificationCenter.add(request, withCompletionHandler: {
+            (error) in
+            if error != nil {
+                print("notification error: ", error!)
+            }
+        })
     }
 
     /// add task from delegate
@@ -244,7 +268,6 @@ extension ToDoViewController: AddButtonExpandDelegate {
         taskTableView.tasks = todoViewModel.tasks   // new task
         taskTableView.reloadData()
 
-        // TODO: add time picker
         view.addSubview(blurView)
         title = "Add Alarm"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
@@ -254,13 +277,22 @@ extension ToDoViewController: AddButtonExpandDelegate {
     }
     
     
-    /// open new task controller
+    /// open new task controller from delegate
     func buttonWillExpand() {
         let addTaskController: AddTaskController = AddTaskController(type: taskType!)
         addTaskController.modalPresentationStyle = .custom
         addTaskController.transitioningDelegate = self
 
         present(addTaskController, animated: true, completion: nil)
+    }
+}
+
+extension ToDoViewController: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        // TODO: go to view controller from notification
+
     }
 }
 

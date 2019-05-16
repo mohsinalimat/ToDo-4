@@ -29,6 +29,7 @@
 		A1C7A91922752C8F00C0C1FD /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C7A91822752C8F00C0C1FD /* Extension.swift */; };
 		A1C98528224F18EE0071E79C /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C98527224F18EE0071E79C /* ToDoViewController.swift */; };
 		A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */; };
+		A1EA8E52228CD2F300A5691E /* TimePickerSoundOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1EA8E51228CD2F300A5691E /* TimePickerSoundOption.swift */; };
 		B004DC3053A7D76BC404C83E /* Pods_ToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E27C3B32806F0827D27B949 /* Pods_ToDo.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,7 @@
 		A1C7A91822752C8F00C0C1FD /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A1C98527224F18EE0071E79C /* ToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
 		A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCardPresentAnimator.swift; sourceTree = "<group>"; };
+		A1EA8E51228CD2F300A5691E /* TimePickerSoundOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerSoundOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +207,7 @@
 				A1B4018822516CC3007993C4 /* CheckBox.swift */,
 				A1B4018A22519E00007993C4 /* TaskTableView.swift */,
 				A18CFD4C227347760081A54E /* TaskCell.swift */,
+				A1EA8E51228CD2F300A5691E /* TimePickerSoundOption.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A17A3CB6224B2A2000204CD9 /* HomeController.swift in Sources */,
+				A1EA8E52228CD2F300A5691E /* TimePickerSoundOption.swift in Sources */,
 				A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */,
 				A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */,
 				A18CFD4D227347760081A54E /* TaskCell.swift in Sources */,

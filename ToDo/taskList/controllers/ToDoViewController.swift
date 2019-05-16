@@ -11,6 +11,8 @@ import AddButtonExpand
 import UserNotifications
 
 class ToDoViewController: UIViewController {
+    
+    var timePickerSoundOption: TimePickerSoundOption = TimePickerSoundOption()
 
     lazy var todoViewModel: ToDoViewModel = {
         return ToDoViewModel(taskType: taskType!)
@@ -31,10 +33,7 @@ class ToDoViewController: UIViewController {
     /**
      default to current hour and minute when picking timer
     **/
-    lazy var timerPickedComponent: DateComponents = {
-        let currentTime = Calendar.current.dateComponents([.hour, .minute], from: Date())
-        return currentTime
-    }()
+    var timerPickedComponent: DateComponents = Calendar.current.dateComponents([.hour, .minute], from: Date())
     
     var todoCard: ToDoCardExt? {
         didSet {
@@ -60,17 +59,6 @@ class ToDoViewController: UIViewController {
 
             taskTableView.tasks = todoViewModel.tasks
             todoCard?.numOfTask = todoViewModel.tasksCount
-        }
-    }
-    
-    /// go back to home controller
-    @objc func backArrowAction() {
-        if view.subviews.count == 4 {
-            navigationItem.rightBarButtonItem = nil
-            title = "Tasks"
-            view.subviews[3].removeFromSuperview()
-        } else {
-            navigationController?.popViewController(animated: true)
         }
     }
 
@@ -167,6 +155,7 @@ extension ToDoViewController: UIPickerViewDelegate {
 }
 
 extension ToDoViewController: AddButtonExpandDelegate {
+    /// add time picker and uiswitch inside blur view
     var blurView: UIVisualEffectView {
         let blurEffect = UIBlurEffect(style: .prominent)
         let blurredView = UIVisualEffectView(effect: blurEffect)
@@ -183,17 +172,45 @@ extension ToDoViewController: AddButtonExpandDelegate {
 
         blurredView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         blurredView.contentView.addSubview(timePicker)
-        blurredView.frame = CGRect(x: 0,
-                                   y: -navigationController!.navigationBar.frame.height,
-                                   width: view.bounds.width,
-                                   height: view.bounds.height + navigationController!.navigationBar.frame.height)
+        blurredView.contentView.addSubview(timePickerSoundOption)
+        blurredView.frame = view.frame
         
         timePicker.widthAnchor.constraint(equalToConstant: blurredView.frame.width).isActive = true
-        timePicker.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        timePicker.centerYAnchor.constraint(equalTo: blurredView.centerYAnchor).isActive = true
+        timePicker.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        timePicker.topAnchor.constraint(equalTo: blurredView.topAnchor, constant: navigationController!.navigationBar.frame.height * 2).isActive = true
         timePicker.leftAnchor.constraint(equalTo: blurredView.leftAnchor).isActive = true
+
+        timePickerSoundOption.widthAnchor.constraint(equalToConstant: blurredView.frame.width).isActive = true
+        timePickerSoundOption.heightAnchor.constraint(equalToConstant: view.bounds.height - (timePicker.bounds.maxY + 50)).isActive = true
+        timePickerSoundOption.topAnchor.constraint(equalTo: blurredView.topAnchor, constant: timePicker.bounds.maxY + 50).isActive = true
+        timePickerSoundOption.leftAnchor.constraint(equalTo: blurredView.leftAnchor).isActive = true
         
         return blurredView
+    }
+    
+    /**
+     go back to home controller.
+     Reset sound option to the default selection
+     **/
+    @objc func backArrowAction() {
+        if view.subviews.count == 4 {
+            navigationItem.rightBarButtonItem = nil
+            title = "Tasks"
+            resetSoundOptionAndTimer()
+            view.subviews[3].removeFromSuperview()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    fileprivate func resetSoundOptionAndTimer() {
+        // reset sound option
+        timePickerSoundOption.previousSelectedIndexPath = IndexPath(row: 0, section: 0)
+        timePickerSoundOption.reloadSections(IndexSet(integer: 0), with: .none)
+        
+        // reset to current time
+        timerPickedComponent = Calendar.current.dateComponents([.hour, .minute], from: Date())
+
     }
     
     /// save timer
@@ -210,6 +227,9 @@ extension ToDoViewController: AddButtonExpandDelegate {
             let minute = timerPickedComponent.minute!
 
             todoViewModel.saveTimer(hour: hour, minute: minute)
+            
+            resetSoundOptionAndTimer()
+            
 
             // scroll to newly added task and reload
             for (dateSection, date) in taskTableView.tasks.enumerated() {

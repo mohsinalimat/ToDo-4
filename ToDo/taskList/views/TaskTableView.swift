@@ -195,13 +195,12 @@ extension TaskTableView: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: tasksId)  else { return nil }
-        let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height))
+        let label: UILabel = UILabel()
         let taskDate: DateComponents = Calendar.current.dateComponents([.day, .month], from: date(date: tasks[section].0)!)
         let present: DateComponents = Calendar.current.dateComponents([.day, .month], from: Date())
 
         if taskDate.day! < present.day! && taskDate.month! <= present.month! {
-            label.attributedText = NSMutableAttributedString().normal("\(tasks[section].0)").bold(" - past due")
+            label.attributedText = NSMutableAttributedString().normal("\(tasks[section].0)").bold(" - past due", size: nil)
         } else {
             label.attributedText = NSMutableAttributedString().normal("\(tasks[section].0)")
         }

@@ -112,7 +112,7 @@ extension MonthCollectionView: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 2, bottom: 0, right: 2)
+        return UIEdgeInsets(top: 10, left: 5, bottom: 0, right: 5)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -10,6 +10,7 @@
 		A1154C97225863A1004AD50C /* AddTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1154C96225863A1004AD50C /* AddTaskController.swift */; };
 		A12017C622700F32007AC0EF /* ToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12017C522700F32007AC0EF /* ToDoViewModel.swift */; };
 		A14AE34322583B62008242C1 /* AddTaskPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */; };
+		A1520A7E228E1FF8000B0471 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1520A7D228E1FF8000B0471 /* Reminder.swift */; };
 		A172A84D227B83F5002ED40D /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A172A84C227B83F5002ED40D /* ImageCropper.swift */; };
 		A17A3CB4224B2A2000204CD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */; };
 		A17A3CB6224B2A2000204CD9 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CB5224B2A2000204CD9 /* HomeController.swift */; };
@@ -29,7 +30,6 @@
 		A1C7A91922752C8F00C0C1FD /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C7A91822752C8F00C0C1FD /* Extension.swift */; };
 		A1C98528224F18EE0071E79C /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C98527224F18EE0071E79C /* ToDoViewController.swift */; };
 		A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */; };
-		A1EA8E52228CD2F300A5691E /* TimePickerSoundOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1EA8E51228CD2F300A5691E /* TimePickerSoundOption.swift */; };
 		B004DC3053A7D76BC404C83E /* Pods_ToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E27C3B32806F0827D27B949 /* Pods_ToDo.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +40,8 @@
 		A1154C96225863A1004AD50C /* AddTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskController.swift; sourceTree = "<group>"; };
 		A12017C522700F32007AC0EF /* ToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewModel.swift; sourceTree = "<group>"; };
 		A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskPresentationController.swift; sourceTree = "<group>"; };
+		A1520A7D228E1FF8000B0471 /* Reminder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
+		A1520A84228E48C1000B0471 /* Marimba-notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Marimba-notification.caf"; sourceTree = "<group>"; };
 		A172A84C227B83F5002ED40D /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		A17A3CB0224B2A2000204CD9 /* ToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -61,7 +63,6 @@
 		A1C7A91822752C8F00C0C1FD /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A1C98527224F18EE0071E79C /* ToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
 		A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCardPresentAnimator.swift; sourceTree = "<group>"; };
-		A1EA8E51228CD2F300A5691E /* TimePickerSoundOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerSoundOption.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +150,7 @@
 				A17A3CBD224B2A2100204CD9 /* Assets.xcassets */,
 				A17A3CBF224B2A2100204CD9 /* LaunchScreen.storyboard */,
 				A17A3CC2224B2A2100204CD9 /* Info.plist */,
+				A1520A84228E48C1000B0471 /* Marimba-notification.caf */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -203,11 +205,11 @@
 		A1B8AD5E225073A6000D22D9 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				A1520A7D228E1FF8000B0471 /* Reminder.swift */,
 				A1B8AD6022507437000D22D9 /* ToDo-Ext.swift */,
 				A1B4018822516CC3007993C4 /* CheckBox.swift */,
 				A1B4018A22519E00007993C4 /* TaskTableView.swift */,
 				A18CFD4C227347760081A54E /* TaskCell.swift */,
-				A1EA8E51228CD2F300A5691E /* TimePickerSoundOption.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -360,7 +362,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A17A3CB6224B2A2000204CD9 /* HomeController.swift in Sources */,
-				A1EA8E52228CD2F300A5691E /* TimePickerSoundOption.swift in Sources */,
+				A1520A7E228E1FF8000B0471 /* Reminder.swift in Sources */,
 				A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */,
 				A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */,
 				A18CFD4D227347760081A54E /* TaskCell.swift in Sources */,

@@ -9,10 +9,11 @@
 import UIKit
 import AddButtonExpand
 import UserNotifications
+import AVFoundation
 
 class ToDoViewController: UIViewController {
     
-    var timePickerSoundOption: TimePickerSoundOption = TimePickerSoundOption()
+    var reminderOption: Reminder = Reminder()
 
     lazy var todoViewModel: ToDoViewModel = {
         return ToDoViewModel(taskType: taskType!)
@@ -34,6 +35,11 @@ class ToDoViewController: UIViewController {
      default to current hour and minute when picking timer
     **/
     var timerPickedComponent: DateComponents = Calendar.current.dateComponents([.hour, .minute], from: Date())
+    
+    /**
+     number of notification appear on app icon
+    **/
+    var totalNotification: Int = 0
     
     var todoCard: ToDoCardExt? {
         didSet {
@@ -66,6 +72,7 @@ class ToDoViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Tasks"
+        reminderOption.separatorStyle = .none
         navigationController?.delegate = self
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backArrow"),
                                                            style: .plain,
@@ -172,7 +179,7 @@ extension ToDoViewController: AddButtonExpandDelegate {
 
         blurredView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         blurredView.contentView.addSubview(timePicker)
-        blurredView.contentView.addSubview(timePickerSoundOption)
+        blurredView.contentView.addSubview(reminderOption)
         blurredView.frame = view.frame
         
         timePicker.widthAnchor.constraint(equalToConstant: blurredView.frame.width).isActive = true
@@ -180,10 +187,10 @@ extension ToDoViewController: AddButtonExpandDelegate {
         timePicker.topAnchor.constraint(equalTo: blurredView.topAnchor, constant: navigationController!.navigationBar.frame.height * 2).isActive = true
         timePicker.leftAnchor.constraint(equalTo: blurredView.leftAnchor).isActive = true
 
-        timePickerSoundOption.widthAnchor.constraint(equalToConstant: blurredView.frame.width).isActive = true
-        timePickerSoundOption.heightAnchor.constraint(equalToConstant: view.bounds.height - (timePicker.bounds.maxY + 50)).isActive = true
-        timePickerSoundOption.topAnchor.constraint(equalTo: blurredView.topAnchor, constant: timePicker.bounds.maxY + 50).isActive = true
-        timePickerSoundOption.leftAnchor.constraint(equalTo: blurredView.leftAnchor).isActive = true
+        reminderOption.widthAnchor.constraint(equalToConstant: blurredView.frame.width).isActive = true
+        reminderOption.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        reminderOption.topAnchor.constraint(equalTo: blurredView.topAnchor, constant: timePicker.bounds.maxY + 50).isActive = true
+        reminderOption.leftAnchor.constraint(equalTo: blurredView.leftAnchor).isActive = true
         
         return blurredView
     }
@@ -196,21 +203,37 @@ extension ToDoViewController: AddButtonExpandDelegate {
         if view.subviews.count == 4 {
             navigationItem.rightBarButtonItem = nil
             title = "Tasks"
-            resetSoundOptionAndTimer()
+            resetReminderOptionAndTimer()
             view.subviews[3].removeFromSuperview()
+            scrollToNewTask()
         } else {
             navigationController?.popViewController(animated: true)
         }
     }
     
-    fileprivate func resetSoundOptionAndTimer() {
-        // reset sound option
-        timePickerSoundOption.previousSelectedIndexPath = IndexPath(row: 0, section: 0)
-        timePickerSoundOption.reloadSections(IndexSet(integer: 0), with: .none)
-        
+    fileprivate func resetReminderOptionAndTimer() {
         // reset to current time
         timerPickedComponent = Calendar.current.dateComponents([.hour, .minute], from: Date())
-
+        // reset reminder switch to false
+        reminderOption.reloadData()
+    }
+    
+    /// scroll to newly added task and reload
+    fileprivate func scrollToNewTask() {
+        guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
+        let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
+        for (dateSection, date) in taskTableView.tasks.enumerated() {
+            if date.0 == recentlyAddedTaskDate {
+                for (taskRow, task) in date.1.enumerated() {
+                    if task.name! == recentlyAddedTask.name! {
+                        let scrollToIndexPath = IndexPath(row: taskRow, section: dateSection)
+                        taskTableView.reloadRows(at: [scrollToIndexPath], with: .none)
+                        taskTableView.scrollToRow(at: scrollToIndexPath, at: .top, animated: true)
+                        break
+                    }
+                }
+            }
+        }
     }
     
     /// save timer
@@ -220,30 +243,15 @@ extension ToDoViewController: AddButtonExpandDelegate {
             navigationItem.rightBarButtonItem = nil
             view.subviews[3].removeFromSuperview()
             
-            guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
-            let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
-            
             let hour = timerPickedComponent.hour!
             let minute = timerPickedComponent.minute!
 
             todoViewModel.saveTimer(hour: hour, minute: minute)
             
-            resetSoundOptionAndTimer()
-            
+            resetReminderOptionAndTimer()
 
             // scroll to newly added task and reload
-            for (dateSection, date) in taskTableView.tasks.enumerated() {
-                if date.0 == recentlyAddedTaskDate {
-                    for (taskRow, task) in date.1.enumerated() {
-                        if task.name! == recentlyAddedTask.name! {
-                            let scrollToIndexPath = IndexPath(row: taskRow, section: dateSection)
-                            taskTableView.reloadRows(at: [scrollToIndexPath], with: .none)
-                            taskTableView.scrollToRow(at: scrollToIndexPath, at: .top, animated: true)
-                            break
-                        }
-                    }
-                }
-            }
+            scrollToNewTask()
             
             // add notification
             addNotification()
@@ -258,6 +266,10 @@ extension ToDoViewController: AddButtonExpandDelegate {
         let content = UNMutableNotificationContent()
         content.title = "To Do"
         content.body = recentlyAddedTask.name!
+        
+        if reminderOption.isReminderOn {
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "Marimba-notification.caf"))
+        }
 
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: recentlyAddedTask.date!)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
@@ -266,6 +278,13 @@ extension ToDoViewController: AddButtonExpandDelegate {
         let notificationCenter = UNUserNotificationCenter.current()
 
         notificationCenter.delegate = self
+        
+        notificationCenter.requestAuthorization(options: [.alert, .sound], completionHandler: {
+            (success, error) in
+            if error != nil {
+                print("notification request error: ", error!)
+            }
+        })
         notificationCenter.add(request, withCompletionHandler: {
             (error) in
             if error != nil {
@@ -312,7 +331,6 @@ extension ToDoViewController: UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         // TODO: go to view controller from notification
-
     }
 }
 

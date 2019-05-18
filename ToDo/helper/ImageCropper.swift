@@ -27,13 +27,13 @@ class CircleCropView: UIView {
         let y = (imageView.frame.midY * imageViewScale)/1.5 < frame.origin.y * imageViewScale
             ? frame.origin.y * imageViewScale - (frame.height * imageViewScale)/1.5
             : frame.origin.y * imageViewScale
-        let width = (imageView.frame.midY * imageViewScale)/1.5 < frame.origin.y * imageViewScale
-            ? frame.height/2 * imageViewScale
-            : frame.height * imageViewScale
-        let height = (imageView.frame.midY * imageViewScale)/1.5 < frame.origin.y * imageViewScale
-            ? frame.width/2 * imageViewScale
+        let width = imageView.frame.midY * imageViewScale < frame.origin.y * imageViewScale
+            ? frame.width * imageViewScale * 2
             : frame.width * imageViewScale
-        
+        let height = imageView.frame.midY * imageViewScale < frame.origin.y * imageViewScale
+            ? frame.height * imageViewScale * 2
+            : frame.height * imageViewScale
+
         let cropZone = CGRect(x: x,
                               y: y,
                               width: width,
@@ -70,28 +70,6 @@ class CircleCropView: UIView {
         return roundedImage
     }
     
-    /// TODO: Implement crop functionality
-    lazy var focusShape: CAShapeLayer = {
-        let shape = CAShapeLayer()
-        let path = UIBezierPath()
-        
-        // 2 vertical line
-        path.move(to: CGPoint(x: bounds.midX - 60, y: 15))
-        path.addLine(to: CGPoint(x: bounds.midX - 60, y: bounds.maxY - 15))
-        path.move(to: CGPoint(x: bounds.midX + 60, y: 15))
-        path.addLine(to: CGPoint(x: bounds.midX + 60, y: bounds.maxY - 15))
-        
-        // 2 horizontal line
-        path.move(to: CGPoint(x: 15, y: bounds.midY - 60))
-        path.addLine(to: CGPoint(x: bounds.maxX - 15, y: bounds.midY - 60))
-        path.move(to: CGPoint(x: 15, y: bounds.midY + 60))
-        path.addLine(to: CGPoint(x: bounds.maxX - 15, y: bounds.midY + 60))
-        shape.path = path.cgPath
-        shape.lineWidth = 0.5
-        shape.strokeColor = UIColor.lightGray.cgColor
-        return shape
-    }()
-    
     @objc func dragView(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: self)
         let velocity = sender.velocity(in: self)
@@ -125,19 +103,10 @@ class CircleCropView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
-        layer.masksToBounds = false
-        layer.cornerRadius = frame.size.height/2
-        clipsToBounds = true
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = 1
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(dragView(_:)))
         addGestureRecognizer(panGesture)
-    }
-    
-    override func draw(_ rect: CGRect) {
-        let newRect = CGRect(x: rect.origin.x + 5, y: rect.origin.y + 5, width: rect.width - 10, height: rect.height - 10)
-        let circle = UIBezierPath(ovalIn: newRect)
-        UIColor.white.setStroke()
-        circle.lineWidth = 1
-        circle.stroke()
     }
     
     required init?(coder aDecoder: NSCoder) {

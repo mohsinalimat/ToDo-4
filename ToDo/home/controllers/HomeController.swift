@@ -373,25 +373,22 @@ extension HomeController: UICollectionViewDelegate {
         let newTaskType: TaskType = TaskType(type: choice)
         toDoCardLayout.newToDoCard = true
 
-            let taskType = person.taskType.filter {
-                $0.type == choice
-            }
+        let taskType = person.taskType.filter { $0.type == choice }
 
-            if taskType.count == 0 {
-                taskTypeCollection.performBatchUpdates({
-                    addTaskType(newTaskType)
-                    self.taskTypeCollection.insertItems(at: [IndexPath(row: 1, section: 0)])
-                }, completion: {
-                    (finished: Bool) in
-                    let newContentOffset: CGPoint = CGPoint(x: self.view.bounds.width/1.5 + 10,
-                                                            y: self.taskTypeCollection.contentOffset.y)
-                    self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
-                                                         at: UICollectionView.ScrollPosition.centeredHorizontally,
-                                                         animated: true)
-                    self.taskTypeCollection.setContentOffset(newContentOffset, animated: true)
-                })
-            }
-
+        if taskType.count == 0 {
+            taskTypeCollection.performBatchUpdates({
+                addTaskType(newTaskType)
+                self.taskTypeCollection.insertItems(at: [IndexPath(row: 1, section: 0)])
+            }, completion: {
+                (finished: Bool) in
+                let newContentOffset: CGPoint = CGPoint(x: self.view.bounds.width/1.5 + 10,
+                                                        y: self.taskTypeCollection.contentOffset.y)
+                self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
+                                                        at: UICollectionView.ScrollPosition.centeredHorizontally,
+                                                        animated: true)
+                self.taskTypeCollection.setContentOffset(newContentOffset, animated: true)
+            })
+        }
     }
     
     fileprivate func addTaskType(_ type: TaskType) {

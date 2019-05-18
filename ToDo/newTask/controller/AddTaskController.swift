@@ -56,7 +56,7 @@ class AddTaskController: UIViewController {
     }()
 
     lazy var singleDatePickerCalendar: SingleDatePickerCalendar = {
-        let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 160, width: view.frame.width, height: 300))
+        let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 160, width: view.frame.width, height: 280))
         singleDatePickerCalendar.singleDatePickerDelegate = self
         return singleDatePickerCalendar
     }()

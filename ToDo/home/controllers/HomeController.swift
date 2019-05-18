@@ -388,7 +388,7 @@ extension HomeController: UICollectionViewDelegate {
                     self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
                                                          at: UICollectionView.ScrollPosition.centeredHorizontally,
                                                          animated: true)
-                    self.taskTypeCollection.setContentOffset(newContentOffset, animated: true) // TODO: temporary solution, need to fix scrolling after add new item
+                    self.taskTypeCollection.setContentOffset(newContentOffset, animated: true)
                 })
             }
 

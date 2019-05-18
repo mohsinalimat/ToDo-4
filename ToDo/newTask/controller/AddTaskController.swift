@@ -18,6 +18,18 @@ class AddTaskController: UIViewController {
     
     var type: Type
     
+    var calendarMaxY: CGFloat? {
+        didSet {
+            guard let _ = calendarMaxY else { return }
+
+            view.addSubview(singleDatePickerCalendar)
+
+            let currentMonth: Int = Calendar.current.component(.month, from: Date()) - 1
+
+            singleDatePickerCalendar.scrollToItem(at: IndexPath(row: currentMonth, section: 0), at: .centeredVertically, animated: true)
+        }
+    }
+    
     lazy var todoViewModel: ToDoViewModel = {
         return ToDoViewModel(taskType: type)
     }()
@@ -55,11 +67,12 @@ class AddTaskController: UIViewController {
         return label
     }()
 
-    lazy var singleDatePickerCalendar: SingleDatePickerCalendar = {
-        let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 160, width: view.frame.width, height: 280))
+    var singleDatePickerCalendar: SingleDatePickerCalendar {
+        let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 150, width: view.frame.width, height: calendarMaxY! - 150))
         singleDatePickerCalendar.singleDatePickerDelegate = self
+
         return singleDatePickerCalendar
-    }()
+    }
 
     @objc func addButtonShrink() {
         if inputTask.text != "" && dateSelected != nil {
@@ -95,17 +108,13 @@ class AddTaskController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-
-        let currentMonth: Int = Calendar.current.component(.month, from: Date()) - 1
-
+        
         view.addSubview(inputTask)
         view.addSubview(newTaskLabel)
         view.addSubview(taskTypeQuestion)
         view.addSubview(crossOut)
-        view.addSubview(singleDatePickerCalendar)
-        
-        singleDatePickerCalendar.scrollToItem(at: IndexPath(row: currentMonth, section: 0), at: .centeredVertically, animated: true)
 
+        
         newTaskLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         newTaskLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 50).isActive = true
 

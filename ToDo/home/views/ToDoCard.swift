@@ -64,6 +64,25 @@ class ToDoCard: UICollectionViewCell {
     var taskType: String = "Other" {
         didSet {
             taskTypeLabelLayer.string = taskType
+            switch taskType {
+            case "Work":
+                topLeftIcon.image = UIImage(named: "work")
+                break
+            case "Grocery":
+                topLeftIcon.image = UIImage(named: "grocery")
+                break
+            case "Home":
+                topLeftIcon.image = UIImage(named: "home")
+                break
+            case "Travel":
+                topLeftIcon.image = UIImage(named: "travel")
+                break
+            case "Personal":
+                topLeftIcon.image = UIImage(named: "personal")
+                break
+            default:
+                topLeftIcon.image = UIImage(named: "other")
+            }
         }
     }
     

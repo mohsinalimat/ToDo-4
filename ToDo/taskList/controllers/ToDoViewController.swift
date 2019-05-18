@@ -167,7 +167,7 @@ extension ToDoViewController: AddButtonExpandDelegate {
         let blurEffect = UIBlurEffect(style: .prominent)
         let blurredView = UIVisualEffectView(effect: blurEffect)
         let timePicker = UIPickerView()
-        let hour = timerPickedComponent.hour! == 0 ? 23 : timerPickedComponent.hour!
+        let hour = timerPickedComponent.hour! == 0 ? 23 : timerPickedComponent.hour! - 1
         let minute = timerPickedComponent.minute! - 1
 
         timePicker.delegate = self

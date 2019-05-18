@@ -180,6 +180,14 @@ class HomeController: UIViewController {
         cancelImageView()
     }
     
+    lazy var toDoCardLayout: ToDoCardCollectionViewFLowLayout = {
+        let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
+        layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
+        layout.itemSize = CGSize(width: view.bounds.width/1.5, height: view.bounds.height/2.5)
+        
+        return layout
+    }()
+    
     @objc func cancelImageCapture() {
         captureSession.stopRunning()
         captureSession.removeOutput(stillImageOutput)
@@ -201,15 +209,11 @@ class HomeController: UIViewController {
     }
 
     lazy var taskTypeCollection: UICollectionView = {
-        let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
-        layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
-        layout.itemSize = CGSize(width: view.bounds.width/1.5, height: view.bounds.height/2.5)
-
         let collection: UICollectionView = UICollectionView(frame: CGRect(x: 0,
                                                                           y: view.bounds.maxY - view.bounds.height/2,
                                                                           width: view.bounds.width,
                                                                           height: view.bounds.height/2),
-                                                            collectionViewLayout: layout)
+                                                            collectionViewLayout: toDoCardLayout)
         collection.dataSource = self
         collection.delegate = self
         collection.backgroundColor = .clear
@@ -367,14 +371,15 @@ extension HomeController: UICollectionViewDelegate {
     
     func saveTaskType(choice: Type) {
         let newTaskType: TaskType = TaskType(type: choice)
-        try! realm.write {
+        toDoCardLayout.newToDoCard = true
+
             let taskType = person.taskType.filter {
                 $0.type == choice
             }
 
             if taskType.count == 0 {
                 taskTypeCollection.performBatchUpdates({
-                    person.taskType.insert(newTaskType, at: 0)
+                    addTaskType(newTaskType)
                     self.taskTypeCollection.insertItems(at: [IndexPath(row: 1, section: 0)])
                 }, completion: {
                     (finished: Bool) in
@@ -386,6 +391,16 @@ extension HomeController: UICollectionViewDelegate {
                     self.taskTypeCollection.setContentOffset(newContentOffset, animated: true) // TODO: temporary solution, need to fix scrolling after add new item
                 })
             }
+
+    }
+    
+    fileprivate func addTaskType(_ type: TaskType) {
+        do {
+            try realm.write {
+                person.taskType.insert(type, at: 0)
+            }
+        } catch let error {
+            print("cannot add new task type: ", error)
         }
     }
 

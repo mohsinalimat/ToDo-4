@@ -10,4 +10,6 @@ target 'ToDo' do
   pod 'AddButtonExpand'
   pod 'SingleDatePickerCalendar'
   pod 'ProgressBar'
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
 end

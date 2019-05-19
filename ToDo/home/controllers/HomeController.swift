@@ -248,6 +248,20 @@ class HomeController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        Network.getQuoteOfDay { quote in
+            let quoteLabel = UILabel(frame: CGRect(x: self.view.bounds.width/8,
+                                                   y: self.view.bounds.midY/2,
+                                                   width: self.view.bounds.width - self.view.bounds.width/8, height: 100))
+            quoteLabel.text = quote
+            quoteLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
+            quoteLabel.textColor = .gray
+            quoteLabel.numberOfLines = 5
+            self.view.addSubview(quoteLabel)
+        }
+
+        title = "TODO"
+        navigationController?.navigationBar.titleTextAttributes = [.font: UIFont(name: "AvenirNext-DemiBold", size: 12)!, .foregroundColor: UIColor.gray]
+
         let currentDateComponent: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         let currentDate: String = "\(monthInString(currentDateComponent.month!)) \(currentDateComponent.day!), \(currentDateComponent.year!)"
         let currentDateLabel: UILabel = UILabel()
@@ -269,13 +283,12 @@ class HomeController: UIViewController {
         view.addSubview(profilePicture)
         
         profilePicture.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
-        profilePicture.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height/10).isActive = true
+        profilePicture.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height/8).isActive = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
-
-        navigationController?.setNavigationBarHidden(true, animated: true)
+       // navigationController?.setNavigationBarHidden(true, animated: true)
         navigationController?.delegate = self
         taskTypeCollection.reloadItems(at: [IndexPath(row: todoCardIndex, section: 0)])
     }
@@ -339,7 +352,7 @@ extension HomeController: UINavigationControllerDelegate {
                               animationControllerFor operation: UINavigationController.Operation,
                               from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let _ = toVC as? ToDoViewController else { return nil }
-        navigationController.setNavigationBarHidden(false, animated: false)
+       // navigationController.setNavigationBarHidden(false, animated: false)
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
         return ToDoCardPresentAnimator(navigationBarMaxY: navigationController.navigationBar.frame.maxY, todoCardIndex: todoCardIndex)
     }

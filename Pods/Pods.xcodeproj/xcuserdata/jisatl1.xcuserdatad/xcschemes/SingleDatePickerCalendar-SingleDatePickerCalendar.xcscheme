@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F0C26AE5BFDCAD0DB678B3912007AE0D"
+               BlueprintIdentifier = "BAF593FCEC8F4F823D5B6A1029540DAC"
                BuildableName = "SingleDatePickerCalendar.bundle"
                BlueprintName = "SingleDatePickerCalendar-SingleDatePickerCalendar"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F0C26AE5BFDCAD0DB678B3912007AE0D"
+            BlueprintIdentifier = "BAF593FCEC8F4F823D5B6A1029540DAC"
             BuildableName = "SingleDatePickerCalendar.bundle"
             BlueprintName = "SingleDatePickerCalendar-SingleDatePickerCalendar"
             ReferencedContainer = "container:Pods.xcodeproj">

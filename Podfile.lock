@@ -1,5 +1,6 @@
 PODS:
   - AddButtonExpand (0.0.10)
+  - Alamofire (4.8.2)
   - ProgressBar (0.0.2)
   - Realm (3.15.0):
     - Realm/Headers (= 3.15.0)
@@ -7,28 +8,35 @@ PODS:
   - RealmSwift (3.15.0):
     - Realm (= 3.15.0)
   - SingleDatePickerCalendar (0.0.6)
+  - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
   - AddButtonExpand
+  - Alamofire
   - ProgressBar
   - RealmSwift
   - SingleDatePickerCalendar
+  - SwiftyJSON
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AddButtonExpand
+    - Alamofire
     - ProgressBar
     - Realm
     - RealmSwift
     - SingleDatePickerCalendar
+    - SwiftyJSON
 
 SPEC CHECKSUMS:
   AddButtonExpand: c2bedb5c5a38e4b3940d1da3f89748798d030df2
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   ProgressBar: a4626c667e4a0a712a537654ca5510615b0030b5
   Realm: 9b834e1be6062f544805252c812348872dc5d4ed
   RealmSwift: 8a41886f8ab6efef9eb8df97de2f2bb911561a79
   SingleDatePickerCalendar: 90625969cde8fa24e6ba3ae463fa4898544ce5e3
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 3737eed050f0cd476ba7a503dc817bc2c57db43f
+PODFILE CHECKSUM: 4ed8f4e0e512dd379b1756a23fe2f2cd986531b6
 
 COCOAPODS: 1.6.1

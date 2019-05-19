@@ -20,6 +20,7 @@
 		A17A3CD6224B2EEB00204CD9 /* ToDoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */; };
 		A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17A3CD9224B2FB900204CD9 /* TaskList.swift */; };
 		A18CFD4D227347760081A54E /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18CFD4C227347760081A54E /* TaskCell.swift */; };
+		A1A0C6C82291D34900F0AE7D /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A0C6C72291D34900F0AE7D /* NetworkRequest.swift */; };
 		A1A5E167225AB7A600B2D4AD /* CategoryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */; };
 		A1A5E169225AFB5200B2D4AD /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5E168225AFB5100B2D4AD /* Person.swift */; };
 		A1B4018922516CC3007993C4 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B4018822516CC3007993C4 /* CheckBox.swift */; };
@@ -53,6 +54,7 @@
 		A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCard.swift; sourceTree = "<group>"; };
 		A17A3CD9224B2FB900204CD9 /* TaskList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskList.swift; sourceTree = "<group>"; };
 		A18CFD4C227347760081A54E /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
+		A1A0C6C72291D34900F0AE7D /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
 		A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTextField.swift; sourceTree = "<group>"; };
 		A1A5E168225AFB5100B2D4AD /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		A1B4018822516CC3007993C4 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 			children = (
 				A1C7A91822752C8F00C0C1FD /* Extension.swift */,
 				A172A84C227B83F5002ED40D /* ImageCropper.swift */,
+				A1A0C6C72291D34900F0AE7D /* NetworkRequest.swift */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -318,18 +321,22 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ToDo/Pods-ToDo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AddButtonExpand/AddButtonExpand.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/ProgressBar/ProgressBar.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SingleDatePickerCalendar/SingleDatePickerCalendar.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AddButtonExpand.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProgressBar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SingleDatePickerCalendar.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -368,6 +375,7 @@
 				A18CFD4D227347760081A54E /* TaskCell.swift in Sources */,
 				A1B4018922516CC3007993C4 /* CheckBox.swift in Sources */,
 				A1B4018B22519E00007993C4 /* TaskTableView.swift in Sources */,
+				A1A0C6C82291D34900F0AE7D /* NetworkRequest.swift in Sources */,
 				A1A5E169225AFB5200B2D4AD /* Person.swift in Sources */,
 				A1B8AD6422508CC7000D22D9 /* ToDoCardDismissAnimator.swift in Sources */,
 				A1C7A91922752C8F00C0C1FD /* Extension.swift in Sources */,

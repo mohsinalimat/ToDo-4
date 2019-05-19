@@ -16,6 +16,8 @@ class HomeController: UIViewController {
     // MARK: - Camera action properties
     let toDoCardIdentifier: String = "ToDoCard"
     
+    let toDoCardCollectionHeader: String = "toDoCardCollectionHeader"
+    
     let newCategoryCardIdentifier: String = "NewCategoryCard"
 
     let captureSession: AVCaptureSession = AVCaptureSession()
@@ -214,6 +216,7 @@ class HomeController: UIViewController {
                                                                           width: view.bounds.width,
                                                                           height: view.bounds.height/2),
                                                             collectionViewLayout: toDoCardLayout)
+
         collection.dataSource = self
         collection.delegate = self
         collection.backgroundColor = .clear
@@ -224,9 +227,38 @@ class HomeController: UIViewController {
 
         return collection
     }()
+    
+    fileprivate func monthInString(_ month: Int) -> String {
+        switch month {
+        case 1: return "January"
+        case 2: return "Feburary"
+        case 3: return "March"
+        case 4: return "April"
+        case 5: return "May"
+        case 6: return "June"
+        case 7: return "July"
+        case 8: return "August"
+        case 9: return "September"
+        case 10: return "October"
+        case 11: return "November"
+        case 12: return "December"
+        default: fatalError("Invalid month")
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let currentDateComponent: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        let currentDate: String = "\(monthInString(currentDateComponent.month!)) \(currentDateComponent.day!), \(currentDateComponent.year!)"
+        let currentDateLabel: UILabel = UILabel()
+        
+        currentDateLabel.attributedText = NSMutableAttributedString().boldGray("Today : ").normal(currentDate)
+        currentDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(currentDateLabel)
+        
+        currentDateLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
+        currentDateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
 
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.backgroundColor = .clear

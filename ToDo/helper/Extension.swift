@@ -17,6 +17,15 @@ extension NSMutableAttributedString {
         
         return self
     }
+    
+    @discardableResult func boldGray(_ text: String) -> NSMutableAttributedString {
+        let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AvenirNext-DemiBold", size: 15)!, .foregroundColor: UIColor.gray]
+        let boldString = NSMutableAttributedString(string: text, attributes: attrs)
+        
+        append(boldString)
+        
+        return self
+    }
 
     @discardableResult func normal(_ text: String) -> NSMutableAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AppleSDGothicNeo-Regular", size: 15)!, .foregroundColor: UIColor.lightGray]

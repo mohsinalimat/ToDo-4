@@ -25,10 +25,12 @@ class ToDoCardCollectionViewFLowLayout: UICollectionViewFlowLayout {
             currentPage = max(currentPage - 1, 0)
         } else if previousOffset < collectionView.contentOffset.x && velocity.x > 0 { // right slide
             if newToDoCard {
-                currentPage = currentPage + 1
+                currentPage += 1
                 newToDoCard = false
             }
             currentPage = min(currentPage + 1, itemsCount - 1)
+        } else {
+             newToDoCard = false
         }
         
         let updatedOffset: CGFloat = (itemSize.width + minimumInteritemSpacing) * CGFloat(currentPage)

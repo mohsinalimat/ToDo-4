@@ -25,7 +25,7 @@ class AddTaskController: UIViewController {
             view.addSubview(singleDatePickerCalendar)
 
             let currentMonth: Int = Calendar.current.component(.month, from: Date()) - 1
-
+            print(currentMonth)
             singleDatePickerCalendar.scrollToItem(at: IndexPath(row: currentMonth, section: 0), at: .centeredVertically, animated: true)
         }
     }

@@ -263,36 +263,28 @@ class HomeController: UIViewController {
         let tasksToDo = totalTaskToDoToday
         let label = UILabel(frame: CGRect(x: view.bounds.width/8,
                                           y: view.bounds.height/4,
-                                          width: self.view.bounds.width - self.view.bounds.width/8,
-                                          height: 20))
+                                          width: view.bounds.width - view.bounds.width/8,
+                                          height: 40))
         label.font = UIFont(name: "AvenirNext-Bold", size: 12)
         label.textColor = .gray
-
-        if tasksToDo == 0 {
-            label.text = "There are no more tasks left to do."
-        } else {
-            label.text = "You have \(totalTaskToDoToday) tasks to do today."
-        }
+        label.numberOfLines = 2
+       // label.backgroundColor = .gray
+        return label
+    }()
+    
+    lazy var quoteLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: self.view.bounds.width/8,
+                                               y: self.view.bounds.height/3.8,
+                                               width: self.view.bounds.width - self.view.bounds.width/8,
+                                               height: 100))
+        label.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
+        label.textColor = .gray
+        label.numberOfLines = 5
         return label
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // add total tasks to do today
-        view.addSubview(taskReminderLabel)
-
-        // get random quote of the day
-        Network.getQuoteOfDay { quote in
-            let quoteLabel = UILabel(frame: CGRect(x: self.view.bounds.width/8,
-                                                   y: self.view.bounds.height/4,
-                                                   width: self.view.bounds.width - self.view.bounds.width/8,
-                                                   height: 100))
-            quoteLabel.text = quote
-            quoteLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
-            quoteLabel.textColor = .gray
-            quoteLabel.numberOfLines = 5
-            self.view.addSubview(quoteLabel)
-        }
 
         // home screen title
         title = "TO DO"
@@ -321,16 +313,34 @@ class HomeController: UIViewController {
         profilePicture.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
         profilePicture.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height/8).isActive = true
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // get random quote of the day
+        Network.getQuoteOfDay { quote in
+            self.quoteLabel.text = quote
+            if self.quoteLabel.superview == nil {
+                self.view.addSubview(self.quoteLabel)
+            }
+        }
+        // update tasks to do today
+        let tasksToDo = totalTaskToDoToday
+        let firstName = person.firstName ?? ""
+        
+        if taskReminderLabel.superview == nil {
+            view.addSubview(taskReminderLabel)
+        }
+
+        if tasksToDo == 0 {
+            taskReminderLabel.text = "Hello, \(firstName). \nThere are no more tasks left to do."
+        } else {
+            taskReminderLabel.text = "Hello, \(firstName). \nYou have \(totalTaskToDoToday) tasks to do today."
+        }
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
-        let tasksToDo = totalTaskToDoToday
         navigationController?.delegate = self
         taskTypeCollection.reloadItems(at: [IndexPath(row: todoCardIndex, section: 0)])
-
-        if tasksToDo > 0 {
-            taskReminderLabel.text = "You have \(totalTaskToDoToday) tasks to do today."
-        }
     }
 
     override func didReceiveMemoryWarning() {

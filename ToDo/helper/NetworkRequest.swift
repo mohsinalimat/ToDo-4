@@ -10,16 +10,21 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+enum NetworkError: Error {
+    case invalidResponse
+}
+
 final class Network {
     /// this api is coming from https://quotes.rest/#!/qod/get_qod
     static func getQuoteOfDay(completion: @escaping (String) -> Void) {
         Alamofire.request("https://quotes.rest/qod", method: .get, parameters: ["category": "love"]).responseJSON { response in
             do {
-                let json = try JSON(data: response.data!)
-                let quote = json["contents"]["quotes"][0]["quote"].string!
+                guard let data = response.data, response.result.isSuccess else { throw NetworkError.invalidResponse }
+                let json = try JSON(data: data)
+                let quote = json["contents"]["quotes"][0]["quote"].string ?? ""
                 completion(quote)
             } catch {
-                print("JSONSerialization error:", error)
+                print(error)
             }
         }
     }

@@ -10,35 +10,34 @@ import UIKit
 import RealmSwift
 import AVFoundation
 
-
 class HomeController: UIViewController {
-    
+
     // MARK: - Camera action properties
     let toDoCardIdentifier: String = "ToDoCard"
-    
+
     let toDoCardCollectionHeader: String = "toDoCardCollectionHeader"
-    
+
     let newCategoryCardIdentifier: String = "NewCategoryCard"
 
     let captureSession: AVCaptureSession = AVCaptureSession()
-    
+
     let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
-    
+
     lazy var circleCrop: CircleCropView = {
        return CircleCropView(frame: CGRect(x: 10,
                                            y: UIScreen.main.bounds.height/2 -  UIScreen.main.bounds.height/4,
                                            width: UIScreen.main.bounds.width - 10,
                                            height: UIScreen.main.bounds.height/2))
     }()
-    
+
     lazy var imageView: UIImageView = {
         return UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
     }()
-    
+
     lazy var cameraPreview: UIView = {
         return UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
     }()
-    
+
     lazy var profilePicture: UIButton = {
         let imageView = UIButton()
 
@@ -47,7 +46,7 @@ class HomeController: UIViewController {
         } else {
             imageView.setImage(UIImage(named: "user"), for: .normal)
         }
-        
+
         let image = imageView.image(for: .normal)!
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -62,7 +61,7 @@ class HomeController: UIViewController {
         imageView.layer.cornerRadius = image.size.width/2
         return imageView
     }()
-    
+
     /// view photo options
     @objc func photoOptions() {
         let alertPhotoOptions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -71,7 +70,7 @@ class HomeController: UIViewController {
         alertPhotoOptions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertPhotoOptions, animated: true, completion: nil)
     }
-    
+
     func pickImageFromLibrary(action: UIAlertAction) {
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
@@ -80,12 +79,12 @@ class HomeController: UIViewController {
         imagePicker.imageExportPreset = .current
         present(imagePicker, animated: true, completion: nil)
     }
-    
+
     func capturePhoto(action: UIAlertAction) {
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        
+
         guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
-        
+
         do {
             let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
             if captureSession.inputs.count == 0 {
@@ -94,31 +93,29 @@ class HomeController: UIViewController {
         } catch let error {
             print("error unable to initialize back camera: ", error.localizedDescription)
         }
-        
+
         if captureSession.canAddOutput(stillImageOutput) {
             captureSession.sessionPreset = AVCaptureSession.Preset.photo
             captureSession.addOutput(stillImageOutput)
         }
-        
-        
+
         previewLayer.frame = view.bounds
         previewLayer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraPreview.layer.addSublayer(previewLayer)
-        
+
         view.addSubview(cameraPreview)
         view.addSubview(cameraButtonView)
         view.addSubview(crossOut)
-        
+
         crossOut.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40).isActive = true
         crossOut.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
-        
-        
+
         DispatchQueue.global(qos: .userInitiated).async {
             self.captureSession.startRunning()
         }
     }
-    
+
     lazy var capturePhotoButton: UIButton = {
         let button: UIButton = UIButton()
         button.setImage(UIImage(named: "len"), for: .normal)
@@ -128,7 +125,7 @@ class HomeController: UIViewController {
         button.addTarget(self, action: #selector(captureAndSaveImage), for: .touchUpInside)
         return button
     }()
-    
+
     lazy var cameraButtonView: UIView = {
         let cameraButtonView: UIView = UIView(frame: CGRect(x: 0, y: view.bounds.maxY - 120, width: view.bounds.width, height: 120))
         cameraButtonView.backgroundColor = .clear
@@ -138,7 +135,7 @@ class HomeController: UIViewController {
         capturePhotoButton.centerYAnchor.constraint(equalTo: cameraButtonView.centerYAnchor).isActive = true
         return cameraButtonView
     }()
-    
+
     /// use for canceling image capture
     lazy var crossOut: UIButton = {
         let image: UIButton = UIButton()
@@ -147,7 +144,7 @@ class HomeController: UIViewController {
         image.addTarget(self, action: #selector(cancelImageCapture), for: .touchUpInside)
         return image
     }()
-    
+
     /// done cropping image text
     lazy var doneCropImage: UIButton = {
         let button = UIButton(type: .roundedRect)
@@ -158,18 +155,19 @@ class HomeController: UIViewController {
         button.addTarget(self, action: #selector(doneCroppingImageAction), for: .touchUpInside)
         return button
     }()
-    
+
     /// done crop image action. The actual cropping
     @objc func doneCroppingImageAction() {
         guard let _ = imageView.image else { return }
+
         let targetSize = profilePicture.bounds.size
-        
+
         guard let cropImage = circleCrop.cropImage(imageView, targetSize),
             let cropImagePngData = cropImage.pngData() else { return }
         
         profilePicture.layer.cornerRadius = cropImage.size.width/2
         profilePicture.setImage(cropImage, for: .normal)
-        
+
         do {
             try realm.write {
                 person.profileImage = cropImagePngData
@@ -177,11 +175,11 @@ class HomeController: UIViewController {
         } catch let error {
             print(error.localizedDescription)
         }
-        
-        
+
+
         cancelImageView()
     }
-    
+
     lazy var toDoCardLayout: ToDoCardCollectionViewFLowLayout = {
         let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
@@ -189,7 +187,7 @@ class HomeController: UIViewController {
         
         return layout
     }()
-    
+
     @objc func cancelImageCapture() {
         captureSession.stopRunning()
         captureSession.removeOutput(stillImageOutput)
@@ -197,13 +195,13 @@ class HomeController: UIViewController {
         crossOut.removeFromSuperview()
         cameraPreview.removeFromSuperview()
     }
-    
+
     @objc func cancelImageView() {
         crossOut.removeFromSuperview()
         imageView.removeFromSuperview()
         circleCrop.removeFromSuperview()
     }
-    
+
     @objc func captureAndSaveImage() {
         let photoSettings: AVCapturePhotoSettings = AVCapturePhotoSettings()
         photoSettings.isAutoStillImageStabilizationEnabled = true
@@ -227,7 +225,7 @@ class HomeController: UIViewController {
 
         return collection
     }()
-    
+
     fileprivate func monthInString(_ month: Int) -> String {
         switch month {
         case 1: return "January"
@@ -246,12 +244,49 @@ class HomeController: UIViewController {
         }
     }
 
+    var totalTaskToDoToday: Int {
+        let currentDate = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        var totalTaskToDoToday = 0
+        for taskType in person.taskType {
+            let tasksToDo = taskType.tasks.filter {
+                let taskDate = Calendar.current.dateComponents([.year, .month, .day], from: $0.date!)
+                return taskDate.day! == currentDate.day! && taskDate.month! == currentDate.month! && taskDate.year! == currentDate.year!
+            }
+
+            totalTaskToDoToday += tasksToDo.count
+        }
+
+        return totalTaskToDoToday
+    }
+
+    lazy var taskReminderLabel: UILabel = {
+        let tasksToDo = totalTaskToDoToday
+        let label = UILabel(frame: CGRect(x: view.bounds.width/8,
+                                          y: view.bounds.height/4,
+                                          width: self.view.bounds.width - self.view.bounds.width/8,
+                                          height: 20))
+        label.font = UIFont(name: "AvenirNext-Bold", size: 12)
+        label.textColor = .gray
+
+        if tasksToDo == 0 {
+            label.text = "There are no more tasks left to do."
+        } else {
+            label.text = "You have \(totalTaskToDoToday) tasks to do today."
+        }
+        return label
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        // add total tasks to do today
+        view.addSubview(taskReminderLabel)
+
+        // get random quote of the day
         Network.getQuoteOfDay { quote in
             let quoteLabel = UILabel(frame: CGRect(x: self.view.bounds.width/8,
-                                                   y: self.view.bounds.midY/2,
-                                                   width: self.view.bounds.width - self.view.bounds.width/8, height: 100))
+                                                   y: self.view.bounds.height/4,
+                                                   width: self.view.bounds.width - self.view.bounds.width/8,
+                                                   height: 100))
             quoteLabel.text = quote
             quoteLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
             quoteLabel.textColor = .gray
@@ -259,38 +294,43 @@ class HomeController: UIViewController {
             self.view.addSubview(quoteLabel)
         }
 
-        title = "TODO"
+        // home screen title
+        title = "TO DO"
         navigationController?.navigationBar.titleTextAttributes = [.font: UIFont(name: "AvenirNext-DemiBold", size: 12)!, .foregroundColor: UIColor.gray]
-
-        let currentDateComponent: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
-        let currentDate: String = "\(monthInString(currentDateComponent.month!)) \(currentDateComponent.day!), \(currentDateComponent.year!)"
-        let currentDateLabel: UILabel = UILabel()
-        
-        currentDateLabel.attributedText = NSMutableAttributedString().boldGray("Today : ").normal(currentDate)
-        currentDateLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(currentDateLabel)
-        
-        currentDateLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
-        currentDateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.view.backgroundColor = .white
         navigationController?.navigationBar.barTintColor = .white
 
+        // current date label above todo type carousel card
+        let currentDateComponent: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        let currentDate: String = "\(monthInString(currentDateComponent.month!)) \(currentDateComponent.day!), \(currentDateComponent.year!)"
+        let currentDateLabel: UILabel = UILabel()
+
+        currentDateLabel.attributedText = NSMutableAttributedString().boldGray("Today : ").normal(currentDate)
+        currentDateLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(currentDateLabel)
+
+        currentDateLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
+        currentDateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
         view.addSubview(taskTypeCollection)
         view.addSubview(profilePicture)
-        
+
         profilePicture.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width/8).isActive = true
         profilePicture.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height/8).isActive = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
-       // navigationController?.setNavigationBarHidden(true, animated: true)
+        let tasksToDo = totalTaskToDoToday
         navigationController?.delegate = self
         taskTypeCollection.reloadItems(at: [IndexPath(row: todoCardIndex, section: 0)])
+
+        if tasksToDo > 0 {
+            taskReminderLabel.text = "You have \(totalTaskToDoToday) tasks to do today."
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -304,12 +344,12 @@ extension HomeController: UIImagePickerControllerDelegate {
         picker.dismiss(animated: true, completion: {
             guard let pickedImageFromLibrary = info[.originalImage] as? UIImage else { return }
             let targetSize = self.profilePicture.frame.size
-            
+
             guard let cropImage = self.circleCrop.cropImage(pickedImageFromLibrary, targetSize),
                   let cropImagePngData = cropImage.pngData() else { return }
             self.profilePicture.layer.cornerRadius = cropImage.size.width/2
             self.profilePicture.setImage(cropImage, for: .normal)
-            
+
             do {
                 try realm.write {
                     person.profileImage = cropImagePngData
@@ -328,7 +368,7 @@ extension HomeController: AVCapturePhotoCaptureDelegate {
         if let image = unmanage?.takeUnretainedValue() {
             let newCaptureImage = UIImage(cgImage: image, scale: 1, orientation: .right)
             imageView.image = newCaptureImage
-            
+
             cancelImageCapture()
 
             view.addSubview(imageView)
@@ -340,7 +380,7 @@ extension HomeController: AVCapturePhotoCaptureDelegate {
 
             crossOut.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40).isActive = true
             crossOut.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
-            
+
             doneCropImage.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -40).isActive = true
             doneCropImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
         }
@@ -352,7 +392,6 @@ extension HomeController: UINavigationControllerDelegate {
                               animationControllerFor operation: UINavigationController.Operation,
                               from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let _ = toVC as? ToDoViewController else { return nil }
-       // navigationController.setNavigationBarHidden(false, animated: false)
         let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
         return ToDoCardPresentAnimator(navigationBarMaxY: navigationController.navigationBar.frame.maxY, todoCardIndex: todoCardIndex)
     }
@@ -370,7 +409,7 @@ extension HomeController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let newCategoryCard = collectionView.dequeueReusableCell(withReuseIdentifier: newCategoryCardIdentifier, for: indexPath) as? NewCategoryCard,
             let todoCard = collectionView.dequeueReusableCell(withReuseIdentifier: toDoCardIdentifier, for: indexPath) as? ToDoCard else { return UICollectionViewCell() }
-        
+
         if indexPath.row == 0 {
             return newCategoryCard
         }
@@ -448,7 +487,7 @@ extension HomeController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let todoCardIndex: Int = Int((collectionView.contentOffset.x - 10) / (view.bounds.width/1.5)) // 10 is space between card
-        return todoCardIndex == indexPath.row ? true : false
+        return todoCardIndex == indexPath.row
     }
 }
 

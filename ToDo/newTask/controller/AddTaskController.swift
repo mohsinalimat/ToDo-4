@@ -21,11 +21,9 @@ class AddTaskController: UIViewController {
     var calendarMaxY: CGFloat? {
         didSet {
             guard let _ = calendarMaxY else { return }
-
-            view.addSubview(singleDatePickerCalendar)
-
             let currentMonth: Int = Calendar.current.component(.month, from: Date()) - 1
-
+            
+            view.addSubview(singleDatePickerCalendar)
             singleDatePickerCalendar.scrollToItem(at: IndexPath(row: currentMonth, section: 0), at: .centeredVertically, animated: true)
         }
     }
@@ -67,12 +65,12 @@ class AddTaskController: UIViewController {
         return label
     }()
 
-    var singleDatePickerCalendar: SingleDatePickerCalendar {
+    lazy var singleDatePickerCalendar: SingleDatePickerCalendar = {
         let singleDatePickerCalendar: SingleDatePickerCalendar = SingleDatePickerCalendar(frame: CGRect(x: 0, y: 150, width: view.frame.width, height: calendarMaxY! - 150))
         singleDatePickerCalendar.singleDatePickerDelegate = self
 
         return singleDatePickerCalendar
-    }
+    }()
 
     @objc func addButtonShrink() {
         if inputTask.text != "" && dateSelected != nil {

@@ -64,7 +64,7 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
         todoCard.numOfTask = tasksCount
 
         todoCard.progressBar.setPercentage(percentage, animated: false)
-        todoCard.taskType = realm.objects(Person.self).first!.taskType[todoCardIndex - 1].type.rawValue // TODO: fix, not always first person
+        todoCard.taskType = person.taskType[todoCardIndex - 1].type.rawValue
         
         UIView.animate(withDuration: 1.5, animations: {
             
@@ -77,12 +77,13 @@ extension ToDoCardPresentAnimator: UIViewControllerAnimatedTransitioning {
                                     width: UIScreen.main.bounds.width/1.5,
                                     height: UIScreen.main.bounds.height/4)
             todoCard.progressBar.frame.origin.y = todoCard.taskTypeLabelLayer.bounds.maxY * 4.8
-        }, completion: {
-            (finished: Bool) in
+        }, completion: { finished in
+
             let toDoViewController: ToDoViewController = transitionContext.viewController(forKey: .to)! as! ToDoViewController
             toDoViewController.todoCard = todoCard
             toDoViewController.taskType = Type(rawValue: todoCard.taskType)
             transitionContext.completeTransition(true)
+
         })
     }
 }

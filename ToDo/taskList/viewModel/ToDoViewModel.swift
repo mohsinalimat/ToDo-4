@@ -58,7 +58,12 @@ class ToDoViewModel {
         do {
             try realm.write {
                 var dateComponent = Calendar.current.dateComponents([.year, .month, .day], from: recentlyAddedTask!.date!)
-                dateComponent.setValue(hour, for: .hour)
+                if hour == 24 {
+                    dateComponent.setValue(0, for: .hour)
+                } else {
+                    dateComponent.setValue(hour, for: .hour)
+                }
+
                 dateComponent.setValue(minute, for: .minute)
 
                 recentlyAddedTask?.date = Calendar(identifier: .gregorian).date(from: dateComponent)

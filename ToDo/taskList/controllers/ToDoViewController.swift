@@ -133,8 +133,8 @@ extension ToDoViewController: UIPickerViewDelegate {
         let minute = 60
         var minutes: [String] = [String]()
         for i in 1...minute {
-            if i < 10 {
-                minutes.append("\(i)")
+            if i == 60 {
+                minutes.append("0")
             } else {
                 minutes.append(String(i))
             }

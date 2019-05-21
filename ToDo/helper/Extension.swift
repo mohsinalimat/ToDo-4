@@ -18,11 +18,20 @@ extension NSMutableAttributedString {
         return self
     }
     
-    @discardableResult func boldGray(_ text: String) -> NSMutableAttributedString {
-        let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AvenirNext-DemiBold", size: 15)!, .foregroundColor: UIColor.gray]
+    @discardableResult func boldWhite(_ text: String) -> NSMutableAttributedString {
+        let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AvenirNext-DemiBold", size: 15)!, .foregroundColor: UIColor.white]
         let boldString = NSMutableAttributedString(string: text, attributes: attrs)
         
         append(boldString)
+        
+        return self
+    }
+    
+    @discardableResult func normalWhite(_ text: String) -> NSMutableAttributedString {
+        let attrs: [NSAttributedString.Key: Any] = [.font: UIFont(name: "AppleSDGothicNeo-Regular", size: 15)!, .foregroundColor: UIColor.white]
+        let normal = NSMutableAttributedString(string: text, attributes: attrs)
+        
+        append(normal)
         
         return self
     }

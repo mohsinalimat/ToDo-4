@@ -22,7 +22,10 @@ class HomeController: UIViewController {
     let captureSession: AVCaptureSession = AVCaptureSession()
 
     let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
-
+    
+    private var previousOffset: CGFloat = 0
+    private var currentPage: Int = 0
+    
     lazy var circleCrop: CircleCropView = {
        return CircleCropView(frame: CGRect(x: 10,
                                            y: UIScreen.main.bounds.height/2 -  UIScreen.main.bounds.height/4,
@@ -266,9 +269,9 @@ class HomeController: UIViewController {
                                           width: view.bounds.width - view.bounds.width/8,
                                           height: 40))
         label.font = UIFont(name: "AvenirNext-Bold", size: 12)
-        label.textColor = .gray
+        label.textColor = .white
         label.numberOfLines = 2
-       // label.backgroundColor = .gray
+
         return label
     }()
     
@@ -278,28 +281,74 @@ class HomeController: UIViewController {
                                                width: self.view.bounds.width - self.view.bounds.width/8,
                                                height: 100))
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
-        label.textColor = .gray
+        label.textColor = .white
         label.numberOfLines = 5
         return label
     }()
+    
+    var gradientColor: [[Any]] {
+        return [
+            [UIColor(red: 0.45, green: 0.58, blue: 0.87, alpha: 1.0).cgColor, UIColor(red: 0.51, green: 0.85, blue: 0.87, alpha: 1.0).cgColor],
+            [UIColor(red: 0.97, green: 0.63, blue: 0.35, alpha: 1.0).cgColor, UIColor(red: 0.96, green: 0.45, blue: 0.42, alpha: 1.0).cgColor],
+            [UIColor(red: 0.54, green: 0.29, blue: 0.40, alpha: 1.0).cgColor, UIColor(red: 0.87, green: 0.40, blue: 0.54, alpha: 1.0).cgColor],
+            [UIColor(red: 0.68, green: 0.69, blue: 0.91, alpha: 1.0).cgColor, UIColor(red: 0.56, green: 0.34, blue: 0.83, alpha: 1.0).cgColor],
+            [UIColor(red: 0.13, green: 0.38, blue: 0.40, alpha: 1.0).cgColor, UIColor(red: 0.22, green: 0.53, blue: 0.41, alpha: 1.0).cgColor],
+            [UIColor(red: 0.46, green: 0.53, blue: 0.23, alpha: 1.0).cgColor, UIColor(red: 0.67, green: 0.73, blue: 0.68, alpha: 1.0).cgColor]
+        ]
+    }
+    
+    lazy var backgroundGradientLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = gradientColor[0]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        
+        return gradientLayer
+    }()
+    
+    lazy var nagigationBarGradientLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [gradientColor[0][0]]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        
+        return gradientLayer
+    }()
+    
+    func getImageFrom(gradientLayer:CAGradientLayer) -> UIImage? {
+        var gradientImage: UIImage?
+        UIGraphicsBeginImageContext(gradientLayer.frame.size)
+        if let context = UIGraphicsGetCurrentContext() {
+            gradientLayer.render(in: context)
+            gradientImage = UIGraphicsGetImageFromCurrentImageContext()?.resizableImage(withCapInsets: UIEdgeInsets.zero, resizingMode: .stretch)
+        }
+        UIGraphicsEndImageContext()
+        return gradientImage
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // home screen title
+        // gradient background color
+        view.layer.addSublayer(backgroundGradientLayer)
+
+        // home screen title and navigation bar gradient
         title = "TO DO"
         navigationController?.navigationBar.titleTextAttributes = [.font: UIFont(name: "AvenirNext-DemiBold", size: 12)!, .foregroundColor: UIColor.gray]
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.view.backgroundColor = .white
         navigationController?.navigationBar.barTintColor = .white
+        navigationController?.navigationBar.setBackgroundImage(getImageFrom(gradientLayer: nagigationBarGradientLayer), for: .default)
 
         // current date label above todo type carousel card
         let currentDateComponent: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         let currentDate: String = "\(monthInString(currentDateComponent.month!)) \(currentDateComponent.day!), \(currentDateComponent.year!)"
         let currentDateLabel: UILabel = UILabel()
 
-        currentDateLabel.attributedText = NSMutableAttributedString().boldGray("Today : ").normal(currentDate)
+        currentDateLabel.attributedText = NSMutableAttributedString().boldWhite("Today : ").normalWhite(currentDate)
         currentDateLabel.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(currentDateLabel)
@@ -402,8 +451,7 @@ extension HomeController: UINavigationControllerDelegate {
                               animationControllerFor operation: UINavigationController.Operation,
                               from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let _ = toVC as? ToDoViewController else { return nil }
-        let todoCardIndex: Int = Int((taskTypeCollection.contentOffset.x - 10) / (view.bounds.width/1.5))
-        return ToDoCardPresentAnimator(navigationBarMaxY: navigationController.navigationBar.frame.maxY, todoCardIndex: todoCardIndex)
+        return ToDoCardPresentAnimator(navigationBarMaxY: navigationController.navigationBar.frame.maxY, todoCardIndex: currentPage)
     }
 }
 
@@ -441,6 +489,20 @@ extension HomeController: UICollectionViewDataSource {
 }
 
 extension HomeController: UICollectionViewDelegate {
+    var todoCardWidth: CGFloat {
+        return view.bounds.width / 1.5 + 10
+    }
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if previousOffset > scrollView.contentOffset.x && velocity.x < 0 { // left slide
+            currentPage = max(currentPage - 1, 0)
+        } else if previousOffset < scrollView.contentOffset.x && velocity.x > 0 { // right slide
+            currentPage = currentPage + 1
+        }
+        previousOffset = todoCardWidth * CGFloat(currentPage)
+        backgroundGradientLayer.colors = gradientColor[currentPage]
+        nagigationBarGradientLayer.colors = [gradientColor[currentPage][0]]
+    }
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -477,6 +539,10 @@ extension HomeController: UICollectionViewDelegate {
                 (finished: Bool) in
                 let newContentOffset: CGPoint = CGPoint(x: self.view.bounds.width/1.5 + 10,
                                                         y: self.taskTypeCollection.contentOffset.y)
+                self.currentPage = 1
+                self.backgroundGradientLayer.colors = self.gradientColor[self.currentPage]
+                self.nagigationBarGradientLayer.colors = [self.gradientColor[self.currentPage][0]]
+                self.previousOffset = self.todoCardWidth * CGFloat(self.currentPage)
                 self.taskTypeCollection.scrollToItem(at: IndexPath(row: 1, section: 0),
                                                         at: UICollectionView.ScrollPosition.centeredHorizontally,
                                                         animated: true)
@@ -496,8 +562,7 @@ extension HomeController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let todoCardIndex: Int = Int((collectionView.contentOffset.x - 10) / (view.bounds.width/1.5)) // 10 is space between card
-        return todoCardIndex == indexPath.row
+        return currentPage == indexPath.row
     }
 }
 

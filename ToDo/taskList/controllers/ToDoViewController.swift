@@ -13,7 +13,9 @@ import AVFoundation
 
 class ToDoViewController: UIViewController {
     
-    var reminderOption: Reminder = Reminder()
+    let notificationCenter = UNUserNotificationCenter.current()
+    
+    let reminderOption: Reminder = Reminder()
 
     lazy var todoViewModel: ToDoViewModel = {
         return ToDoViewModel(taskType: taskType!)
@@ -92,9 +94,11 @@ class ToDoViewController: UIViewController {
 
 extension ToDoViewController: TaskTableViewDelegate {
     /// delete task in realm
-    func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String) {
-        todoViewModel.deleteTask(taskNameToDelete: deletedTaskName, taskDateToDelete: taskDateToDelete)
+    func taskTableView(_ taskToDelete: Task) {
+        todoViewModel.deleteTask(taskToDelete)
         todoCard?.numOfTask = todoViewModel.tasksCount
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [taskToDelete.id!])
+        // update progress bar on todo card
         let percentage: Int = todoViewModel.tasksCompletedPercentage
         todoCard?.progressBar.setPercentage(percentage, animated: true)
         if todoCard?.progressBar.percentage == 100 {
@@ -273,12 +277,10 @@ extension ToDoViewController: AddButtonExpandDelegate {
 
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: recentlyAddedTask.date!)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let uuidString = UUID().uuidString
+        let uuidString = recentlyAddedTask.id!
         let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
-        let notificationCenter = UNUserNotificationCenter.current()
 
         notificationCenter.delegate = self
-        
         notificationCenter.requestAuthorization(options: [.alert, .sound], completionHandler: {
             (success, error) in
             if error != nil {
@@ -332,6 +334,8 @@ extension ToDoViewController: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
+        let taskId = response.notification.request.identifier
+        center.removeDeliveredNotifications(withIdentifiers: [taskId])
         // TODO: go to view controller from notification
     }
 }

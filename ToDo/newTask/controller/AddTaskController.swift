@@ -74,7 +74,8 @@ class AddTaskController: UIViewController {
 
     @objc func addButtonShrink() {
         if inputTask.text != "" && dateSelected != nil {
-            let newTask = Task(name: inputTask.text!, date: dateSelected!)
+            let taskId = UUID().uuidString
+            let newTask = Task(name: inputTask.text!, date: dateSelected!, id: taskId)
             todoViewModel.saveTask(newTask)
             dismiss(animated: true, completion: nil)
             inputTask.resignFirstResponder()

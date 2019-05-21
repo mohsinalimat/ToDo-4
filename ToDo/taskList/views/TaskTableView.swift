@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TaskTableViewDelegate: AnyObject {
-    func taskTableView(_ deletedTaskName: String, _ taskDateToDelete: String)
+    func taskTableView(_ taskToDelete: Task)
 }
 
 class TaskTableView: UITableView {
@@ -117,7 +117,6 @@ extension TaskTableView: UITableViewDataSource {
 }
 
 extension TaskTableView: TaskCellDelegate {
-
     /**
      Do this after deletion for the row below the deleted index path.
     **/
@@ -157,9 +156,8 @@ extension TaskTableView: TaskCellDelegate {
     }
 
     /// on delete task cell
-    func taskCell(_ deletedIndexPath: IndexPath, _ deletedTaskName: String) {
-        let taskDate: String = tasks[deletedIndexPath.section].0
-        
+    func taskCell(_ deletedIndexPath: IndexPath) {
+        let taskToDelete: Task = tasks[deletedIndexPath.section].1[deletedIndexPath.row]
         removeCheckedIndexPath(deletedIndexPath)
 
         if tasks[deletedIndexPath.section].1.count == 1 {       // remove section if there is only 1 task left
@@ -174,7 +172,7 @@ extension TaskTableView: TaskCellDelegate {
             reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)
         }
 
-        taskDelegate?.taskTableView(deletedTaskName, taskDate) // notify toDoViewController
+        taskDelegate?.taskTableView(taskToDelete) // notify toDoViewController
     }
 
     /// save checked indexPath

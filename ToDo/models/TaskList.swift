@@ -61,10 +61,12 @@ final class TaskType: Object {
 final class Task: Object {
     @objc dynamic var name: String?
     @objc dynamic var date: Date?
+    @objc dynamic var id: String?
 
-    convenience init(name: String, date: Date) {
+    convenience init(name: String, date: Date, id: String) {
         self.init()
         self.name = name
         self.date = date
+        self.id = id
     }
 }

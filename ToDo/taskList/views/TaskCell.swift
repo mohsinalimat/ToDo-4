@@ -10,7 +10,7 @@ import UIKit
 
 protocol TaskCellDelegate: AnyObject {
     func taskCell(_ checkedIndexPath: IndexPath, _ checked: Bool)
-    func taskCell(_ deletedIndexPath: IndexPath, _ deletedTaskName: String)
+    func taskCell(_ deletedIndexPath: IndexPath)
 }
 
 class TaskCell: UITableViewCell {
@@ -57,7 +57,7 @@ class TaskCell: UITableViewCell {
     @objc func trashCanOnTap() {
         checkbox.checked = false
         trashCan.removeFromSuperview()
-        delegate?.taskCell(indexPathToDelete, checkbox.label)
+        delegate?.taskCell(indexPathToDelete)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

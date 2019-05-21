@@ -85,10 +85,11 @@ class ToDoViewModel {
     }
     
     /// delete tasks
-    func deleteTask(taskNameToDelete: String, taskDateToDelete: String) {
+    func deleteTask(_ taskToDelete: Task) {
         do {
             try realm.write {
-                let dateToDelete: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date(date: taskDateToDelete)!)
+                let taskNameToDelete: String = taskToDelete.name!
+                let dateToDelete: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: taskToDelete.date!)
                 
                 for (index, task) in taskType.tasks.enumerated() {
                     let taskDate: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: task.date!)

@@ -101,6 +101,8 @@ class HomeController: UIViewController {
             captureSession.sessionPreset = AVCaptureSession.Preset.photo
             captureSession.addOutput(stillImageOutput)
         }
+        
+        navigationController?.setNavigationBarHidden(true, animated: true)
 
         previewLayer.frame = view.bounds
         previewLayer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
@@ -194,15 +196,18 @@ class HomeController: UIViewController {
     @objc func cancelImageCapture() {
         captureSession.stopRunning()
         captureSession.removeOutput(stillImageOutput)
+        doneCropImage.removeFromSuperview()
         cameraButtonView.removeFromSuperview()
         crossOut.removeFromSuperview()
         cameraPreview.removeFromSuperview()
     }
 
     @objc func cancelImageView() {
+        doneCropImage.removeFromSuperview()
         crossOut.removeFromSuperview()
         imageView.removeFromSuperview()
         circleCrop.removeFromSuperview()
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     @objc func captureAndSaveImage() {
@@ -424,9 +429,12 @@ extension HomeController: AVCapturePhotoCaptureDelegate {
     /// crop image or cancel after photo capture
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         let unmanage = photo.cgImageRepresentation()
+
         if let image = unmanage?.takeUnretainedValue() {
             let newCaptureImage = UIImage(cgImage: image, scale: 1, orientation: .right)
             imageView.image = newCaptureImage
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
 
             cancelImageCapture()
 

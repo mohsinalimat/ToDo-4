@@ -282,9 +282,9 @@ class HomeController: UIViewController {
     
     lazy var quoteLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: self.view.bounds.width/8,
-                                               y: self.view.bounds.height/3.8,
-                                               width: self.view.bounds.width - self.view.bounds.width/8,
-                                               height: 100))
+                                          y: self.view.bounds.height/3.8,
+                                          width: self.view.bounds.width - self.view.bounds.width/8,
+                                          height: 100))
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
         label.textColor = .white
         label.numberOfLines = 5

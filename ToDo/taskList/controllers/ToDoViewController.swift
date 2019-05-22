@@ -128,7 +128,11 @@ extension ToDoViewController: UIPickerViewDelegate {
         let hour = 24
         var hours: [String] = [String]()
         for i in 1...hour {
-            hours.append(String(i))
+            if i == 24 {
+                hours.append("0")
+            } else {
+                hours.append(String(i))
+            }
         }
         return hours
     }

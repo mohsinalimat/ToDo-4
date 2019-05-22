@@ -98,7 +98,7 @@ extension TaskTableView: UITableViewDataSource {
         
         taskCell.alarmClock.removeFromSuperview()
 
-        if let hour = dueDateComponent.hour, let minute = dueDateComponent.minute, hour != 0 || minute != 0 {
+        if let hour = dueDateComponent.hour, let minute = dueDateComponent.minute, hour != 0 || minute != 0 { // 0:0 time does not work
             taskCell.alarmClock.setTitle("\(hour):\(minute)", for: .normal)
             taskCell.addSubview(taskCell.alarmClock)
             taskCell.alarmClock.centerYAnchor.constraint(equalTo: taskCell.centerYAnchor).isActive = true

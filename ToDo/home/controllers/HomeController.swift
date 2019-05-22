@@ -85,39 +85,42 @@ class HomeController: UIViewController {
 
     func capturePhoto(action: UIAlertAction) {
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-
-        guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
-
-        do {
-            let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
-            if captureSession.inputs.count == 0 {
-                captureSession.addInput(captureDeviceInput)
-            }
-        } catch let error {
-            print("error unable to initialize back camera: ", error.localizedDescription)
-        }
-
-        if captureSession.canAddOutput(stillImageOutput) {
-            captureSession.sessionPreset = AVCaptureSession.Preset.photo
-            captureSession.addOutput(stillImageOutput)
-        }
         
-        navigationController?.setNavigationBarHidden(true, animated: true)
-
-        previewLayer.frame = view.bounds
-        previewLayer.position = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        cameraPreview.layer.addSublayer(previewLayer)
-
-        view.addSubview(cameraPreview)
-        view.addSubview(cameraButtonView)
-        view.addSubview(crossOut)
-
-        crossOut.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40).isActive = true
-        crossOut.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
-
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.captureSession.startRunning()
+        AVCaptureDevice.requestAccess(for: .video) { granted in
+            if granted {
+                DispatchQueue.main.async {
+                    guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
+                    
+                    do {
+                        let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
+                        if self.captureSession.inputs.count == 0 {
+                            self.captureSession.addInput(captureDeviceInput)
+                        }
+                    } catch let error {
+                        print("error unable to initialize back camera: ", error.localizedDescription)
+                    }
+                    
+                    if self.captureSession.canAddOutput(self.stillImageOutput) {
+                        self.captureSession.sessionPreset = AVCaptureSession.Preset.photo
+                        self.captureSession.addOutput(self.stillImageOutput)
+                    }
+                    
+                    self.navigationController?.setNavigationBarHidden(true, animated: true)
+                    
+                    previewLayer.frame = self.view.bounds
+                    previewLayer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
+                    previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+                    self.cameraPreview.layer.addSublayer(previewLayer)
+                    
+                    self.view.addSubview(self.cameraPreview)
+                    self.view.addSubview(self.cameraButtonView)
+                    self.view.addSubview(self.crossOut)
+                    
+                    self.crossOut.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 40).isActive = true
+                    self.crossOut.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40).isActive = true
+                    self.captureSession.startRunning()
+                }
+            }
         }
     }
 
@@ -146,7 +149,7 @@ class HomeController: UIViewController {
         let image: UIButton = UIButton()
         image.setImage(UIImage(named: "crossOut"), for: .normal)
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.addTarget(self, action: #selector(cancelImageCapture), for: .touchUpInside)
+        image.addTarget(self, action: #selector(cancelCropOptionView), for: .touchUpInside)
         return image
     }()
 
@@ -192,14 +195,19 @@ class HomeController: UIViewController {
         
         return layout
     }()
-
-    @objc func cancelImageCapture() {
+    
+    func cancelCaptureView() {
         captureSession.stopRunning()
         captureSession.removeOutput(stillImageOutput)
         doneCropImage.removeFromSuperview()
         cameraButtonView.removeFromSuperview()
         crossOut.removeFromSuperview()
         cameraPreview.removeFromSuperview()
+    }
+
+    @objc func cancelCropOptionView() {
+        cancelCaptureView()
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     @objc func cancelImageView() {
@@ -378,16 +386,15 @@ class HomeController: UIViewController {
         }
         // update tasks to do today
         let tasksToDo = totalTaskToDoToday
-        let firstName = person.firstName ?? ""
         
         if taskReminderLabel.superview == nil {
             view.addSubview(taskReminderLabel)
         }
 
         if tasksToDo == 0 {
-            taskReminderLabel.text = "Hello, \(firstName). \nThere are no more tasks left to do."
+            taskReminderLabel.text = "Hello, \nThere are no more tasks left to do."
         } else {
-            taskReminderLabel.text = "Hello, \(firstName). \nYou have \(totalTaskToDoToday) tasks to do today."
+            taskReminderLabel.text = "Hello, \nYou have \(totalTaskToDoToday) tasks to do today."
         }
     }
 
@@ -436,7 +443,7 @@ extension HomeController: AVCapturePhotoCaptureDelegate {
 
             navigationController?.setNavigationBarHidden(true, animated: false)
 
-            cancelImageCapture()
+            cancelCaptureView()
 
             view.addSubview(imageView)
             view.addSubview(circleCrop)

@@ -290,12 +290,12 @@ class HomeController: UIViewController {
     
     lazy var quoteLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: self.view.bounds.width/8,
-                                          y: self.view.bounds.height/3.8,
+                                          y: self.view.bounds.height/3.2,
                                           width: self.view.bounds.width - self.view.bounds.width/8,
                                           height: 100))
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 10)
         label.textColor = .white
-        label.numberOfLines = 5
+        label.numberOfLines = 0
         return label
     }()
     
@@ -382,6 +382,7 @@ class HomeController: UIViewController {
             self.quoteLabel.text = quote
             if self.quoteLabel.superview == nil {
                 self.view.addSubview(self.quoteLabel)
+                self.quoteLabel.sizeToFit()
             }
         }
         // update tasks to do today

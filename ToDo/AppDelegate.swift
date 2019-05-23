@@ -18,9 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: UNAuthorizationOptions.alert, completionHandler: {
-            (granted, error) in 
-        })
+        center.requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if !granted {
+                print("authorization not granted")
+            }
+        }
         return true
     }
 
@@ -40,6 +42,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+       
+        guard let homeController = (window?.rootViewController as? UINavigationController)?.topViewController as? HomeController else { return }
+        Network.getQuoteOfDay { quote in
+            homeController.quoteLabel.text = quote
+            if homeController.quoteLabel.superview == nil {
+                homeController.view.addSubview(homeController.quoteLabel)
+                homeController.quoteLabel.sizeToFit()
+            }
+        }
     }
 }
 

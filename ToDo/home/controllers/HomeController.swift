@@ -377,14 +377,6 @@ class HomeController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        // get random quote of the day
-        Network.getQuoteOfDay { quote in
-            self.quoteLabel.text = quote
-            if self.quoteLabel.superview == nil {
-                self.view.addSubview(self.quoteLabel)
-                self.quoteLabel.sizeToFit()
-            }
-        }
         // update tasks to do today
         let tasksToDo = totalTaskToDoToday
         

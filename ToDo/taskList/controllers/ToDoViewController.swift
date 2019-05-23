@@ -285,18 +285,17 @@ extension ToDoViewController: AddButtonExpandDelegate {
         let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
 
         notificationCenter.delegate = self
-        notificationCenter.requestAuthorization(options: [.alert, .sound], completionHandler: {
-            (success, error) in
-            if error != nil {
-                print("notification request error: ", error!)
+        notificationCenter.getNotificationSettings { setting in
+            if setting.authorizationStatus == .authorized {
+                self.notificationCenter.add(request) { error in
+                    if error != nil {
+                        print("notification error: ", error!)
+                    }
+                }
+            } else {
+                print("Not authorized")
             }
-        })
-        notificationCenter.add(request, withCompletionHandler: {
-            (error) in
-            if error != nil {
-                print("notification error: ", error!)
-            }
-        })
+        }
     }
 
     /// add task from delegate

@@ -65,17 +65,6 @@ open class CheckBox: UIControl {
         }
     }
     
-    /// checkbox size
-    open var size: CGSize = CGSize(width: 15, height: 15) {
-        didSet {
-            frame.size = size
-            textLayer.frame = CGRect(x: bounds.maxX * 2,
-                                     y: -2,
-                                     width: textLayer.preferredFrameSize().width,
-                                     height: textLayer.preferredFrameSize().height)
-        }
-    }
-    
     /// checkbox border
     open var borderColor: UIColor = UIColor.black {
         didSet {
@@ -100,13 +89,14 @@ open class CheckBox: UIControl {
     /// determine whether checkbox is checked, default to false
     var checked: Bool = false {
         didSet {
-            if !checked {
+            if checked {
+                layoutIfNeeded()
+                drawCheckMark()
+                textLayer.addSublayer(crossOutLine)
+            } else {
                 checkMark.removeFromSuperlayer()
                 crossOutLine.removeFromSuperlayer()
                 layer.backgroundColor = UIColor.white.cgColor
-            } else {
-                drawCheckMark()
-                textLayer.addSublayer(crossOutLine)
             }
         }
     }
@@ -125,10 +115,9 @@ open class CheckBox: UIControl {
     /// check mark path
     fileprivate lazy var checkMarkPath: UIBezierPath = {
         let checkMarkPath: UIBezierPath = UIBezierPath()
-        checkMarkPath.move(to: CGPoint(x: self.borderWidth, y: frame.height/2))
-        checkMarkPath.addLine(to: CGPoint(x: frame.width/2 - self.borderWidth, y: frame.height - self.borderWidth))
-        checkMarkPath.addLine(to: CGPoint(x: frame.width - self.borderWidth, y: self.borderWidth))
-        
+        checkMarkPath.move(to: CGPoint(x: 0, y: 0))
+        checkMarkPath.addLine(to: CGPoint(x: frame.width/2, y: frame.height))
+        checkMarkPath.addLine(to: CGPoint(x: frame.width, y: frame.height/4))
         return checkMarkPath
     }()
     
@@ -249,8 +238,8 @@ open class CheckBox: UIControl {
     // MARK: - override funcs
     public init() {
         super.init(frame: .zero)
-        frame.size = self.size
-        self.defaultSetUp()
+        frame.size = CGSize(width: 15, height: 15)
+        defaultSetUp()
     }
     
     override public init(frame: CGRect) {

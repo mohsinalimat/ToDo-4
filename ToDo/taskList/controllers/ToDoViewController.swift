@@ -229,7 +229,7 @@ extension ToDoViewController: AddButtonExpandDelegate {
     /// scroll to newly added task and reload
     fileprivate func scrollToNewTask() {
         guard let recentlyAddedTask = todoViewModel.recentlyAddedTask else { return }
-        let recentlyAddedTaskDate = todoViewModel.dateString(date: recentlyAddedTask.date!)
+        let recentlyAddedTaskDate = ToDoViewModel.dateString(date: recentlyAddedTask.date!)
         for (dateSection, date) in taskTableView.tasks.enumerated() {
             if date.0 == recentlyAddedTaskDate {
                 for (taskRow, task) in date.1.enumerated() {

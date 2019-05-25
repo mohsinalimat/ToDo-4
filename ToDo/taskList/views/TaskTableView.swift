@@ -82,7 +82,11 @@ extension TaskTableView: UITableViewDataSource {
         if taskCell.delegate == nil {
              taskCell.delegate = self
         }
-        
+
+        let task = tasks[indexPath.section].1[indexPath.row]
+        taskCell.checkbox.label = task.name!
+        taskCell.indexPathToDelete = indexPath
+
         if taskCell.checkbox.checked && !isIndexPathChecked(indexPath: indexPath) {
             taskCell.checkbox.checked = false
             taskCell.trashCan.removeFromSuperview()
@@ -93,7 +97,6 @@ extension TaskTableView: UITableViewDataSource {
             taskCell.trashCan.rightAnchor.constraint(equalTo: taskCell.rightAnchor).isActive = true
         }
         
-        let task = tasks[indexPath.section].1[indexPath.row]
         let dueDateComponent = Calendar.current.dateComponents([.hour, .minute, .year], from: task.date!)
         
         taskCell.alarmClock.removeFromSuperview()
@@ -105,8 +108,6 @@ extension TaskTableView: UITableViewDataSource {
             taskCell.alarmClock.centerXAnchor.constraint(equalTo: taskCell.centerXAnchor, constant: 80).isActive = true
         }
 
-        taskCell.checkbox.label = task.name!
-        taskCell.indexPathToDelete = indexPath
 
         return taskCell
     }
@@ -165,11 +166,15 @@ extension TaskTableView: TaskCellDelegate {
             deleteSections(IndexSet(integer: deletedIndexPath.section), with: .bottom)
             updateSectionCheckIndexPath(deletedIndexPath)
             reloadData()
-        } else {
+        } else {                                                // remove task in the same section
             updateRowCheckIndexPath(deletedIndexPath)
             tasks[deletedIndexPath.section].1.remove(at: deletedIndexPath.row)
-            deleteRows(at: [deletedIndexPath], with: .bottom)
-            reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)
+            UIView.performWithoutAnimation {
+                beginUpdates()
+                deleteRows(at: [deletedIndexPath], with: .none)
+                reloadSections(IndexSet(integer: deletedIndexPath.section), with: .none)
+                endUpdates()
+            }
         }
 
         taskDelegate?.taskTableView(taskToDelete) // notify toDoViewController
@@ -186,15 +191,9 @@ extension TaskTableView: TaskCellDelegate {
 }
 
 extension TaskTableView: UITableViewDelegate {
-    func date(date: String) -> Date? {
-        let formatter: DateFormatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
-        return formatter.date(from: date)
-    }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label: UILabel = UILabel()
-        let taskDate: DateComponents = Calendar.current.dateComponents([.day, .month], from: date(date: tasks[section].0)!)
+        let taskDate: DateComponents = Calendar.current.dateComponents([.day, .month], from: ToDoViewModel.date(date: tasks[section].0)!)
         let present: DateComponents = Calendar.current.dateComponents([.day, .month], from: Date())
 
         if taskDate.day! < present.day! && taskDate.month! <= present.month! {

@@ -36,10 +36,10 @@ class ToDoViewModel {
             return [(String, [Task])]()
         }
         
-        var initialDate: String = dateString(date: taskType.tasks.first!.date!)
+        var initialDate: String = ToDoViewModel.dateString(date: taskType.tasks.first!.date!)
         
         for task in taskType.tasks {
-            let taskDate: String = dateString(date: task.date!)
+            let taskDate: String = ToDoViewModel.dateString(date: task.date!)
             if taskDate != initialDate {
                 initialDate = taskDate
             }
@@ -115,14 +115,14 @@ class ToDoViewModel {
     }
     
     /// format mm/dd/yyyy in string
-    func dateString(date: Date) -> String {
+    static func dateString(date: Date) -> String {
         let formatter: DateFormatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
         return formatter.string(from: date)
     }
     
     /// format mm/dd/yyyy in date component
-    func date(date: String) -> Date? {
+    static func date(date: String) -> Date? {
         let formatter: DateFormatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
         return formatter.date(from: date)

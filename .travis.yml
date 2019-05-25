@@ -7,4 +7,4 @@ before_install:
  - gem install bundler
  - gem install rake
 os: osx
-gemfile: gemfile
+gemfile: Gemfile

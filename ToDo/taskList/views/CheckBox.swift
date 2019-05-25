@@ -8,16 +8,6 @@
 
 import UIKit
 
-//
-//  RadioButtons.swift
-//  RadioButtons
-//
-//  Created by Tuyen Le on 10.02.19.
-//  Copyright © 2019 Tuyen Le. All rights reserved.
-//
-
-import UIKit
-
 open class CheckBox: UIControl {
     // MARK: - checkbox attribute properties
     
@@ -37,7 +27,8 @@ open class CheckBox: UIControl {
     open var label: String = "" {
         didSet {
             textLayer.string = label
-            textLayer.frame = CGRect(x: bounds.maxX * 2,
+            layoutIfNeeded()
+            textLayer.frame = CGRect(x: bounds.maxX + 10,
                                      y: 0,
                                      width: textLayer.preferredFrameSize().width,
                                      height: textLayer.preferredFrameSize().height)
@@ -237,8 +228,7 @@ open class CheckBox: UIControl {
     
     // MARK: - override funcs
     public init() {
-        super.init(frame: .zero)
-        frame.size = CGSize(width: 15, height: 15)
+        super.init(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
         defaultSetUp()
     }
     

@@ -37,6 +37,7 @@ class AddTaskController: UIViewController {
         text.becomeFirstResponder()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.tintColor = .lightGray
+        text.delegate = self
         return text
     }()
 
@@ -140,5 +141,17 @@ extension AddTaskController: SingleDatePickerCalendarDelegate {
         let calendar: Calendar = Calendar(identifier: .gregorian)
         let date: Date = calendar.date(from: dateSelected)!
         self.dateSelected = date
+    }
+}
+
+extension AddTaskController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let currentCharacterCount = textField.text?.count ?? 0
+        if range.length + range.location > currentCharacterCount {
+            return false
+        }
+        let newLength = currentCharacterCount + string.count - range.length
+        return newLength <= 20
     }
 }

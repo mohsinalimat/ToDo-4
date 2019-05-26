@@ -385,7 +385,7 @@ class HomeController: UIViewController {
         }
 
         if tasksToDo == 0 {
-            taskReminderLabel.text = "Hello, \nThere are no more tasks left to do."
+            taskReminderLabel.text = "Hello, \nThere are no task to do today."
         } else {
             taskReminderLabel.text = "Hello, \nYou have \(totalTaskToDoToday) tasks to do today."
         }

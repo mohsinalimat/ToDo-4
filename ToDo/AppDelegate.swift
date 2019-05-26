@@ -41,9 +41,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-       
         guard let homeController = (window?.rootViewController as? UINavigationController)?.topViewController as? HomeController else { return }
+        let tasksToDo = homeController.totalTaskToDoToday
+        
+        if tasksToDo == 0 {
+            homeController.taskReminderLabel.text = "Hello, \nThere are no more tasks left to do."
+        } else {
+            homeController.taskReminderLabel.text = "Hello, \nYou have \(tasksToDo) tasks to do today."
+        }
         Network.getQuoteOfDay { quote in
             homeController.quoteLabel.text = quote
             if homeController.quoteLabel.superview == nil {

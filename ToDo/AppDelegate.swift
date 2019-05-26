@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tasksToDo = homeController.totalTaskToDoToday
         
         if tasksToDo == 0 {
-            homeController.taskReminderLabel.text = "Hello, \nThere are no more tasks left to do."
+            homeController.taskReminderLabel.text = "Hello, \nThere are no task to do today."
         } else {
             homeController.taskReminderLabel.text = "Hello, \nYou have \(tasksToDo) tasks to do today."
         }

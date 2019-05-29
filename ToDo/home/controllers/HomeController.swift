@@ -306,6 +306,7 @@ class HomeController: UIViewController {
             [UIColor(red: 0.54, green: 0.29, blue: 0.40, alpha: 1.0).cgColor, UIColor(red: 0.87, green: 0.40, blue: 0.54, alpha: 1.0).cgColor],
             [UIColor(red: 0.68, green: 0.69, blue: 0.91, alpha: 1.0).cgColor, UIColor(red: 0.56, green: 0.34, blue: 0.83, alpha: 1.0).cgColor],
             [UIColor(red: 0.13, green: 0.38, blue: 0.40, alpha: 1.0).cgColor, UIColor(red: 0.22, green: 0.53, blue: 0.41, alpha: 1.0).cgColor],
+            [UIColor(red: 0.46, green: 0.53, blue: 0.23, alpha: 1.0).cgColor, UIColor(red: 0.67, green: 0.73, blue: 0.68, alpha: 1.0).cgColor],
             [UIColor(red: 0.46, green: 0.53, blue: 0.23, alpha: 1.0).cgColor, UIColor(red: 0.67, green: 0.73, blue: 0.68, alpha: 1.0).cgColor]
         ]
     }

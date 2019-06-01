@@ -11,21 +11,24 @@ import RealmSwift
 import AVFoundation
 
 class HomeController: UIViewController {
+    // MARK: - identifier
+    let toDoCardIdentifier: String = "ToDoCard"
+    
+    let toDoCardCollectionHeader: String = "toDoCardCollectionHeader"
+    
+    let newCategoryCardIdentifier: String = "NewCategoryCard"
+    
+    // MARK: - to do card swipe property
+    private var previousOffset: CGFloat = 0
+
+    private var currentPage: Int = 0
 
     // MARK: - Camera action properties
-    let toDoCardIdentifier: String = "ToDoCard"
-
-    let toDoCardCollectionHeader: String = "toDoCardCollectionHeader"
-
-    let newCategoryCardIdentifier: String = "NewCategoryCard"
-
     let captureSession: AVCaptureSession = AVCaptureSession()
 
     let stillImageOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
     
-    private var previousOffset: CGFloat = 0
-    private var currentPage: Int = 0
-    
+    // MARK: - camera and capture image
     lazy var circleCrop: CircleCropView = {
        return CircleCropView(frame: CGRect(x: 10,
                                            y: UIScreen.main.bounds.height/2 -  UIScreen.main.bounds.height/4,
@@ -149,7 +152,7 @@ class HomeController: UIViewController {
         let image: UIButton = UIButton()
         image.setImage(UIImage(named: "crossOut"), for: .normal)
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.addTarget(self, action: #selector(cancelCropOptionView), for: .touchUpInside)
+        image.addTarget(self, action: #selector(cancelCaptureImage), for: .touchUpInside)
         return image
     }()
 
@@ -185,17 +188,10 @@ class HomeController: UIViewController {
         }
 
 
-        cancelImageView()
+        cancelCropImageView()
     }
-
-    lazy var toDoCardLayout: ToDoCardCollectionViewFLowLayout = {
-        let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
-        layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
-        layout.itemSize = CGSize(width: view.bounds.width/1.5, height: view.bounds.height/2.5)
-        
-        return layout
-    }()
     
+    /// remove capturing video view after it's taken
     func cancelCaptureView() {
         captureSession.stopRunning()
         captureSession.removeOutput(stillImageOutput)
@@ -204,25 +200,36 @@ class HomeController: UIViewController {
         crossOut.removeFromSuperview()
         cameraPreview.removeFromSuperview()
     }
-
-    @objc func cancelCropOptionView() {
+    
+    /// Discard taken image after it's taken
+    @objc func cancelCaptureImage() {
         cancelCaptureView()
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
-
-    @objc func cancelImageView() {
+    
+    /// Discard taken image without cropping
+    @objc func cancelCropImageView() {
         doneCropImage.removeFromSuperview()
         crossOut.removeFromSuperview()
         imageView.removeFromSuperview()
         circleCrop.removeFromSuperview()
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
-
+    
     @objc func captureAndSaveImage() {
         let photoSettings: AVCapturePhotoSettings = AVCapturePhotoSettings()
         photoSettings.isAutoStillImageStabilizationEnabled = true
         stillImageOutput.capturePhoto(with: photoSettings, delegate: self)
     }
+
+    // MARK: To do card
+    lazy var toDoCardLayout: ToDoCardCollectionViewFLowLayout = {
+        let layout: ToDoCardCollectionViewFLowLayout = ToDoCardCollectionViewFLowLayout()
+        layout.scrollDirection = UICollectionView.ScrollDirection.horizontal
+        layout.itemSize = CGSize(width: view.bounds.width/1.5, height: view.bounds.height/2.5)
+        
+        return layout
+    }()
 
     lazy var taskTypeCollection: UICollectionView = {
         let collection: UICollectionView = UICollectionView(frame: CGRect(x: 0,
@@ -242,24 +249,7 @@ class HomeController: UIViewController {
         return collection
     }()
 
-    fileprivate func monthInString(_ month: Int) -> String {
-        switch month {
-        case 1: return "January"
-        case 2: return "Feburary"
-        case 3: return "March"
-        case 4: return "April"
-        case 5: return "May"
-        case 6: return "June"
-        case 7: return "July"
-        case 8: return "August"
-        case 9: return "September"
-        case 10: return "October"
-        case 11: return "November"
-        case 12: return "December"
-        default: fatalError("Invalid month")
-        }
-    }
-
+    // MARK: task reminder
     var totalTaskToDoToday: Int {
         let currentDate = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         var totalTaskToDoToday = 0
@@ -288,6 +278,7 @@ class HomeController: UIViewController {
         return label
     }()
     
+    // MARK: random quote
     lazy var quoteLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: self.view.bounds.width/8,
                                           y: self.view.bounds.height/3.2,
@@ -299,6 +290,7 @@ class HomeController: UIViewController {
         return label
     }()
     
+    // MARK: gradient property
     var gradientColor: [[Any]] {
         return [
             [UIColor(red: 0.45, green: 0.58, blue: 0.87, alpha: 1.0).cgColor, UIColor(red: 0.51, green: 0.85, blue: 0.87, alpha: 1.0).cgColor],
@@ -331,7 +323,7 @@ class HomeController: UIViewController {
         return gradientLayer
     }()
     
-    func getImageFrom(gradientLayer:CAGradientLayer) -> UIImage? {
+    func getNavBarBackgroundImage(gradientLayer:CAGradientLayer) -> UIImage? {
         var gradientImage: UIImage?
         UIGraphicsBeginImageContext(gradientLayer.frame.size)
         if let context = UIGraphicsGetCurrentContext() {
@@ -342,6 +334,7 @@ class HomeController: UIViewController {
         return gradientImage
     }
 
+    // MARK: - override funcs
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -355,7 +348,7 @@ class HomeController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.view.backgroundColor = .white
         navigationController?.navigationBar.barTintColor = .white
-        navigationController?.navigationBar.setBackgroundImage(getImageFrom(gradientLayer: nagigationBarGradientLayer), for: .default)
+        navigationController?.navigationBar.setBackgroundImage(getNavBarBackgroundImage(gradientLayer: nagigationBarGradientLayer), for: .default)
 
         // current date label above todo type carousel card
         let currentDateComponent: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
@@ -442,7 +435,7 @@ extension HomeController: AVCapturePhotoCaptureDelegate {
             view.addSubview(imageView)
             view.addSubview(circleCrop)
 
-            crossOut.addTarget(self, action: #selector(cancelImageView), for: .touchUpInside)
+            crossOut.addTarget(self, action: #selector(cancelCropImageView), for: .touchUpInside)
             view.addSubview(crossOut)
             view.addSubview(doneCropImage)
 

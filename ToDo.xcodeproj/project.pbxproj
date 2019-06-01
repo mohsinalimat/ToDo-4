@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A11338FA22A315A7005F4540 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11338F922A315A7005F4540 /* Common.swift */; };
 		A1154C97225863A1004AD50C /* AddTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1154C96225863A1004AD50C /* AddTaskController.swift */; };
 		A12017C622700F32007AC0EF /* ToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12017C522700F32007AC0EF /* ToDoViewModel.swift */; };
 		A14AE34322583B62008242C1 /* AddTaskPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */; };
@@ -38,6 +39,7 @@
 		20A1E7C5CFDAD79742C392DF /* Pods-ToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ToDo/Pods-ToDo.debug.xcconfig"; sourceTree = "<group>"; };
 		8E27C3B32806F0827D27B949 /* Pods_ToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B8536ADFD20F2A7EB9BA06 /* Pods-ToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDo/Pods-ToDo.release.xcconfig"; sourceTree = "<group>"; };
+		A11338F922A315A7005F4540 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		A1154C96225863A1004AD50C /* AddTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskController.swift; sourceTree = "<group>"; };
 		A12017C522700F32007AC0EF /* ToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewModel.swift; sourceTree = "<group>"; };
 		A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskPresentationController.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				A1C7A91822752C8F00C0C1FD /* Extension.swift */,
 				A172A84C227B83F5002ED40D /* ImageCropper.swift */,
 				A1A0C6C72291D34900F0AE7D /* NetworkRequest.swift */,
+				A11338F922A315A7005F4540 /* Common.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				A1520A7E228E1FF8000B0471 /* Reminder.swift in Sources */,
 				A1C9852A224F21EB0071E79C /* ToDoCardPresentAnimator.swift in Sources */,
 				A17A3CDA224B2FB900204CD9 /* TaskList.swift in Sources */,
+				A11338FA22A315A7005F4540 /* Common.swift in Sources */,
 				A18CFD4D227347760081A54E /* TaskCell.swift in Sources */,
 				A1B4018922516CC3007993C4 /* CheckBox.swift in Sources */,
 				A1B4018B22519E00007993C4 /* TaskTableView.swift in Sources */,

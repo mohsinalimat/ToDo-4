@@ -96,29 +96,49 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A12017C422700F0A007AC0EF /* viewModel */ = {
+		A11338F522A30F3C005F4540 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				A12017C522700F32007AC0EF /* ToDoViewModel.swift */,
+				A1520A7D228E1FF8000B0471 /* Reminder.swift */,
+				A1B8AD6022507437000D22D9 /* ToDo-Ext.swift */,
+				A1B4018822516CC3007993C4 /* CheckBox.swift */,
+				A1B4018A22519E00007993C4 /* TaskTableView.swift */,
+				A18CFD4C227347760081A54E /* TaskCell.swift */,
+				A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */,
+				A1B9735F2259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift */,
+				A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */,
 			);
-			path = viewModel;
+			path = View;
 			sourceTree = "<group>";
 		};
-		A14AE34022583B22008242C1 /* newTask */ = {
-			isa = PBXGroup;
-			children = (
-				A14AE34122583B49008242C1 /* controller */,
-			);
-			path = newTask;
-			sourceTree = "<group>";
-		};
-		A14AE34122583B49008242C1 /* controller */ = {
+		A11338F622A30F46005F4540 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				A14AE34222583B62008242C1 /* AddTaskPresentationController.swift */,
 				A1154C96225863A1004AD50C /* AddTaskController.swift */,
+				A1C98527224F18EE0071E79C /* ToDoViewController.swift */,
+				A17A3CB5224B2A2000204CD9 /* HomeController.swift */,
+				A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */,
+				A1B8AD6322508CC7000D22D9 /* ToDoCardDismissAnimator.swift */,
 			);
-			path = controller;
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		A11338F722A30F4D005F4540 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A17A3CD9224B2FB900204CD9 /* TaskList.swift */,
+				A1A5E168225AFB5100B2D4AD /* Person.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A11338F822A30F99005F4540 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A12017C522700F32007AC0EF /* ToDoViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		A17A3CA7224B2A2000204CD9 = {
@@ -142,11 +162,11 @@
 		A17A3CB2224B2A2000204CD9 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
-				A1C7A91722752C7F00C0C1FD /* helper */,
-				A17A3CD3224B2EC400204CD9 /* models */,
-				A14AE34022583B22008242C1 /* newTask */,
-				A1B8AD5D22507398000D22D9 /* taskList */,
-				A17A3CD1224B2E1400204CD9 /* home */,
+				A11338F822A30F99005F4540 /* ViewModel */,
+				A11338F722A30F4D005F4540 /* Model */,
+				A11338F622A30F46005F4540 /* Controller */,
+				A11338F522A30F3C005F4540 /* View */,
+				A1C7A91722752C7F00C0C1FD /* Helper */,
 				A17A3CB3224B2A2000204CD9 /* AppDelegate.swift */,
 				A17A3CB7224B2A2000204CD9 /* Main.storyboard */,
 				A17A3CBD224B2A2100204CD9 /* Assets.xcassets */,
@@ -157,90 +177,14 @@
 			path = ToDo;
 			sourceTree = "<group>";
 		};
-		A17A3CD1224B2E1400204CD9 /* home */ = {
-			isa = PBXGroup;
-			children = (
-				A1B8AD6222508C3B000D22D9 /* navigationAnimator */,
-				A17A3CD4224B2EC900204CD9 /* views */,
-				A17A3CD2224B2EBA00204CD9 /* controllers */,
-			);
-			path = home;
-			sourceTree = "<group>";
-		};
-		A17A3CD2224B2EBA00204CD9 /* controllers */ = {
-			isa = PBXGroup;
-			children = (
-				A17A3CB5224B2A2000204CD9 /* HomeController.swift */,
-			);
-			path = controllers;
-			sourceTree = "<group>";
-		};
-		A17A3CD3224B2EC400204CD9 /* models */ = {
-			isa = PBXGroup;
-			children = (
-				A17A3CD9224B2FB900204CD9 /* TaskList.swift */,
-				A1A5E168225AFB5100B2D4AD /* Person.swift */,
-			);
-			path = models;
-			sourceTree = "<group>";
-		};
-		A17A3CD4224B2EC900204CD9 /* views */ = {
-			isa = PBXGroup;
-			children = (
-				A17A3CD5224B2EEB00204CD9 /* ToDoCard.swift */,
-				A1B9735F2259A59C005CCF8C /* ToDoCardCollectionViewFLowLayout.swift */,
-				A1A5E166225AB7A600B2D4AD /* CategoryTextField.swift */,
-			);
-			path = views;
-			sourceTree = "<group>";
-		};
-		A1B8AD5D22507398000D22D9 /* taskList */ = {
-			isa = PBXGroup;
-			children = (
-				A12017C422700F0A007AC0EF /* viewModel */,
-				A1B8AD5F225073AC000D22D9 /* controllers */,
-				A1B8AD5E225073A6000D22D9 /* views */,
-			);
-			path = taskList;
-			sourceTree = "<group>";
-		};
-		A1B8AD5E225073A6000D22D9 /* views */ = {
-			isa = PBXGroup;
-			children = (
-				A1520A7D228E1FF8000B0471 /* Reminder.swift */,
-				A1B8AD6022507437000D22D9 /* ToDo-Ext.swift */,
-				A1B4018822516CC3007993C4 /* CheckBox.swift */,
-				A1B4018A22519E00007993C4 /* TaskTableView.swift */,
-				A18CFD4C227347760081A54E /* TaskCell.swift */,
-			);
-			path = views;
-			sourceTree = "<group>";
-		};
-		A1B8AD5F225073AC000D22D9 /* controllers */ = {
-			isa = PBXGroup;
-			children = (
-				A1C98527224F18EE0071E79C /* ToDoViewController.swift */,
-			);
-			path = controllers;
-			sourceTree = "<group>";
-		};
-		A1B8AD6222508C3B000D22D9 /* navigationAnimator */ = {
-			isa = PBXGroup;
-			children = (
-				A1C98529224F21EB0071E79C /* ToDoCardPresentAnimator.swift */,
-				A1B8AD6322508CC7000D22D9 /* ToDoCardDismissAnimator.swift */,
-			);
-			path = navigationAnimator;
-			sourceTree = "<group>";
-		};
-		A1C7A91722752C7F00C0C1FD /* helper */ = {
+		A1C7A91722752C7F00C0C1FD /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				A1C7A91822752C8F00C0C1FD /* Extension.swift */,
 				A172A84C227B83F5002ED40D /* ImageCropper.swift */,
 				A1A0C6C72291D34900F0AE7D /* NetworkRequest.swift */,
 			);
-			path = helper;
+			path = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

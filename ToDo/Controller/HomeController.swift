@@ -323,7 +323,7 @@ class HomeController: UIViewController {
         return gradientLayer
     }()
     
-    func getNavBarBackgroundImage(gradientLayer:CAGradientLayer) -> UIImage? {
+    func getNavBarBackgroundImage(gradientLayer: CAGradientLayer) -> UIImage? {
         var gradientImage: UIImage?
         UIGraphicsBeginImageContext(gradientLayer.frame.size)
         if let context = UIGraphicsGetCurrentContext() {

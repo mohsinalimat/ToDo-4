@@ -19,4 +19,4 @@ Keeping this observation in mind, the goal was to design a really simple To-Do a
 
 ## Demo
 
-![Alt Text](https://i.ibb.co/8rZ6Vrx/todo-1.gif)
+![ezgif com-video-to-gif](https://user-images.githubusercontent.com/13130384/60698396-4c067080-9f19-11e9-8d17-da04d534b59b.gif)

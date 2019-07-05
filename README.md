@@ -19,4 +19,4 @@ Keeping this observation in mind, the goal was to design a really simple To-Do a
 
 ## Demo
 
-![Alt Text](https://ibb.co/v3nZ83d)
+![Alt Text](https://ibb.co/v3nZ83d"><img src="https://i.ibb.co/8rZ6Vrx/todo-1.gif")

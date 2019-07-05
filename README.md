@@ -1,9 +1,9 @@
 # ToDo
-A simple Todo app that focus on custom animation. 
+A Todo app that allow you to delete and create a task in a most simple way without complication and extraneous information.
 
 Credit give to Jae-song https://dribbble.com/shots/3812962-iPhone-X-Todo-Concept. Who came up with the original design
 
-![alt text](https://imge.to/i/4kCot)
+
 
 ## Demo
 ![Alt Text](https://media.giphy.com/media/lmpRpTtaxZaUWbFVL5/giphy.gif)

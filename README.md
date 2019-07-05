@@ -19,3 +19,4 @@ Keeping this observation in mind, the goal was to design a really simple To-Do a
 
 ## Demo
 
+![Alt Text](https://gifyu.com/image/Eda1)

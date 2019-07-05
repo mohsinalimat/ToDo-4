@@ -3,7 +3,11 @@ A Todo app that allow you to delete and create a task in a most simple way witho
 
 Checkbox component allow you to delete a task. User can create as many tasks as they like under specific category.
 
-Credit give to Jae-song https://dribbble.com/shots/3812962-iPhone-X-Todo-Concept. Who came up with the original design
+## Demo
+
+![ezgif com-video-to-gif](https://user-images.githubusercontent.com/13130384/60698396-4c067080-9f19-11e9-8d17-da04d534b59b.gif)
+
+Credit give to Jae-song. Who came up with the original design
 
 ## Motivation 
 
@@ -17,6 +21,3 @@ Keeping this observation in mind, the goal was to design a really simple To-Do a
 
 ![Webp net-resizeimage (2)](https://user-images.githubusercontent.com/13130384/60696892-e8c51000-9f11-11e9-98fa-fe6b60ba70a4.png)           ![Webp net-resizeimage (1)](https://user-images.githubusercontent.com/13130384/60696775-689eaa80-9f11-11e9-9579-d9d4d45cba3c.png)
 
-## Demo
-
-![ezgif com-video-to-gif](https://user-images.githubusercontent.com/13130384/60698396-4c067080-9f19-11e9-8d17-da04d534b59b.gif)

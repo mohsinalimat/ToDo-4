@@ -14,7 +14,7 @@ final class Person: Object {
     @objc dynamic var middleName: String?
     @objc dynamic var profileImage: Data?
     var taskType: List<TaskType> = List<TaskType>()
-    
+
     convenience init(firstName: String, lastName: String, middleName: String, profileImage: Data?) {
         self.init()
         self.firstName = firstName

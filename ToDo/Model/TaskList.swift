@@ -31,7 +31,7 @@ final class TaskType: Object {
             return tasks.count + numOfCompletedTask
         }
     }
-    
+
     @objc dynamic var percentage: Int {
         get {
             if totalTask == 0 {
@@ -40,9 +40,9 @@ final class TaskType: Object {
             return Int(CGFloat(numOfCompletedTask) / CGFloat(totalTask) * 100)
         }
     }
-    
+
     var tasks: List<Task> = List<Task>()
-    
+
     var type: Type {
         get {
             return Type(rawValue: typeEnum)!
